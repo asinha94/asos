@@ -19,10 +19,10 @@ DESTDIR?=$(PREFIX)/build
 # Hardocded options        #
 ############################
 
-CFLAGS:=$(CFLAGS) -Wall -Wextra -ffreestanding -std=gnu99
+CFLAGS:=$(CFLAGS) -Wall -Wextra -std=gnu99 -ffreestanding
 CPPFLAGS:=$(CPPFLAGS)
 LDFLAGS:=$(LDFLAGS)
-LIBS:=$(LIBS)
+LIBS:=$(LIBS) -lgcc
 
 ############################
 # Architecture Specific    #
@@ -48,10 +48,10 @@ LINKSCRIPT=$(KERNEL_ARCH_LINKSCRIPT)
 #############################
 
 OBJS=$(KERNEL_OBJS)
+CFLAGS:=$(CFLAGS) -nostdlib
 
-.PHONY: all clean C_SOURCES ASM_SOURCES
+.PHONY: clean run
 .SUFFIXES: .o .c .s
-all: asos.bin
 
 asos.bin: $(OBJS) $(LINKSCRIPT)
 	mkdir -p $(DESTDIR)
@@ -59,10 +59,15 @@ asos.bin: $(OBJS) $(LINKSCRIPT)
 	grub-file --is-x86-multiboot $(DESTDIR)/$@
 
 %.o : %.c
-		$(CC) -c $< $@ $(CFLAGS)
+	$(CC) -c $< -o $@ $(CFLAGS)
 
 %.o : %.s
-		$(ASM) $< -o $@
+	$(ASM) $< -o $@
+
+run: asos.bin qemu
+
+qemu:
+	qemu-system-i386 -kernel $(DESTDIR)/asos.bin
 
 clean:
 	rm -rf $(DESTDIR)
