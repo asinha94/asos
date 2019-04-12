@@ -71,11 +71,7 @@ void terminal_setcolor(uint8_t color) {
 }
 
 void terminal_putentryat(char c, uint8_t color, size_t x, size_t y) {
-    const size_t index = y * VGA_WIDTH + x;
-    if (c == '\n') {
-        termin
-    }
-    terminal_buffer[index] = vga_entry(c, color);
+    
 }
 
 void terminal_putchar(char c) {
@@ -85,7 +81,9 @@ void terminal_putchar(char c) {
         terminal_row++;
         return;
     }
-    terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
+    /* Set char in position*/
+    const size_t index = terminal_row * VGA_WIDTH + terminal_column;
+    terminal_buffer[index] = vga_entry(c, terminal_color);
     if (++terminal_column == VGA_WIDTH) {
         terminal_column = 0;
         if (++terminal_row == VGA_HEIGHT) {

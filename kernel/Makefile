@@ -37,9 +37,10 @@ LDFLAGS:=$(LDFLAGS) $(KERNEL_ARCH_LDFLAGS)
 LIBS:=$(LIBS) $(KERNEL_ARCH_LIBS)
 
 KERNEL_OBJS = $(KERNEL_ARCH_OBJS) \
-	      kernel/kernel.o
+	          kernel/kernel.o
 
 CC=$(KERNEL_ARCH_CC)
+ASM=$(KERNEL_ARCH_ASM)
 LINKSCRIPT=$(KERNEL_ARCH_LINKSCRIPT)
 
 #############################
@@ -48,7 +49,7 @@ LINKSCRIPT=$(KERNEL_ARCH_LINKSCRIPT)
 
 OBJS=$(KERNEL_OBJS)
 
-.PHONY: all clean
+.PHONY: all clean C_SOURCES ASM_SOURCES
 .SUFFIXES: .o .c .s
 all: asos.bin
 
@@ -57,11 +58,11 @@ asos.bin: $(OBJS) $(LINKSCRIPT)
 	$(CC) -T $(LINKSCRIPT) -o $(DESTDIR)/$@ $(CFLAGS) $(OBJS)
 	grub-file --is-x86-multiboot $(DESTDIR)/$@
 
-%.o : %.c:
-	$(CC) -c $< $@ $(CFLAGS)
+%.o : %.c
+		$(CC) -c $< $@ $(CFLAGS)
 
-%.o : %.s:
-	$(CC) -c $< $@ $(CFLAGS)
+%.o : %.s
+		$(ASM) $< -o $@
 
 clean:
 	rm -rf $(DESTDIR)
