@@ -2,12 +2,6 @@
 # Defaultable flag options #
 ############################
 
-# Compiling and linker options
-CFLAGS?=-O2 -g
-CPPFLAGS?=
-LDFLAGS?=
-LIBS?=
-
 # Default architecture
 ARCH?=i686
 
@@ -19,10 +13,10 @@ DESTDIR?=$(PREFIX)/build
 # Hardocded options        #
 ############################
 
-CFLAGS:=$(CFLAGS) -g -Wall -Wextra -std=gnu99 -ffreestanding
-CPPFLAGS:=$(CPPFLAGS)
-LDFLAGS:=$(LDFLAGS)
-LIBS:=$(LIBS) -lgcc
+CFLAGS=-g -Wall -Wextra -std=gnu99 -ffreestanding
+CPPFLAGS=
+LDFLAGS=
+LIBS=-lgcc
 
 ############################
 # Architecture Specific    #
@@ -64,7 +58,8 @@ asos.bin: $(OBJS) $(LINKSCRIPT)
 %.o : %.s
 	$(ASM) $< -o $@
 
-run: asos.bin qemu
+run: asos.bin
+	qemu-system-i386 -s -S -kernel $(DESTDIR)/asos.bin -curses
 
 qemu: asos.bin
 	qemu-system-i386 -s -S -kernel $(DESTDIR)/asos.bin

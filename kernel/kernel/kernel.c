@@ -53,7 +53,6 @@ uint8_t terminal_color;
 uint16_t* terminal_buffer;
 
 void clear_from(uint8_t linnum) {
-    if (linnum >= VGA_HEIGHT) return;
     /* clear all lines from linnum onwards */
     terminal_color = vga_entry_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);    
     for (size_t y = linnum; y < VGA_HEIGHT; y++) {
@@ -63,15 +62,13 @@ void clear_from(uint8_t linnum) {
             terminal_buffer[index] = vga_entry(' ', terminal_color);
         }
     }
-
 }
 
 void terminal_initialize(void) {
     terminal_row = 0;
     terminal_column = 0;
     terminal_buffer = (uint16_t*) 0xB8000;
-    clear_from(terminal_row);
-    
+    clear_from(0);
 }
 
 
@@ -80,20 +77,18 @@ void terminal_setcolor(uint8_t color) {
 }
 
 
-
-void scroll_up_lines(uint8_t num_lines) {
+void scroll_up_lines(uint8_t num_lines) {       
     if (num_lines > VGA_HEIGHT)
         num_lines = VGA_HEIGHT;
 
     // we want to overrite the first num_lines number of rows
     // so start copying from num_lines till the total_height
-    for (uint8_t y = 0; y < num_lines; y++) {
-        uint8_t old_offset = y * VGA_WIDTH;
-        uint8_t offset = num_lines == VGA_HEIGHT ? num_lines - 1 : num_lines;
-        uint8_t new_offset = old_offset + (num_lines == offset * VGA_WIDTH);
+    for (uint8_t y = num_lines; y < VGA_HEIGHT; y++) {
+        uint8_t old_line = (y - num_lines) * VGA_WIDTH;
+        uint8_t new_line = y * VGA_WIDTH;
         for (uint8_t x = 0; x < VGA_WIDTH; x++) {
-            uint8_t old_index = old_offset + x;
-            uint8_t new_index = new_offset + x;
+            uint8_t old_index = old_line + x;
+            uint8_t new_index = new_line + x;
             terminal_buffer[old_index] = terminal_buffer[new_index];
         }
             
@@ -105,7 +100,6 @@ void scroll_up_lines(uint8_t num_lines) {
 }
 
 void terminal_putchar(char c) {
-
     if (c == '\n') {
         terminal_column = 0;
         terminal_row++;

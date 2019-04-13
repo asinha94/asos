@@ -1,0 +1,41 @@
+{
+  "tasks": [
+    {
+      "type": "shell",
+      "label": "i686-elf-gcc build active file",
+      "command": "${workspaceFolder}/cc/bin/i686-elf-gcc",
+      "args": [
+        "-g",
+        "${file}",
+        "-o",
+        "${fileDirname}/${fileBasenameNoExtension}"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/cc/bin"
+      }
+    },
+    {
+      "type": "shell",
+      "label": "gcc build active file",
+      "command": "/usr/bin/gcc",
+      "args": [
+        "-g",
+        "${file}",
+        "-o",
+        "${fileDirname}/${fileBasenameNoExtension}"
+      ],
+      "options": {
+        "cwd": "/usr/bin"
+      }
+    },
+    {
+      "type": "shell",
+      "label": "make",
+      "command": "/usr/bin/make",
+      "options": {
+        "cwd": "${workspaceFolder}/kernel"
+      }
+    }
+  ],
+  "version": "2.0.0"
+}
