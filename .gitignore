@@ -2,3 +2,4 @@ cc/
 cc-files/
 **/build
 **/*.o
+.vscode/ipch

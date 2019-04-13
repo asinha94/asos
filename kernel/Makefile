@@ -19,7 +19,7 @@ DESTDIR?=$(PREFIX)/build
 # Hardocded options        #
 ############################
 
-CFLAGS:=$(CFLAGS) -Wall -Wextra -std=gnu99 -ffreestanding
+CFLAGS:=$(CFLAGS) -g -Wall -Wextra -std=gnu99 -ffreestanding
 CPPFLAGS:=$(CPPFLAGS)
 LDFLAGS:=$(LDFLAGS)
 LIBS:=$(LIBS) -lgcc
@@ -66,8 +66,8 @@ asos.bin: $(OBJS) $(LINKSCRIPT)
 
 run: asos.bin qemu
 
-qemu:
-	qemu-system-i386 -kernel $(DESTDIR)/asos.bin
+qemu: asos.bin
+	qemu-system-i386 -s -S -kernel $(DESTDIR)/asos.bin
 
 clean:
 	rm -rf $(DESTDIR)
