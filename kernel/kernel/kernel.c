@@ -52,10 +52,9 @@ size_t terminal_column;
 uint8_t terminal_color;
 uint16_t* terminal_buffer;
 
-void clear_from(uint8_t linnum) {
-    /* clear all lines from linnum onwards */
-    terminal_color = vga_entry_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);    
-    for (size_t y = linnum; y < VGA_HEIGHT; y++) {
+void clear_from(uint8_t linum) {
+    /* clear all lines from linum onwards */
+    for (size_t y = linum; y < VGA_HEIGHT; y++) {
         const size_t line = y * VGA_WIDTH;
         for (size_t x = 0; x < VGA_WIDTH; x++) {
             const size_t index = line + x;
@@ -68,6 +67,7 @@ void terminal_initialize(void) {
     terminal_row = 0;
     terminal_column = 0;
     terminal_buffer = (uint16_t*) 0xB8000;
+    terminal_color = vga_entry_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
     clear_from(0);
 }
 
@@ -84,18 +84,17 @@ void scroll_up_lines(uint8_t num_lines) {
     // we want to overrite the first num_lines number of rows
     // so start copying from num_lines till the total_height
     for (uint8_t y = num_lines; y < VGA_HEIGHT; y++) {
-        uint8_t old_line = (y - num_lines) * VGA_WIDTH;
-        uint8_t new_line = y * VGA_WIDTH;
+        uint16_t old_line = (y - num_lines) * VGA_WIDTH;
+        uint16_t new_line = y * VGA_WIDTH;
         for (uint8_t x = 0; x < VGA_WIDTH; x++) {
-            uint8_t old_index = old_line + x;
-            uint8_t new_index = new_line + x;
+            uint16_t old_index = old_line + x;
+            uint16_t new_index = new_line + x;
             terminal_buffer[old_index] = terminal_buffer[new_index];
         }
-            
-        // clear off the remaining lines
-        clear_from(VGA_HEIGHT - num_lines);
-
     }
+
+    // clear off the remaining lines
+    clear_from(VGA_HEIGHT - num_lines);
     
 }
 
@@ -130,5 +129,34 @@ void terminal_writestring(const char* data) {
 void kernel_main(void) {
     terminal_initialize();
 
-    terminal_writestring("Hello World\n\nMr. Sinha");
+    while (1) {
+        terminal_writestring("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+        terminal_writestring("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
+        terminal_writestring("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC");
+        terminal_writestring("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
+        terminal_writestring("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+        terminal_writestring("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
+        terminal_writestring("GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG");
+        terminal_writestring("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
+        terminal_writestring("IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII");
+        terminal_writestring("JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ");
+        terminal_writestring("KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK");
+        terminal_writestring("LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL");
+        terminal_writestring("MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM");
+        terminal_writestring("NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN");
+        terminal_writestring("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+        terminal_writestring("PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP");
+        terminal_writestring("QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ");
+        terminal_writestring("RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR");
+        terminal_writestring("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
+        terminal_writestring("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
+        terminal_writestring("UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU");
+        terminal_writestring("VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV");
+        terminal_writestring("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
+        terminal_writestring("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+        terminal_writestring("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
+    }
+    
 }
+
+
