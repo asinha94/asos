@@ -1,5 +1,5 @@
-#include <include/arch/i686/tty.h>
-#include <include/arch/i686/vga.h>
+#include <arch/i686/tty.h>
+#include <arch/i686/vga.h>
 
 const size_t VGA_WIDTH = 80;
 const size_t VGA_HEIGHT = 25;

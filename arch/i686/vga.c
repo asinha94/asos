@@ -1,4 +1,4 @@
-#include <include/arch/i686/vga.h>
+#include <arch/i686/vga.h>
 
 #ifndef ASOS_i386_VGA_DRIVER_H
 #define ASOS_i386_VGA_DRIVER_H

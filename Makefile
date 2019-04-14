@@ -10,8 +10,6 @@ PREFIX ?= $(shell pwd)
 DEST_DIR ?= $(PREFIX)/bin
 BUILD_DIR ?= $(PREFIX)/build
 
-SHELL ?= /usr/bin/bash
-
 ############################
 # Hardocded options        #
 ############################
@@ -32,6 +30,7 @@ CFLAGS := $(CFLAGS) $(KERNEL_ARCH_CFLAGS)
 CPPFLAGS := $(CPPFLAGS) $(KERNEL_ARCH_CPPFLAGS)
 LDFLAGS := $(LDFLAGS) $(KERNEL_ARCH_LDFLAGS)
 LIBS := $(LIBS) $(KERNEL_ARCH_LIBS)
+OBJS := $(KERNEL_ARCH_OBJS)
 
 CC = $(KERNEL_ARCH_CC)
 ASM = $(KERNEL_ARCH_ASM)
@@ -41,8 +40,8 @@ LINKSCRIPT = $(KERNEL_ARCH_LINKSCRIPT)
 # Make Targets              #
 #############################
 
-OBJS := kernel/kernel.o arch/i686/tty.o arch/i686/vga.o
-INCLUDES := -I$(PREFIX)
+OBJS := $(OBJS) kernel/kernel.o arch/i686/tty.o arch/i686/vga.o 
+INCLUDES := -I$(PREFIX)/include
 CFLAGS := $(CFLAGS) -nostdlib $(INCLUDES)
 
 
@@ -58,7 +57,6 @@ asos.bin: $(OBJS) $(LINKSCRIPT)
 	$(CC) -c $< -o $@ $(CFLAGS)
 
 %.o : %.s
-	mkdir -p $(BUIlD_DIR)
 	$(ASM) $< -o $@
 
 run: asos.bin
