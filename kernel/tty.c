@@ -1,3 +1,5 @@
+#include <stdbool.h>
+
 #include <arch/i686/vga.h>
 #include <kernel/tty.h>
 
@@ -42,12 +44,12 @@ static void tty_scroll_up_lines(uint8_t num_lines) {
 
     // we want to overrite the first num_lines number of rows
     // so start copying from num_lines till the total_height
-    for (uint8_t y = num_lines; y < VGA_HEIGHT; y++) {
-        uint16_t old_line = (y - num_lines) * VGA_WIDTH;
-        uint16_t new_line = y * VGA_WIDTH;
-        for (uint8_t x = 0; x < VGA_WIDTH; x++) {
-            uint16_t old_index = old_line + x;
-            uint16_t new_index = new_line + x;
+    for (size_t y = num_lines; y < VGA_HEIGHT; y++) {
+        size_t old_line = (y - num_lines) * VGA_WIDTH;
+        size_t new_line = y * VGA_WIDTH;
+        for (size_t x = 0; x < VGA_WIDTH; x++) {
+            size_t old_index = old_line + x;
+            size_t new_index = new_line + x;
             tty_buffer[old_index] = tty_buffer[new_index];
         }
     }
@@ -57,13 +59,33 @@ static void tty_scroll_up_lines(uint8_t num_lines) {
 
 }
 
+static inline bool is_escape_char(char c) {
+    return c == '\n' || c == '\r' || c == '\t';
+}
 
-static void tty_putchar(char c) {
-    if (c == '\n') {
+static void handle_escape_char(char c) {
+    switch (c) {
+    case '\n':
         tty_column = 0;
         tty_row++;
+        break;
+    case '\r':
+        tty_column = 0;
+        tty_row++;
+        break;
+    case '\t':
+        tty_writestring("    ");
+    default:
+        break;
+    }
+}
+
+static void tty_putchar(char c) {
+    if (is_escape_char(c)) {
+        handle_escape_char(c);
         return;
     }
+    
     /* Set char in position*/
     const size_t index = tty_row * VGA_WIDTH + tty_column;
     tty_buffer[index] = vga_entry(c, tty_color);
@@ -78,7 +100,7 @@ static void tty_putchar(char c) {
 }
 
 
-static void tty_writechar(const char* data, size_t size) {
+static void tty_writechars(const char* data, size_t size) {
     for (size_t i = 0; i < size; i++ ) {
         tty_putchar(data[i]);
     }
@@ -87,7 +109,7 @@ static void tty_writechar(const char* data, size_t size) {
 
 
 void tty_writestring(const char* data) {
-    tty_writechar(data, strlen(data));
+    tty_writechars(data, strlen(data));
 }
 
 
