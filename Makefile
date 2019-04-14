@@ -40,8 +40,13 @@ LINKSCRIPT = $(KERNEL_ARCH_LINKSCRIPT)
 # Make Targets              #
 #############################
 
-OBJS := $(OBJS) kernel/kernel.o arch/i686/tty.o arch/i686/vga.o 
+OBJS := $(OBJS) kernel/kernel.o kernel/tty.o arch/i686/vga.o
 INCLUDES := -I$(PREFIX)/include
+WARNINGS := -Wall -Wextra -pedantic -Wshadow -Wpointer-arith -Wcast-align \
+	    -Wwrite-strings -Wmissing-prototypes -Wmissing-declarations \
+	    -Wredundant-decls -Wnested-externs -Winline -Wno-long-long \
+	    -Wconversion -Wstrict-prototypes
+
 CFLAGS := $(CFLAGS) -nostdlib $(INCLUDES)
 
 
@@ -49,22 +54,22 @@ CFLAGS := $(CFLAGS) -nostdlib $(INCLUDES)
 .SUFFIXES: .o .c .s
 
 asos.bin: $(OBJS) $(LINKSCRIPT)
-	mkdir -p $(DEST_DIR)
-	$(CC) -T $(LINKSCRIPT) -o $(DEST_DIR)/$@ $(CFLAGS) $(OBJS)
-	grub-file --is-x86-multiboot $(DEST_DIR)/$@
+	@mkdir -p $(DEST_DIR)
+	@$(CC) -T $(LINKSCRIPT) -o $(DEST_DIR)/$@ $(CFLAGS) $(OBJS)
+	@grub-file --is-x86-multiboot $(DEST_DIR)/$@
 
 %.o : %.c
-	$(CC) -c $< -o $@ $(CFLAGS)
+	@$(CC) -c $< -o $@ $(CFLAGS)
 
 %.o : %.s
-	$(ASM) $< -o $@
+	@$(ASM) $< -o $@
 
 run: asos.bin
-	qemu-system-i386 -s -S -kernel $(DESTDIR)/asos.bin -curses
+	@qemu-system-i386 -s -S -kernel $(DESTDIR)/asos.bin -curses
 
 qemu: asos.bin
-	qemu-system-i386 -s -S -kernel $(DESTDIR)/asos.bin
+	@qemu-system-i386 -s -S -kernel $(DESTDIR)/asos.bin
 
 clean:
-	rm -rf $(DEST_DIR) $(BUILD_DIR) $(OBJS) *.o */*.o */*/*.o
+	@rm -rf $(DEST_DIR) $(BUILD_DIR) $(OBJS) *.o */*.o */*/*.o
 

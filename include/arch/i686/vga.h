@@ -1,3 +1,6 @@
+#ifndef ASOS_i386_VGA_DRIVER_H
+#define ASOS_i386_VGA_DRIVER_H
+
 #include <stdint.h>
 
 enum vga_color {
@@ -21,3 +24,5 @@ enum vga_color {
 
 extern inline uint8_t vga_entry_color(enum vga_color fg, enum vga_color bg);
 extern inline uint16_t vga_entry(unsigned char uc, uint8_t color);
+
+#endif

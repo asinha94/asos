@@ -1,5 +1,5 @@
-#include <arch/i686/tty.h>
 #include <arch/i686/vga.h>
+#include <kernel/tty.h>
 
 const size_t VGA_WIDTH = 80;
 const size_t VGA_HEIGHT = 25;
@@ -9,8 +9,6 @@ static size_t tty_column;
 static uint8_t tty_color;
 static uint16_t* tty_buffer;
 
-#ifndef ASOS_i386_TTY_H
-#define ASOS_i386_TTY_H
 
 size_t strlen(const char* str) {
     size_t len = 0;
@@ -101,4 +99,4 @@ void tty_init(void) {
     tty_clear_from(0);
 }
 
-#endif
+

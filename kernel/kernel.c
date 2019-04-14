@@ -2,7 +2,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#include <arch/i686/tty.h>
+#include <kernel/tty.h>
 
 
 void kernel_main(void) {
