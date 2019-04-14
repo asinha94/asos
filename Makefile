@@ -40,7 +40,7 @@ LINKSCRIPT = $(KERNEL_ARCH_LINKSCRIPT)
 # Make Targets              #
 #############################
 
-OBJS := $(OBJS) kernel/kernel.o kernel/tty.o arch/i686/vga.o
+OBJS := $(OBJS) kernel/kernel.o kernel/tty.o
 INCLUDES := -I$(PREFIX)/include
 WARNINGS := -Wall -Wextra -pedantic -Wshadow -Wpointer-arith -Wcast-align \
 	    -Wwrite-strings -Wmissing-prototypes -Wmissing-declarations \
