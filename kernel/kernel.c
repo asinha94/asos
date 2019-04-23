@@ -3,10 +3,12 @@
 #include <stdint.h>
 
 #include <kernel/tty.h>
+#include <kernel/segments.h>
 
 
 void kernel_main(void) {
     tty_init();
+    load_gdt_table();
 
     while (1) {
         tty_writestring("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");

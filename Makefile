@@ -6,6 +6,7 @@
 ARCH ?= i686
 
 # Direcotries
+CC_PREFIX ?= $(HOME)/Documents/cc
 PREFIX ?= $(shell pwd)
 DEST_DIR ?= $(PREFIX)/bin
 BUILD_DIR ?= $(PREFIX)/build
@@ -40,7 +41,7 @@ LINKSCRIPT = $(KERNEL_ARCH_LINKSCRIPT)
 # Make Targets              #
 #############################
 
-OBJS := $(OBJS) kernel/kernel.o kernel/tty.o
+OBJS := $(OBJS) kernel/kernel.o kernel/tty.o kernel/segments.o
 INCLUDES := -I$(PREFIX)/include
 WARNINGS := -Wall -Wextra -pedantic -Wshadow -Wpointer-arith -Wcast-align \
 	    -Wwrite-strings -Wmissing-prototypes -Wmissing-declarations \
