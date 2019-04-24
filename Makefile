@@ -66,10 +66,10 @@ asos.bin: $(OBJS) $(LINKSCRIPT)
 	@$(ASM) $< -o $@
 
 run: asos.bin
-	@qemu-system-i386 -s -S -kernel $(DESTDIR)/asos.bin -curses
+	@qemu-system-i386 -s -S -kernel $(DEST_DIR)/asos.bin -curses
 
 qemu: asos.bin
-	@qemu-system-i386 -s -S -kernel $(DESTDIR)/asos.bin
+	@qemu-system-i386 -s -S -kernel $(DEST_DIR)/asos.bin
 
 clean:
 	@rm -rf $(DEST_DIR) $(BUILD_DIR) $(OBJS) *.o */*.o */*/*.o

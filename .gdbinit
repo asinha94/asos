@@ -1,2 +1,2 @@
-file ./kernel/build/asos.bin
+file ./bin/asos.bin
 target remote localhost:1234
