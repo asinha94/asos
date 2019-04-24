@@ -4,3 +4,4 @@ cc-files/
 **/bin
 **/*.o
 .vscode/ipch
+.gdb_history
