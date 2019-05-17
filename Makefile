@@ -2,40 +2,27 @@
 # Defaultable flag options #
 ############################
 
-# Default architecture
 ARCH ?= i686
-
-# Direcotries
 CC_PREFIX ?= $(HOME)/Documents/cc
 PREFIX ?= $(shell pwd)
 DEST_DIR ?= $(PREFIX)/bin
 BUILD_DIR ?= $(PREFIX)/build
 
-############################
-# Hardocded options        #
-############################
+###############################################
+# Flags and Architecture Specific Variables   #
+###############################################
 
 CFLAGS = -g -Wall -Wextra -std=gnu99 -ffreestanding
 CPPFLAGS =
 LDFLAGS =
 LIBS = -lgcc
 
-############################
-# Architecture Specific    #
-############################
+CC = $(CC_PREFIX)/bin/i686-elf-gcc
+ASM = $(CC_PREFIX)/bin/i686-elf-as
+LINKSCRIPT = $(ARCHDIR)/linker.ld
 
 ARCHDIR ?= $(PREFIX)/arch/$(ARCH)
-include $(ARCHDIR)/make.inc
-
-CFLAGS := $(CFLAGS) $(KERNEL_ARCH_CFLAGS)
-CPPFLAGS := $(CPPFLAGS) $(KERNEL_ARCH_CPPFLAGS)
-LDFLAGS := $(LDFLAGS) $(KERNEL_ARCH_LDFLAGS)
-LIBS := $(LIBS) $(KERNEL_ARCH_LIBS)
-OBJS := $(KERNEL_ARCH_OBJS)
-
-CC = $(KERNEL_ARCH_CC)
-ASM = $(KERNEL_ARCH_ASM)
-LINKSCRIPT = $(KERNEL_ARCH_LINKSCRIPT)
+OBJS := $(ARCHDIR)/boot.o $(ARCHDIR)/init_tables.o
 
 #############################
 # Make Targets              #
