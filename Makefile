@@ -12,31 +12,31 @@ BUILD_DIR ?= $(PREFIX)/build
 # Flags and Architecture Specific Variables   #
 ###############################################
 
-CFLAGS = -g -Wall -Wextra -std=gnu99 -ffreestanding
-CPPFLAGS =
-LDFLAGS =
-LIBS = -lgcc
-
 CC = $(CC_PREFIX)/bin/i686-elf-gcc
 ASM = $(CC_PREFIX)/bin/i686-elf-as
 LINKSCRIPT = $(ARCHDIR)/linker.ld
 
 ARCHDIR ?= $(PREFIX)/arch/$(ARCH)
-OBJS := $(ARCHDIR)/boot.o $(ARCHDIR)/init_tables.o
+ARCHOBJS := $(ARCHDIR)/boot.o $(ARCHDIR)/init_tables.o
+KERNSOURCES := $(shell find $(PREFIX) -name *.c)
+KERNOBJS := $(addprefix $(PREFIX),$(KERNSOURCES:%.c=%.o))
+INCLUDES := -I$(PREFIX)/include
 
 #############################
 # Make Targets              #
 #############################
 
-OBJS := $(OBJS) kernel/kernel.o kernel/tty.o kernel/segments.o
-INCLUDES := -I$(PREFIX)/include
+OBJS := $(ARCHOBJS) $(KERNOBJS)
+
 WARNINGS := -Wall -Wextra -pedantic -Wshadow -Wpointer-arith -Wcast-align \
 	    -Wwrite-strings -Wmissing-prototypes -Wmissing-declarations \
 	    -Wredundant-decls -Wnested-externs -Winline -Wno-long-long \
 	    -Wconversion -Wstrict-prototypes
 
-CFLAGS := $(CFLAGS) -nostdlib $(INCLUDES)
-
+CFLAGS := -g -Wall -Wextra -std=gnu99 -ffreestanding -nostdlib $(INCLUDES)
+CPPFLAGS =
+LDFLAGS =
+LIBS = -lgcc
 
 .PHONY: clean run
 .SUFFIXES: .o .c .s
