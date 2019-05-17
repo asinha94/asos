@@ -18,15 +18,13 @@ LINKSCRIPT = $(ARCHDIR)/linker.ld
 
 ARCHDIR ?= $(PREFIX)/arch/$(ARCH)
 ARCHOBJS := $(ARCHDIR)/boot.o $(ARCHDIR)/init_tables.o
-KERNSOURCES := $(shell find $(PREFIX) -name *.c)
-KERNOBJS := $(addprefix $(PREFIX),$(KERNSOURCES:%.c=%.o))
+KERNSOURCES := $(shell find $(PREFIX)/ -name *.c)
+KERNOBJS := $(KERNSOURCES:%.c=%.o)
 INCLUDES := -I$(PREFIX)/include
 
 #############################
 # Make Targets              #
 #############################
-
-OBJS := $(ARCHOBJS) $(KERNOBJS)
 
 WARNINGS := -Wall -Wextra -pedantic -Wshadow -Wpointer-arith -Wcast-align \
 	    -Wwrite-strings -Wmissing-prototypes -Wmissing-declarations \
@@ -41,9 +39,9 @@ LIBS = -lgcc
 .PHONY: clean run
 .SUFFIXES: .o .c .s
 
-asos.bin: $(OBJS) $(LINKSCRIPT)
+asos.bin: $(ARCHOBJS) $(KERNOBJS) $(LINKSCRIPT)
 	@mkdir -p $(DEST_DIR)
-	@$(CC) -T $(LINKSCRIPT) -o $(DEST_DIR)/$@ $(CFLAGS) $(OBJS)
+	@$(CC) -T $(LINKSCRIPT) -o $(DEST_DIR)/$@ $(CFLAGS) $(ARCHOBJS) $(KERNOBJS)
 	@grub-file --is-x86-multiboot $(DEST_DIR)/$@
 
 %.o : %.c
@@ -59,5 +57,8 @@ qemu: asos.bin
 	@qemu-system-i386 -s -S -kernel $(DEST_DIR)/asos.bin
 
 clean:
-	@rm -rf $(DEST_DIR) $(BUILD_DIR) $(OBJS) *.o */*.o */*/*.o
+	@rm -rf $(DEST_DIR) $(BUILD_DIR) $(ARCHOBJS) $(KERNOBJS) *.o */*.o */*/*.o
+
+print-%:
+	@echo $* = $($*)
 
