@@ -2,8 +2,8 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#include <kernel/tty.h>
-#include <kernel/segments.h>
+#include "tty.h"
+#include "segments.h"
 
 
 void kernel_main(void) {
