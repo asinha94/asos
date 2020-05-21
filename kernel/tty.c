@@ -1,7 +1,7 @@
 #include <stdbool.h>
 
-#include <arch/i686/vga.h>
-#include <kernel/tty.h>
+#include "vga.h"
+#include "tty.h"
 
 const size_t VGA_WIDTH = 80;
 const size_t VGA_HEIGHT = 25;

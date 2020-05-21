@@ -1,6 +1,6 @@
 #include <stdint.h>
 #include <stddef.h>
-#include <kernel/segments.h>
+#include "segments.h"
 
 //--------------------------------------------------------------------------------------------------------------
 // Macros
