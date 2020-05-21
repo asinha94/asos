@@ -22,14 +22,14 @@ stack_top:
         .global _start
         .type _start, @function
 _start:
-        mov $stack_top, %esp
+        mov esp, stack_top
 
         /* If I were to perform CPU initilization, it would be done here */
 
         /* Startup the higher level kernel */
         call kernel_main
 
-        /* If somehow our kernel has exited then it we need to do nothing
+        /* If somehow our kernel has exited then we need to do nothing
            disable all interrupts, wait for interrupts which won't come
            Then if we somehow escape from that then jump back into waiting
         */

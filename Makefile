@@ -11,7 +11,7 @@ LINKSCRIPT = $(SRC_DIR)/linker.ld
 ARCHOBJS := $(SRC_DIR)/boot.o $(SRC_DIR)/init_tables.o
 KERNSOURCES := $(shell find $(SRC_DIR)/ -name *.c)
 KERNOBJS := $(KERNSOURCES:%.c=%.o)
-INCLUDES := -Ikernal
+#INCLUDES := -Ikernal
 
 #############################
 # Make Targets              #
@@ -22,7 +22,8 @@ WARNINGS := -Wall -Wextra -pedantic -Wshadow -Wpointer-arith -Wcast-align \
 	    -Wredundant-decls -Wnested-externs -Winline -Wno-long-long \
 	    -Wconversion -Wstrict-prototypes
 
-CFLAGS := -g -Wall -Wextra -std=gnu99 -ffreestanding -nostdlib $(INCLUDES)
+CFLAGS := -g -Wall -Wextra -std=gnu99 -ffreestanding -nostdlib #$(INCLUDES)
+ASFLAGS := -msyntax=intel -mnaked-reg
 CPPFLAGS =
 LDFLAGS =
 LIBS = -lgcc
@@ -32,8 +33,8 @@ LIBS = -lgcc
 
 asos.bin: $(KERNOBJS) $(LINKSCRIPT)
 	@mkdir -p $(DEST_DIR)
-	@$(ASM) $(SRC_DIR)/boot.s -o $(SRC_DIR)/boot.o
-	@$(ASM) $(SRC_DIR)/init_tables.s -o $(SRC_DIR)/init_tables.o
+	@$(ASM) $(SRC_DIR)/boot.s -o $(SRC_DIR)/boot.o $(ASFLAGS)
+	@$(ASM) $(SRC_DIR)/init_tables.s -o $(SRC_DIR)/init_tables.o $(ASFLAGS)
 	@$(CC) -T $(LINKSCRIPT) -o $(DEST_DIR)/$@ $(CFLAGS) $(ARCHOBJS) $(KERNOBJS)
 	@grub-file --is-x86-multiboot $(DEST_DIR)/$@
 
