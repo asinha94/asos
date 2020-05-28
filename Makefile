@@ -8,9 +8,10 @@ CC = i686-elf-gcc
 ASM = i686-elf-as
 
 LINKSCRIPT = $(SRC_DIR)/linker.ld
-ARCHOBJS := $(SRC_DIR)/boot.o $(SRC_DIR)/init_tables.o
-KERNSOURCES := $(shell find $(SRC_DIR)/ -name *.c)
-KERNOBJS := $(KERNSOURCES:%.c=%.o)
+KERNSOURCES_C := $(shell find $(SRC_DIR)/ -name *.c)
+KERNSOURCES_ASM := $(shell find $(SRC_DIR)/ -name *.S)
+KERNOBJS_C := $(KERNSOURCES_C:%.c=%.o)
+KERNOBJS_ASM:= $(KERNSOURCES_ASM:%.S=%.o)
 #INCLUDES := -Ikernal
 
 #############################
@@ -29,17 +30,18 @@ LDFLAGS =
 LIBS = -lgcc
 
 .PHONY: clean run
-.SUFFIXES: .o .c .s
+.SUFFIXES: .o .c .S
 
-asos.bin: $(KERNOBJS) $(LINKSCRIPT)
+asos.bin: $(KERNOBJS_C) $(KERNOBJS_ASM) $(LINKSCRIPT)
 	@mkdir -p $(DEST_DIR)
-	@$(ASM) $(SRC_DIR)/boot.s -o $(SRC_DIR)/boot.o $(ASFLAGS)
-	@$(ASM) $(SRC_DIR)/init_tables.s -o $(SRC_DIR)/init_tables.o $(ASFLAGS)
-	@$(CC) -T $(LINKSCRIPT) -o $(DEST_DIR)/$@ $(CFLAGS) $(ARCHOBJS) $(KERNOBJS)
+	@$(CC) -T $(LINKSCRIPT) -o $(DEST_DIR)/$@ $(CFLAGS) $(ARCHOBJS) $(KERNOBJS_C) $(KERNOBJS_ASM)
 	@grub-file --is-x86-multiboot $(DEST_DIR)/$@
 
 %.o : %.c
 	@$(CC) -c $< -o $@ $(CFLAGS)
+
+%.o : %.S
+	@$(ASM) $< -o $@ $(ASFLAGS)
 
 run: asos.bin
 	@qemu-system-i386 -s -S -kernel $(DEST_DIR)/asos.bin -curses
