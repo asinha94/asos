@@ -43,6 +43,9 @@ asos.bin: $(KERNOBJS_C) $(KERNOBJS_ASM) $(LINKSCRIPT)
 %.o : %.S
 	@$(ASM) $< -o $@ $(ASFLAGS)
 
+debug: asos.bin
+	@qemu-system-i386 -s -S -kernel $(DEST_DIR)/asos.bin -curses
+
 run: asos.bin
 	@qemu-system-i386 -s -S -kernel $(DEST_DIR)/asos.bin -curses
 

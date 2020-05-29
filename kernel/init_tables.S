@@ -1,5 +1,5 @@
 .section .text
-.globl asm_init_gdt
+.global asm_init_gdt
 .type asm_init_gdt, @function
 
 asm_init_gdt:
