@@ -68,5 +68,5 @@ void load_gdt_table() {
     table.base = (uint32_t) &segments;
 
     // LGDT table
-    asm_init_gdt((uint32_t) &table);
+    // asm_init_gdt((uint32_t) &table);
 }

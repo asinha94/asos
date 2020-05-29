@@ -24,7 +24,7 @@ WARNINGS := -Wall -Wextra -pedantic -Wshadow -Wpointer-arith -Wcast-align \
 	    -Wconversion -Wstrict-prototypes
 
 CFLAGS := -g -Wall -Wextra -std=gnu99 -ffreestanding -nostdlib #$(INCLUDES)
-ASFLAGS := -msyntax=intel -mnaked-reg
+ASFLAGS := -mnaked-reg
 CPPFLAGS =
 LDFLAGS =
 LIBS = -lgcc
@@ -47,7 +47,7 @@ debug: asos.bin
 	@qemu-system-i386 -s -S -kernel $(DEST_DIR)/asos.bin -curses
 
 run: asos.bin
-	@qemu-system-i386 -S -kernel $(DEST_DIR)/asos.bin -curses
+	@qemu-system-i386 -kernel $(DEST_DIR)/asos.bin -curses
 
 qemu: asos.bin
 	@qemu-system-i386 -s -S -kernel $(DEST_DIR)/asos.bin

@@ -24,7 +24,7 @@ stack_top:
 .global _start
 .type _start, @function
 _start:
-        mov esp, stack_top
+        mov $stack_top, esp
 
         /* If I were to perform CPU initilization, it would be done here */
 
@@ -36,7 +36,7 @@ _start:
            Then if we somehow escape from that then jump back into waiting
         */
         cli
-1:      hlt
-        jmp 1b
+halt:   hlt
+        jmp halt
 
-        .size _start, . -_start
+.size _start, . -_start
