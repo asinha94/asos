@@ -24,7 +24,7 @@ WARNINGS := -Wall -Wextra -pedantic -Wshadow -Wpointer-arith -Wcast-align \
 	    -Wconversion -Wstrict-prototypes
 
 CFLAGS := -g -Wall -Wextra -std=gnu99 -ffreestanding -nostdlib #$(INCLUDES)
-ASFLAGS := -mnaked-reg
+ASFLAGS := #-mnaked-reg
 CPPFLAGS =
 LDFLAGS =
 LIBS = -lgcc

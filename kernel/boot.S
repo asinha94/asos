@@ -24,7 +24,7 @@ stack_top:
 .global _start
 .type _start, @function
 _start:
-        mov $stack_top, esp
+        mov $stack_top, %esp
 
         /* If I were to perform CPU initilization, it would be done here */
 
