@@ -18,9 +18,11 @@
 stack_bottom:
         .skip 16384 # 16 KiB
 stack_top:
-        .section .text
-        .global _start
-        .type _start, @function
+
+
+.section .text
+.global _start
+.type _start, @function
 _start:
         mov esp, stack_top
 

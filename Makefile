@@ -47,7 +47,7 @@ debug: asos.bin
 	@qemu-system-i386 -s -S -kernel $(DEST_DIR)/asos.bin -curses
 
 run: asos.bin
-	@qemu-system-i386 -s -S -kernel $(DEST_DIR)/asos.bin -curses
+	@qemu-system-i386 -S -kernel $(DEST_DIR)/asos.bin -curses
 
 qemu: asos.bin
 	@qemu-system-i386 -s -S -kernel $(DEST_DIR)/asos.bin
