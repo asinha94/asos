@@ -1,6 +1,7 @@
 gdtr dw 0 ; limit i.e table size (bytes)
      dd 0 ; base i.e table address
 
+global asm_init_gdt
 asm_init_gdt:
     ; SysV ABI - arguments are pushed onto stack right to left
     ; first argument is the 4-byte gdt table address
