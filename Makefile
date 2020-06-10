@@ -23,7 +23,7 @@ WARNINGS := -Wall -Wextra -pedantic -Wshadow -Wpointer-arith -Wcast-align \
 	    -Wconversion -Wstrict-prototypes
 
 LIBS = -lgcc
-INCLUDES := -Ikernal
+INCLUDES := -Ikernel
 CFLAGS := -g -Wall -Wextra -std=gnu99 -ffreestanding -nostdlib $(INCLUDES) $(LIBS)
 ASFLAGS := -f elf32
 CPPFLAGS =

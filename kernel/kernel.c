@@ -3,7 +3,7 @@
 #include <stdint.h>
 
 #include "tty.h"
-//#include <kernel/cpu/segments.h>
+#include <cpu/segments.h>
 
 
 void kernel_main(void) {
