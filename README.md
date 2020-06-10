@@ -7,11 +7,12 @@ My pet project in bootstrapping a bare-bones OS. The goal is for this to eventua
 - [X] Load GDT
 
 ## Work to be completed
-- [ ] Configure VGA/VESA graphics
+- [ ] Enable Protected mode with CR0 and verify 
 - [ ] Create IDT
 - [ ] Create keyboard handler
 - [ ] Create PIT/RTC drivers
-- [ ] Fully initialize Protected mode (Paging etc...)
+- [ ] Enabled Paging and move kernel to higher half?
+- [ ] Configure VGA/VESA graphics
 
 ## Optional
 - [ ] Use multiboot2
