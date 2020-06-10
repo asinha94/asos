@@ -1,6 +1,6 @@
 #include <stdint.h>
 #include <stddef.h>
-#include "segments.h"
+#include "gdt.h"
 
 //--------------------------------------------------------------------------------------------------------------
 // Macros
@@ -31,21 +31,14 @@
 #define GDT_LIMIT_UPPER(base) (base & GDT_LIMIT_UPPER_SHIFT) >> GDT_LIMIT_UPPER_SHIFT
 
 
-//--------------------------------------------------------------------------------------------------------------
-// Global local variables
-//--------------------------------------------------------------------------------------------------------------
 gdt_segments segments[GDT_SIZE];
-gdt_ptr table;
+//gdt_ptr gdt_table;
 
-//--------------------------------------------------------------------------------------------------------------
-// Declarations
-//-------------------------------------------------------------------------------------------------------------
-extern int asm_init_gdt(uint32_t gdt_address);
+/* ASM function which loads the GDT for us */
+extern int asm_init_gdt(uint32_t gdt_address, uint16_t gdt_table_size);
 
-//--------------------------------------------------------------------------------------------------------------
-// Function definitions
-//--------------------------------------------------------------------------------------------------------------
-void insert_gdt_entry(size_t entry, uint32_t position, uint32_t length, uint8_t type, uint8_t granularity) {
+
+static void insert_gdt_entry(size_t entry, uint32_t position, uint32_t length, uint8_t type, uint8_t granularity) {
     if (entry >= GDT_SIZE) return;
 
     segments[entry].type = type;
@@ -57,16 +50,18 @@ void insert_gdt_entry(size_t entry, uint32_t position, uint32_t length, uint8_t 
 }
 
 void load_gdt_table() {
-    insert_gdt_entry(0, 0, 0x00000000, 0x00, 0x00); // Null segment
+    // // Null segment
+    insert_gdt_entry(0, 0, 0x00000000, 0x00, 0x00); 
+    // You will notice that the bottom 4 entries look very similar
+    // this is because segmentation is a lot of work
+    // we prefer to handle memory management through paging
     insert_gdt_entry(1, 0, 0xFFFFFFFF, 0x9A, 0xCF); // Kernel Code segment
     insert_gdt_entry(2, 0, 0xFFFFFFFF, 0x92, 0xCF); // Kernel Data segment
     insert_gdt_entry(3, 0, 0xFFFFFFFF, 0xFA, 0xCF); // User Code segment
     insert_gdt_entry(4, 0, 0xFFFFFFFF, 0xFA, 0xCF); // User Code segment
 
-    // pass table address to CPU
-    table.length = (sizeof(gdt_segments) * GDT_SIZE) - 1;
-    table.base = (uint32_t) &segments;
-
-    // LGDT table
-    // asm_init_gdt((uint32_t) &table);
+    // load GDT at table address
+    //gdt_table.length = sizeof(gdt_table);
+    //gdt_table.table_addr = (uint32_t) segments;
+    asm_init_gdt(segments, sizeof(segments));
 }
