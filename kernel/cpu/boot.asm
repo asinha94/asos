@@ -29,9 +29,6 @@ _start:
         ; setup stack
         mov esp, stack_top
 
-        ; TODO: Load GDT
-        ; TODO: enabled paging
-
         ; Startup the higher level kernel
         extern kernel_main
         call kernel_main

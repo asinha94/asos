@@ -63,5 +63,5 @@ void load_gdt_table() {
     // load GDT at table address
     //gdt_table.length = sizeof(gdt_table);
     //gdt_table.table_addr = (uint32_t) segments;
-    asm_init_gdt(segments, sizeof(segments));
+    asm_init_gdt((uint32_t) &segments, sizeof(segments));
 }
