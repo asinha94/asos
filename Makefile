@@ -5,14 +5,13 @@ BUILD_DIR = $(PREFIX)/build
 SRC_DIR = $(PREFIX)/kernel
 
 CC = i686-elf-gcc
-ASM = i686-elf-as
+ASM = nasm
 
 LINKSCRIPT = $(SRC_DIR)/linker.ld
 KERNSOURCES_C := $(shell find $(SRC_DIR)/ -name *.c)
-KERNSOURCES_ASM := $(shell find $(SRC_DIR)/ -name *.S)
-KERNOBJS_C := $(KERNSOURCES_C:%.c=%.o)
-KERNOBJS_ASM:= $(KERNSOURCES_ASM:%.S=%.o)
-#INCLUDES := -Ikernal
+KERNSOURCES_ASM := $(shell find $(SRC_DIR)/ -name *.asm)
+KERNOBJS := $(KERNSOURCES_C:%.c=%.o)  $(KERNSOURCES_ASM:%.asm=%.o)
+
 
 #############################
 # Make Targets              #
@@ -23,37 +22,38 @@ WARNINGS := -Wall -Wextra -pedantic -Wshadow -Wpointer-arith -Wcast-align \
 	    -Wredundant-decls -Wnested-externs -Winline -Wno-long-long \
 	    -Wconversion -Wstrict-prototypes
 
-CFLAGS := -g -Wall -Wextra -std=gnu99 -ffreestanding -nostdlib #$(INCLUDES)
-ASFLAGS := #-mnaked-reg
-CPPFLAGS =
-LDFLAGS =
 LIBS = -lgcc
+INCLUDES := -Ikernal
+CFLAGS := -g -Wall -Wextra -std=gnu99 -ffreestanding -nostdlib $(INCLUDES) $(LIBS)
+ASFLAGS := -f elf32
+CPPFLAGS =
+
 
 .PHONY: clean run
 .SUFFIXES: .o .c .S
 
-asos.bin: $(KERNOBJS_C) $(KERNOBJS_ASM) $(LINKSCRIPT)
+asos.bin: $(KERNOBJS) $(LINKSCRIPT)
 	@mkdir -p $(DEST_DIR)
-	@$(CC) -T $(LINKSCRIPT) -o $(DEST_DIR)/$@ $(CFLAGS) $(ARCHOBJS) $(KERNOBJS_C) $(KERNOBJS_ASM)
+	@$(CC) -T $(LINKSCRIPT) -o $(DEST_DIR)/$@ $(CFLAGS) $(KERNOBJS)
 	@grub-file --is-x86-multiboot $(DEST_DIR)/$@
 
 %.o : %.c
 	@$(CC) -c $< -o $@ $(CFLAGS)
 
-%.o : %.S
-	@$(ASM) $< -o $@ $(ASFLAGS)
+%.o : %.asm
+	@$(ASM) $(ASFLAGS) $< -o $@ 
 
 debug: asos.bin
 	@qemu-system-i386 -s -S -kernel $(DEST_DIR)/asos.bin -curses
 
-run: asos.bin
+run-term: asos.bin
 	@qemu-system-i386 -kernel $(DEST_DIR)/asos.bin -curses
 
 qemu: asos.bin
-	@qemu-system-i386 -s -S -kernel $(DEST_DIR)/asos.bin
+	@qemu-system-i386 -kernel $(DEST_DIR)/asos.bin
 
 clean:
-	@rm -rf $(DEST_DIR) $(BUILD_DIR) $(ARCHOBJS) $(KERNOBJS) *.o */*.o */*/*.o
+	@rm -rf $(DEST_DIR) $(BUILD_DIR) $(ARCHOBJS) $(KERNOBJS) *.o */*.o */*/*.o */*/*/*.o
 
 print-%:
 	@echo $* = $($*)
