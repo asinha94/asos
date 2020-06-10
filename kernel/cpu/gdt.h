@@ -12,16 +12,16 @@ struct gdt_struct {
     uint8_t granularity;
     uint8_t base_upper;
 } __attribute__ ((packed));
+typedef struct gdt_struct gdt_segments;
 
 struct gdt_table_ptr {
     uint16_t length;
-    uint32_t base;
+    uint32_t table_addr;
 } __attribute__ ((packed));
-
-typedef struct gdt_struct gdt_segments;
 typedef struct gdt_table_ptr gdt_ptr;
 
-void insert_gdt_entry(size_t entry, uint32_t position, uint32_t length, uint8_t type, uint8_t granularity);
+
+
 void load_gdt_table();
 
 #endif
