@@ -5,12 +5,13 @@ My pet project in bootstrapping a bare-bones OS. The goal is for this to eventua
 ## Completed:
 - [X] Boot into kernel code
 - [X] Load GDT
+- [X] Enable Protected mode with CR0 and verify 
 
 ## Work to be completed
-- [ ] Enable Protected mode with CR0 and verify 
+- [ ] Create kprintf for debugging
 - [ ] Create IDT
+- [ ] Create APIC/PIT/RTC drivers
 - [ ] Create keyboard handler
-- [ ] Create PIT/RTC drivers
 - [ ] Enabled Paging and move kernel to higher half?
 - [ ] Configure VGA/VESA graphics
 

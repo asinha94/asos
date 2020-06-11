@@ -26,8 +26,25 @@ stack_top:
 section .text
 global _start:function (_start.end - _start)
 _start:
+        ;; disable interrupts
+        cli
+
         ; setup stack
         mov esp, stack_top
+        
+        ; If grub is removed, we need to setup 80x25 video mode ourselves
+        ; this should be done here maybe?
+
+        ; Set A20 so we can access >1 MB of memory
+        ; This is unecceary atm because Grub has already done this
+        in al, 0x92
+        or al, 2
+        out 0x92, al
+
+        ; Set protected mode bit on CR0
+        mov eax, cr0
+        or eax, 0x1
+        mov cr0, eax
 
         ; Startup the higher level kernel
         extern kernel_main

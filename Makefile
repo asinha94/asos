@@ -3,8 +3,10 @@ PREFIX = $(shell pwd)
 DEST_DIR = $(PREFIX)/bin
 BUILD_DIR = $(PREFIX)/build
 SRC_DIR = $(PREFIX)/kernel
+CC_VERSION = gcc-7.5.0
+CROSS_CC_DIR = $(PREFIX)/../build/$(CC_VERSION)/bin
 
-CC = i686-elf-gcc
+CC = $(CROSS_CC_DIR)/i686-elf-gcc
 ASM = nasm
 
 LINKSCRIPT = $(SRC_DIR)/linker.ld
