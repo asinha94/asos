@@ -2,8 +2,8 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#include "tty.h"
-#include <cpu/gdt.h>
+#include <display/tty.h>
+#include <boot/gdt.h>
 
 
 void kernel_main(void) {

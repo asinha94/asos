@@ -10,7 +10,8 @@ My pet project in bootstrapping a bare-bones OS. The goal is for this to eventua
 ## Work to be completed
 - [ ] Create kprintf for debugging
 - [ ] Create IDT
-- [ ] Create APIC/PIT/RTC drivers
+- [ ] Create (A)PIC driver
+- [ ] Create PIT/RTC drivers
 - [ ] Create keyboard handler
 - [ ] Enabled Paging and move kernel to higher half?
 - [ ] Configure VGA/VESA graphics
