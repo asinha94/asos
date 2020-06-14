@@ -10,7 +10,7 @@ QEMU = /mnt/c/Program\ Files/qemu/qemu-system-i386.exe
 CC = $(CROSS_CC_DIR)/i686-elf-gcc
 ASM = nasm
 
-LINKSCRIPT = $(SRC_DIR)/linker.ld
+LINKSCRIPT = $(SRC_DIR)/boot/linker.ld
 KERNSOURCES_C := $(shell find $(SRC_DIR)/ -name *.c)
 KERNSOURCES_ASM := $(shell find $(SRC_DIR)/ -name *.asm)
 KERNOBJS := $(KERNSOURCES_C:%.c=%.o)  $(KERNSOURCES_ASM:%.asm=%.o)

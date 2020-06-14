@@ -15,10 +15,11 @@
 #define CREATE_TYPE_ATTR(syscall) 0x80 | ((syscall) ? 0x6F : 0x0E)
 
 extern void asm_unhandled_isr();
-extern void asm_init_idt(uint32_t idt_address, uint16_t idt_table_size);
+extern void asm_init_idt(uint32_t idt_address);
 
 // IDT table to be loaded
-idt_descriptor idt_entries[IDT_SIZE];
+idt_entries entries[IDT_SIZE];
+idt_table idt;
 
 
 static void insert_idt_entry(
@@ -26,18 +27,18 @@ static void insert_idt_entry(
     uint8_t is_syscall,
     uint32_t handler)
 {
-    idt_entries[index].offset_l = HANDLER_LOWER_ADDR(handler);
+    entries[index].offset_l = HANDLER_LOWER_ADDR(handler);
 
     // Selector tells the CPU what GDT segment, CPL etc... we want to be in
     // when we run this handler. The Answer is always the same...Kernel space
     // Look here for details https://wiki.osdev.org/Selector
-    idt_entries[index].selector = 0x8; //0b 0000 0000 0000 1000
-    idt_entries[index].zero = 0; // always zero
+    entries[index].selector = 0x8; //0b 0000 0000 0000 1000
+    entries[index].zero = 0; // always zero
 
     // Type attribute tells us who/what is calling this routine
     // https://wiki.osdev.org/Interrupts_Descriptor_Table for more details
-    idt_entries[index].type_attr = CREATE_TYPE_ATTR(is_syscall);
-    idt_entries[index].offset_h = HANDLER_UPPER_ADDR(handler);
+    entries[index].type_attr = CREATE_TYPE_ATTR(is_syscall);
+    entries[index].offset_h = HANDLER_UPPER_ADDR(handler);
 }
 
 void init_idt()
@@ -52,7 +53,9 @@ void init_idt()
 
     // load the table, and re-enable interrupts
     // same deal as GDT, pass in table address and size(-1)
-    asm_init_idt((uint32_t) &idt_entries, (uint16_t) sizeof(idt_entries)-1);
+    idt.length = (uint16_t) sizeof(entries) - 1;
+    idt.entries_addr = (uint32_t) &entries;
+    asm_init_idt((uint32_t) &idt);
      
     tty_writestring("Interrupts enabled\n");
 }
