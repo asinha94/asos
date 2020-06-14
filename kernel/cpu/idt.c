@@ -43,7 +43,7 @@ static void insert_idt_entry(
 
 void init_idt()
 {
-    tty_writestring("Creating IDT entries\n");
+    kernprintf("Creating IDT entries\n");
     // Insert default handlers for all 256 interrupts
     for (size_t i = 0; i < IDT_SIZE; ++i) {
         insert_idt_entry(i, 0, (uint32_t) asm_unhandled_isr);
@@ -57,5 +57,5 @@ void init_idt()
     idt.entries_addr = (uint32_t) &entries;
     asm_init_idt((uint32_t) &idt);
      
-    tty_writestring("Interrupts enabled\n");
+    kernprintf("Interrupts enabled\n");
 }

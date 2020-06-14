@@ -10,6 +10,16 @@ static size_t tty_column;
 static uint8_t tty_color;
 static uint16_t* tty_buffer;
 
+size_t strlen(const char* str);
+static void tty_writechars(const char* data, size_t size);
+static void tty_clear_from(uint8_t linum);
+static void tty_setcolor(uint8_t color);
+static void tty_scroll_up_lines(uint8_t num_lines);
+static inline bool is_escape_char(char c);
+static void handle_escape_char(char c);
+static void tty_putchar(char c);
+static void tty_writechars(const char* data, size_t size);
+
 
 size_t strlen(const char* str) {
     size_t len = 0;
@@ -78,7 +88,7 @@ static void handle_escape_char(char c)
         tty_row++;
         break;
     case '\t':
-        tty_writestring("    ");
+        tty_writechars("    ", 4);
     default:
         break;
     }
@@ -114,13 +124,13 @@ static void tty_writechars(const char* data, size_t size)
 }
 
 
-void tty_writestring(const char* data)
+void kernprintf(const char* data)
 {
     tty_writechars(data, strlen(data));
 }
 
 
-void tty_init(void)
+void init_tty(void)
 {
     tty_row = 0;
     tty_column = 0;

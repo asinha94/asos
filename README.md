@@ -9,9 +9,9 @@ My pet project in bootstrapping a bare-bones OS. The goal is for this to eventua
 - [X] Create IDT
 
 ## Work to be completed
-- [ ] Create kprintf for debugging
-- [ ] Create (A)PIC driver
+- [ ] Remap (A)PIC IRQ lines and create handlers
 - [ ] Create PIT/RTC drivers
+- [ ] Create kprintf for debugging
 - [ ] Create keyboard handler
 - [ ] Enabled Paging and move kernel to higher half?
 - [ ] Configure VGA/VESA graphics

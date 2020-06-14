@@ -10,8 +10,8 @@
 void kernel_main(void)
 {
     // Init all of the Protected Mode Services
-    tty_init();
-    tty_writestring("Initializing Kernel\n");
+    init_tty();
+    kernprintf("Initializing Kernel\n");
     init_gdt();
     init_idt();
 
