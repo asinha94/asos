@@ -9,7 +9,7 @@ CROSS_CC_DIR = $(PREFIX)/../build/$(CC_VERSION)/bin
 CC = $(CROSS_CC_DIR)/i686-elf-gcc
 ASM = nasm
 
-LINKSCRIPT = $(SRC_DIR)/boot/linker.ld
+LINKSCRIPT = $(SRC_DIR)/linker.ld
 KERNSOURCES_C := $(shell find $(SRC_DIR)/ -name *.c)
 KERNSOURCES_ASM := $(shell find $(SRC_DIR)/ -name *.asm)
 KERNOBJS := $(KERNSOURCES_C:%.c=%.o)  $(KERNSOURCES_ASM:%.asm=%.o)
@@ -32,7 +32,7 @@ CPPFLAGS =
 
 
 .PHONY: clean run
-.SUFFIXES: .o .c .S
+.SUFFIXES: .o .c .asm
 
 asos.bin: $(KERNOBJS) $(LINKSCRIPT)
 	@mkdir -p $(DEST_DIR)
@@ -49,7 +49,7 @@ debug: asos.bin
 	@qemu-system-i386 -s -S -kernel $(DEST_DIR)/asos.bin -curses
 
 run-term: asos.bin
-	@qemu-system-i386 -kernel $(DEST_DIR)/asos.bin -curses
+	@qemu-system-i386 -kernel $(DEST_DIR)/asos.bin -curses -no-reboot
 
 qemu: asos.bin
 	@qemu-system-i386 -kernel $(DEST_DIR)/asos.bin

@@ -1,7 +1,6 @@
 #include <stdbool.h>
 
-#include "vga.h"
-#include "tty.h"
+#include <display/tty.h>
 
 const size_t VGA_WIDTH = 80;
 const size_t VGA_HEIGHT = 25;
@@ -20,7 +19,8 @@ size_t strlen(const char* str) {
 }
 
 
-static void tty_clear_from(uint8_t linum) {
+static void tty_clear_from(uint8_t linum)
+{
     /* clear all lines from linum onwards */
     for (size_t y = linum; y < VGA_HEIGHT; y++) {
         const size_t line = y * VGA_WIDTH;
@@ -33,12 +33,14 @@ static void tty_clear_from(uint8_t linum) {
 }
 
 
-static void tty_setcolor(uint8_t color) {
+static void tty_setcolor(uint8_t color)
+{
     tty_color = color;
 }
 
 
-static void tty_scroll_up_lines(uint8_t num_lines) {
+static void tty_scroll_up_lines(uint8_t num_lines)
+{
     if (num_lines > VGA_HEIGHT)
         num_lines = VGA_HEIGHT;
 
@@ -59,11 +61,13 @@ static void tty_scroll_up_lines(uint8_t num_lines) {
 
 }
 
-static inline bool is_escape_char(char c) {
+static inline bool is_escape_char(char c)
+{
     return c == '\n' || c == '\r' || c == '\t';
 }
 
-static void handle_escape_char(char c) {
+static void handle_escape_char(char c)
+{
     switch (c) {
     case '\n':
         tty_column = 0;
@@ -80,7 +84,8 @@ static void handle_escape_char(char c) {
     }
 }
 
-static void tty_putchar(char c) {
+static void tty_putchar(char c)
+{
     if (is_escape_char(c)) {
         handle_escape_char(c);
         return;
@@ -100,7 +105,8 @@ static void tty_putchar(char c) {
 }
 
 
-static void tty_writechars(const char* data, size_t size) {
+static void tty_writechars(const char* data, size_t size)
+{
     for (size_t i = 0; i < size; i++ ) {
         tty_putchar(data[i]);
     }
@@ -108,12 +114,14 @@ static void tty_writechars(const char* data, size_t size) {
 }
 
 
-void tty_writestring(const char* data) {
+void tty_writestring(const char* data)
+{
     tty_writechars(data, strlen(data));
 }
 
 
-void tty_init(void) {
+void tty_init(void)
+{
     tty_row = 0;
     tty_column = 0;
     tty_buffer = (uint16_t*) 0xB8000;

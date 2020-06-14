@@ -24,7 +24,7 @@ asm_init_gdt:
     ; CS is the only register we can't change with mov
     ; so we have to perform a far-jump to change it
     ; so the affects of the GDT take place
-    ; also we need to clear the fetch queue
+    ; also we need to clear the input prefetch queue
     jmp 0x08:.reload_cs
 
 .reload_cs:

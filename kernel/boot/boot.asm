@@ -15,7 +15,7 @@ align 4
         dd CHECKSUM
 
 ; Time to create our own small stack
-; System V ABI requires a 16-bit aligned stack
+; System V ABI requires a 16-byte aligned stack
 section .bss
 align 16  
 stack_bottom:

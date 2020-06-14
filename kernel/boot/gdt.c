@@ -1,10 +1,8 @@
 #include <stdint.h>
 #include <stddef.h>
-#include "gdt.h"
+#include <display/tty.h>
+#include <boot/gdt.h>
 
-//--------------------------------------------------------------------------------------------------------------
-// Macros
-//--------------------------------------------------------------------------------------------------------------
 #define GDT_SIZE 5
 
 // GDT Masks
@@ -24,21 +22,27 @@
 
 // GDT Macros
 #define GDT_BASE_LOWER(base)  (base & GDT_MASK_BASE_LOWER)
-#define GDT_BASE_MIDDLE(base) (base & GDT_MASK_BASE_MIDDLE) >> GDT_BASE_MIDDLE_SHIFT
+#define GDT_BASE_MIDDLE(base) ((base & GDT_MASK_BASE_MIDDLE) >> GDT_BASE_MIDDLE_SHIFT)
 #define GDT_BASE_UPPER(base)  (base & GDT_MASK_BASE_UPPPER) >> GDT_BASE_UPPER_SHIFT
 
-#define GDT_LIMIT_LOWER(base) (base & GDT_LIMIT_LOWER_SHIFT) >> GDT_LIMIT_LOWER_SHIFT
-#define GDT_LIMIT_UPPER(base) (base & GDT_LIMIT_UPPER_SHIFT) >> GDT_LIMIT_UPPER_SHIFT
+#define GDT_LIMIT_LOWER(base) ((base & GDT_LIMIT_LOWER_SHIFT) >> GDT_LIMIT_LOWER_SHIFT)
+#define GDT_LIMIT_UPPER(base) ((base & GDT_LIMIT_UPPER_SHIFT) >> GDT_LIMIT_UPPER_SHIFT)
 
 
 gdt_segments segments[GDT_SIZE];
-//gdt_ptr gdt_table;
+
 
 /* ASM function which loads the GDT for us */
 extern int asm_init_gdt(uint32_t gdt_address, uint16_t gdt_table_size);
 
 
-static void insert_gdt_entry(size_t entry, uint32_t position, uint32_t length, uint8_t type, uint8_t granularity) {
+static void insert_gdt_entry(
+    size_t entry,
+    uint32_t position,
+    uint32_t length,
+    uint8_t type,
+    uint8_t granularity)
+{
     if (entry >= GDT_SIZE) return;
 
     segments[entry].type = type;
@@ -49,7 +53,8 @@ static void insert_gdt_entry(size_t entry, uint32_t position, uint32_t length, u
     segments[entry].base_upper  = GDT_BASE_UPPER(position);
 }
 
-void load_gdt_table() {
+void init_gdt()
+{
     // // Null segment
     insert_gdt_entry(0, 0, 0x00000000, 0x00, 0x00); 
     // You will notice that the bottom 4 entries look very similar
@@ -61,7 +66,7 @@ void load_gdt_table() {
     insert_gdt_entry(4, 0, 0xFFFFFFFF, 0xFA, 0xCF); // User Code segment
 
     // load GDT at table address
-    //gdt_table.length = sizeof(gdt_table);
-    //gdt_table.table_addr = (uint32_t) segments;
-    asm_init_gdt((uint32_t) &segments, sizeof(segments));
+    // why is the size - 1?
+    asm_init_gdt((uint32_t) &segments, (uint16_t) sizeof(segments)-1);
+    tty_writestring("GDT initialized\n");
 }
