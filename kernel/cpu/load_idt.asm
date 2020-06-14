@@ -10,7 +10,7 @@ asm_unhandled_isr:
 global asm_init_idt
 asm_init_idt:
     mov eax, [esp + 4] ;; copy 4 byte address
-    mov [idt + 1], eax
+    mov [idt + 2], eax
     mov ax, [esp + 8] ;; copy 2 byte size
     mov [idt], ax
     lidt [idt]

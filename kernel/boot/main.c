@@ -15,12 +15,8 @@ void kernel_main(void)
     init_gdt();
     init_idt();
 
-    size_t i = 0;
     while (1) {
-        if (i > 1000) {
-            i = 0;
-        }
-        i++;
+        tty_writestring(".");
     }
     
 }

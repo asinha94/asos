@@ -6,6 +6,7 @@ SRC_DIR = $(PREFIX)/kernel
 CC_VERSION = gcc-7.5.0
 CROSS_CC_DIR = $(PREFIX)/../build/$(CC_VERSION)/bin
 
+QEMU = /mnt/c/Program\ Files/qemu/qemu-system-i386.exe
 CC = $(CROSS_CC_DIR)/i686-elf-gcc
 ASM = nasm
 
@@ -46,13 +47,10 @@ asos.bin: $(KERNOBJS) $(LINKSCRIPT)
 	@$(ASM) $(ASFLAGS) $< -o $@ 
 
 debug: asos.bin
-	@qemu-system-i386 -s -S -kernel $(DEST_DIR)/asos.bin -curses
-
-run-term: asos.bin
-	@qemu-system-i386 -kernel $(DEST_DIR)/asos.bin -curses -no-reboot
+	@$(QEMU) -s -S -kernel $(DEST_DIR)/asos.bin -no-reboot -monitor stdio
 
 qemu: asos.bin
-	@qemu-system-i386 -kernel $(DEST_DIR)/asos.bin
+	@$(QEMU) -kernel $(DEST_DIR)/asos.bin -no-reboot  -monitor stdio
 
 clean:
 	@rm -rf $(DEST_DIR) $(BUILD_DIR) $(ARCHOBJS) $(KERNOBJS) *.o */*.o */*/*.o */*/*/*.o
