@@ -16,7 +16,7 @@ void kernel_main(void)
     init_idt();
 
     while (1) {
-        tty_writestring(".");
+        
     }
     
 }

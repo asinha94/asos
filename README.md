@@ -5,11 +5,11 @@ My pet project in bootstrapping a bare-bones OS. The goal is for this to eventua
 ## Completed:
 - [X] Boot into kernel code
 - [X] Load GDT
-- [X] Enable Protected mode with CR0 and verify 
+- [X] Enable Protected mode with CR0 and verify
+- [X] Create IDT
 
 ## Work to be completed
 - [ ] Create kprintf for debugging
-- [ ] Create IDT
 - [ ] Create (A)PIC driver
 - [ ] Create PIT/RTC drivers
 - [ ] Create keyboard handler

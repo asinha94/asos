@@ -30,10 +30,11 @@
 
 
 gdt_segments segments[GDT_SIZE];
+gdt_table gdt;
 
 
 /* ASM function which loads the GDT for us */
-extern int asm_init_gdt(uint32_t gdt_address, uint16_t gdt_table_size);
+extern int asm_init_gdt(uint32_t gdt_address);
 
 
 static void insert_gdt_entry(
@@ -67,6 +68,8 @@ void init_gdt()
 
     // load GDT at table address
     // why is the size - 1?
-    asm_init_gdt((uint32_t) &segments, (uint16_t) sizeof(segments)-1);
+    gdt.length = sizeof(segments) - 1;
+    gdt.segments_addr = (uint32_t) &segments;
+    asm_init_gdt((uint32_t) &gdt);
     tty_writestring("GDT initialized\n");
 }

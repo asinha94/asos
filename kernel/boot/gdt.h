@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <stddef.h>
 
-struct gdt_struct {
+struct gdt_segment_struct {
     uint16_t limit_lower;
     uint16_t base_lower;
     uint8_t  base_middle;
@@ -12,13 +12,13 @@ struct gdt_struct {
     uint8_t  granularity;
     uint8_t  base_upper;
 } __attribute__ ((packed));
-typedef struct gdt_struct gdt_segments;
+typedef struct gdt_segment_struct gdt_segments;
 
-struct gdt_table_ptr {
+struct gdt_table_struct {
     uint16_t length;
-    uint32_t table_addr;
+    uint32_t segments_addr;
 } __attribute__ ((packed));
-typedef struct gdt_table_ptr gdt_ptr;
+typedef struct gdt_table_struct gdt_table;
 
 
 extern void init_gdt();
