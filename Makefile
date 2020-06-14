@@ -4,7 +4,7 @@ DEST_DIR = $(PREFIX)/bin
 BUILD_DIR = $(PREFIX)/build
 SRC_DIR = $(PREFIX)/kernel
 CC_VERSION = gcc-7.5.0
-CROSS_CC_DIR = $(PREFIX)/../build/$(CC_VERSION)/bin
+CROSS_CC_DIR = $(BUILD_DIR)/$(CC_VERSION)/bin
 
 QEMU = /mnt/c/Program\ Files/qemu/qemu-system-i386.exe
 CC = $(CROSS_CC_DIR)/i686-elf-gcc
@@ -53,7 +53,7 @@ qemu: asos.bin
 	@$(QEMU) -kernel $(DEST_DIR)/asos.bin -no-reboot  -monitor stdio
 
 clean:
-	@rm -rf $(DEST_DIR) $(BUILD_DIR) $(ARCHOBJS) $(KERNOBJS) *.o */*.o */*/*.o */*/*/*.o
+	@rm -rf $(DEST_DIR) $(ARCHOBJS) $(KERNOBJS)  $(shell find $(SRC_DIR)/ -name *.o)
 
 print-%:
 	@echo $* = $($*)

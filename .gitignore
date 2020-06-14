@@ -1,7 +1,4 @@
-cc/
-cc-files/
 **/build
 **/bin
 **/*.o
 .vscode/ipch
-.gdb_history
