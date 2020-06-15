@@ -49,7 +49,7 @@ _start:
         ; Startup the higher level kernel
         extern kernel_main
         call kernel_main
-
+        hlt
         ; If somehow our kernel has exited then we need to do nothing
         ; disable all interrupts, wait for interrupts which won't come
         ; Then if we somehow escape from that then jump back into waiting

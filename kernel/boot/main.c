@@ -24,10 +24,7 @@ void kernel_main(void)
     // Enables Interrupts
     enable_interrupts();
 
-    volatile int i = 1;
-    while (i) {
-        
-    }
+    return; // call halt in boot.asm for now
     
 }
 
