@@ -46,10 +46,10 @@ asos.bin: $(KERNOBJS) $(LINKSCRIPT)
 %.o : %.asm
 	@$(ASM) $(ASFLAGS) $< -o $@ 
 
-debug: asos.bin
+qemu-dbg: asos.bin
 	@$(QEMU) -s -S -kernel $(DEST_DIR)/asos.bin -no-reboot -monitor stdio
 
-run: asos.bin
+qemu-run: asos.bin
 	@$(QEMU) -kernel $(DEST_DIR)/asos.bin -no-reboot  -monitor stdio
 
 gdb: asos.bin

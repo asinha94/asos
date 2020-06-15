@@ -5,7 +5,6 @@
 #include <display/tty.h>
 #include <boot/gdt.h>
 #include <cpu/idt.h>
-#include <cpu/pic.h>
 #include <cpu/hal.h>
 
 
@@ -21,7 +20,6 @@ void kernel_main(void)
 
     // Install IDT and IRQ handlers
     init_idt();
-    init_8259PIC();
 
     // Enables Interrupts
     enable_interrupts();

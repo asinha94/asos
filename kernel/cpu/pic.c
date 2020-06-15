@@ -23,7 +23,7 @@
 #define PIC_SLAVE_CASCADE_IRQ    0x02
 
 
-void init_8259PIC()
+void remap_pic_irq()
 {
     // save masks
     uint8_t imr1 = inportb(PIC_MASTER_DATA_PORT);
@@ -57,4 +57,49 @@ void init_8259PIC()
     outportb(PIC_MASTER_DATA_PORT, imr1);
     outportb(PIC_SLAVE_DATA_PORT, imr2);
     kernprintf("PIC intialized\n");
+}
+
+void irq_clear_mask(uint8_t irq_number)
+{
+    uint16_t port;
+    uint8_t data;
+
+    if (irq_number < 8) {
+        // Master
+        port = PIC_MASTER_DATA_PORT;
+    } else {
+        // Slave
+        port = PIC_SLAVE_DATA_PORT;
+        irq_number -= 8;
+    }
+
+    // Current mask
+    data = inportb(port) & ~(1 << irq_number);
+    // Flip bit corresponding to irq_number
+    outportb(port, data);
+}
+
+
+void irq_set_mask(uint8_t irq_number)
+{
+    uint16_t port;
+    uint8_t data;
+
+    if (irq_number < 8) {
+        // Master
+        port = PIC_MASTER_DATA_PORT;
+    } else {
+        // Slave
+        port = PIC_SLAVE_DATA_PORT;
+        irq_number -= 8;
+    }
+
+    // Current mask
+    data = inportb(port) | (1 << irq_number);
+    outportb(port, data);
+}
+
+void irq_eoi()
+{
+    return;
 }

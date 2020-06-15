@@ -1,5 +1,11 @@
-global asm_unhandled_isr
-asm_unhandled_isr:
+global asm_exception_handler
+asm_exception_handler:
+    ; Default ISR which does nothing
+    iret
+
+
+global asm_irq_handler
+asm_irq_handler:
     ; Default ISR which does nothing
     iret
 
