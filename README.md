@@ -9,7 +9,7 @@ My pet project in bootstrapping a bare-bones OS. The goal is for this to eventua
 - [X] Create IDT
 
 ## Work to be completed
-- [ ] Fix issue where LIDT is called twice?
+- [ ] Double check GDT and IDT again
 - [ ] Create keyboard handler
 - [ ] Create kprintf for debugging
 - [ ] Create PIT/RTC drivers
