@@ -24,7 +24,8 @@ void kernel_main(void)
     // Enables Interrupts
     enable_interrupts();
 
-    while (1) {
+    volatile int i = 1;
+    while (i) {
         
     }
     

@@ -201,5 +201,3 @@ asm_handler_irq14:
 global asm_handler_irq15
 asm_handler_irq15:
     iret
-
-

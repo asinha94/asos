@@ -141,7 +141,7 @@ void init_idt()
 
     // Mask out unused IRQs
     irq_clear_mask(0);
-    irq_clear_mask(1);
+    irq_set_mask(1);//irq_clear_mask(1);
     irq_clear_mask(2);
     irq_clear_mask(3);
     irq_clear_mask(4);

@@ -26,13 +26,13 @@
 void remap_pic_irq()
 {
     // save masks
-    uint8_t imr1 = inportb(PIC_MASTER_DATA_PORT);
-    uint8_t imr2 = inportb(PIC_SLAVE_DATA_PORT);
+    //uint8_t imr1 = inportb(PIC_MASTER_DATA_PORT);
+    //uint8_t imr2 = inportb(PIC_SLAVE_DATA_PORT);
 
     // Start initialization sequence of both master and slace
     outportb(PIC_MASTER_CMD_PORT, ICW1_INIT | PIC_ICW1_ICW4);
     io_wait();
-    outportb(PIC_SLAVE_CMD_PORT, ICW1_INIT | PIC_ICW1_ICW4);
+    outportb(PIC_SLAVE_CMD_PORT,  ICW1_INIT | PIC_ICW1_ICW4);
     io_wait();
 
     // Remap Vector offsets to non-reserved range
@@ -53,10 +53,10 @@ void remap_pic_irq()
     outportb(PIC_SLAVE_DATA_PORT, ICW4_8086);
     io_wait();
 
-    // restore the saved masks
-    outportb(PIC_MASTER_DATA_PORT, imr1);
-    outportb(PIC_SLAVE_DATA_PORT, imr2);
-    kernprintf("PIC intialized\n");
+    // disable all IRQs
+    outportb(PIC_MASTER_DATA_PORT, 0);
+    outportb(PIC_SLAVE_DATA_PORT, 0);
+    kernprintf("PIC re-mapped\n");
 }
 
 void irq_clear_mask(uint8_t irq_number)
