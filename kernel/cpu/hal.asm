@@ -10,7 +10,7 @@ outportb:
 global inportb
 inportb:
     mov dx, [esp + 4] ; port
-    in ax, dx ; put byte in ax
+    in al, dx ; put byte in ax
 
 global io_wait
 io_wait:

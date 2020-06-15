@@ -26,8 +26,8 @@
 void init_8259PIC()
 {
     // save masks
-    uint8_t p1 = inportb(PIC_MASTER_DATA_PORT);
-    uint8_t p2 = inportb(PIC_SLAVE_DATA_PORT);
+    uint8_t imr1 = inportb(PIC_MASTER_DATA_PORT);
+    uint8_t imr2 = inportb(PIC_SLAVE_DATA_PORT);
 
     // Start initialization sequence of both master and slace
     outportb(PIC_MASTER_CMD_PORT, ICW1_INIT | PIC_ICW1_ICW4);
@@ -54,7 +54,7 @@ void init_8259PIC()
     io_wait();
 
     // restore the saved masks
-    outportb(PIC_MASTER_DATA_PORT, p1);
-    outportb(PIC_SLAVE_DATA_PORT, p2);
+    outportb(PIC_MASTER_DATA_PORT, imr1);
+    outportb(PIC_SLAVE_DATA_PORT, imr2);
     kernprintf("PIC intialized\n");
 }
