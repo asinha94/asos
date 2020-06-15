@@ -28,7 +28,7 @@ WARNINGS := -Wall -Wextra -pedantic -Wshadow -Wpointer-arith -Wcast-align \
 LIBS = -lgcc
 INCLUDES := -Ikernel
 CFLAGS := -g -Wall -Wextra -std=gnu99 -ffreestanding -nostdlib $(INCLUDES) $(LIBS)
-ASFLAGS := -f elf32
+ASFLAGS := -f elf32 -g
 CPPFLAGS =
 
 
@@ -49,8 +49,11 @@ asos.bin: $(KERNOBJS) $(LINKSCRIPT)
 debug: asos.bin
 	@$(QEMU) -s -S -kernel $(DEST_DIR)/asos.bin -no-reboot -monitor stdio
 
-qemu: asos.bin
+run: asos.bin
 	@$(QEMU) -kernel $(DEST_DIR)/asos.bin -no-reboot  -monitor stdio
+
+gdb: asos.bin
+	@gdb -x ./debug/debug.gdbinit
 
 clean:
 	@rm -rf $(DEST_DIR) $(ARCHOBJS) $(KERNOBJS)  $(shell find $(SRC_DIR)/ -name *.o)

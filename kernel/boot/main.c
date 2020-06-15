@@ -5,6 +5,7 @@
 #include <display/tty.h>
 #include <boot/gdt.h>
 #include <cpu/idt.h>
+#include <cpu/pic.h>
 
 
 void kernel_main(void)
@@ -14,6 +15,7 @@ void kernel_main(void)
     kernprintf("Initializing Kernel\n");
     init_gdt();
     init_idt();
+    init_8259PIC();
 
     while (1) {
         
