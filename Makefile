@@ -63,6 +63,9 @@ iso: asos.bin
 	@cp $(DEST_DIR)/asos.bin isodir/boot
 	@grub-mkrescue -o $(DEST_DIR)/asos.iso isodir
 
+iso9660: asos.bin
+	mkisofs -R -b boot/grub/stage2_eltorito -no-emul-boot -boot-load-size 4 -boot-info-table -o asos.iso isodir
+
 clean:
 	@rm -rf $(DEST_DIR) $(KERNOBJS)
 
