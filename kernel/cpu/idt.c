@@ -158,7 +158,8 @@ void init_idt()
     irq_set_mask(15);
 
     // Still don't know why its 1 less byte than actual
-    idt.length = (uint16_t) (sizeof(idt_entry) * 48) - 1;
+    //(uint16_t) (sizeof(idt_entry) * 48) - 1;
+    idt.length = (uint16_t) (sizeof(idt_entry) * IDT_SIZE) - 1;
     idt.entries_addr = (uint32_t) &entries;
     // load the IDT same way as the GDT
     asm_init_idt((uint32_t) &idt);

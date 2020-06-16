@@ -3,4 +3,4 @@
 **/*.o
 **/*.iso
 .vscode/ipch
-isodir
+**/isodir
