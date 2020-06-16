@@ -95,7 +95,11 @@ void irq_set_mask(uint8_t irq_number)
     outportb(port, data);
 }
 
-void irq_eoi()
+void irq_eoi(uint8_t irq_number)
 {
-    return;
+    if (irq_number > 7) {
+        outportb(PIC_SLAVE_DATA_PORT, PIC_EOI);
+    }
+    // Always send EOI to master
+    outportb(PIC_MASTER_DATA_PORT, PIC_EOI);
 }

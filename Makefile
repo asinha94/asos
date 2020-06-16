@@ -74,10 +74,10 @@ qemu-dbg: asos.bin
 qemu-run: asos.bin
 	@$(QEMU) -kernel $(BUILD_DIR)/asos.bin -no-reboot  -monitor stdio
 
-bochs-run: asos.bin
+bochs-run: iso
 	@$(BOCHS) -f bochsrc.cd
 
-bochs-dbg: asos.bin
+bochs-dbg: iso
 	@$(BOCHSDBG) -f bochsrc.cd
 
 gdb: asos.bin

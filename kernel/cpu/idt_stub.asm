@@ -148,6 +148,13 @@ asm_handler_irq1:
     ;;extern isr_real_handler_33
     ;;call isr_real_handler_33
     ;;popad
+    push eax
+    ; get KBD data
+    in al, 0x60
+    ; eoi
+    mov al, 0x20
+    out 0x20, al
+    pop eax
     iret
 
 global asm_handler_irq2
