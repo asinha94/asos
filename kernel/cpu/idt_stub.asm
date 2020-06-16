@@ -144,6 +144,10 @@ asm_handler_irq0:
 
 global asm_handler_irq1
 asm_handler_irq1:
+    ;;pushad
+    ;;extern isr_real_handler_33
+    ;;call isr_real_handler_33
+    ;;popad
     iret
 
 global asm_handler_irq2

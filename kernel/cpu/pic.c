@@ -25,10 +25,6 @@
 
 void remap_pic_irq()
 {
-    // save masks
-    //uint8_t imr1 = inportb(PIC_MASTER_DATA_PORT);
-    //uint8_t imr2 = inportb(PIC_SLAVE_DATA_PORT);
-
     // Start initialization sequence of both master and slace
     outportb(PIC_MASTER_CMD_PORT, ICW1_INIT | PIC_ICW1_ICW4);
     io_wait();
@@ -53,9 +49,9 @@ void remap_pic_irq()
     outportb(PIC_SLAVE_DATA_PORT, ICW4_8086);
     io_wait();
 
-    // disable all IRQs
-    outportb(PIC_MASTER_DATA_PORT, 0);
-    outportb(PIC_SLAVE_DATA_PORT, 0);
+    // Once we have handlers for all IRQs, enabled them
+    //outportb(PIC_MASTER_DATA_PORT, 0xFF);
+    //outportb(PIC_SLAVE_DATA_PORT, 0xFF);
     kernprintf("PIC re-mapped\n");
 }
 

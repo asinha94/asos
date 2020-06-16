@@ -24,7 +24,9 @@ void kernel_main(void)
     // Enables Interrupts
     enable_interrupts();
 
-    return; // call halt in boot.asm for now
+    while (1) {
+        kernprintf(".");
+    }
     
 }
 

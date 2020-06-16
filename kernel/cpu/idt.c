@@ -122,40 +122,40 @@ void init_idt()
     insert_idt_entry(31, (uint32_t) asm_handler_isr31);
 
     // Next 16 [32-47] are the IRQs 
-    insert_idt_entry(0, (uint32_t) asm_handler_irq0);
-    insert_idt_entry(1, (uint32_t) asm_handler_irq1);
-    insert_idt_entry(2, (uint32_t) asm_handler_irq2);
-    insert_idt_entry(3, (uint32_t) asm_handler_irq3);
-    insert_idt_entry(4, (uint32_t) asm_handler_irq4);
-    insert_idt_entry(5, (uint32_t) asm_handler_irq5);
-    insert_idt_entry(6, (uint32_t) asm_handler_irq6);
-    insert_idt_entry(7, (uint32_t) asm_handler_irq7);
-    insert_idt_entry(8, (uint32_t) asm_handler_irq8);
-    insert_idt_entry(9, (uint32_t) asm_handler_irq9);
-    insert_idt_entry(10, (uint32_t) asm_handler_irq10);
-    insert_idt_entry(11, (uint32_t) asm_handler_irq11);
-    insert_idt_entry(12, (uint32_t) asm_handler_irq12);
-    insert_idt_entry(13, (uint32_t) asm_handler_irq13);
-    insert_idt_entry(14, (uint32_t) asm_handler_irq14);
-    insert_idt_entry(15, (uint32_t) asm_handler_irq15);
+    insert_idt_entry(32, (uint32_t) asm_handler_irq0);
+    insert_idt_entry(33, (uint32_t) asm_handler_irq1);
+    insert_idt_entry(34, (uint32_t) asm_handler_irq2);
+    insert_idt_entry(35, (uint32_t) asm_handler_irq3);
+    insert_idt_entry(36, (uint32_t) asm_handler_irq4);
+    insert_idt_entry(37, (uint32_t) asm_handler_irq5);
+    insert_idt_entry(38, (uint32_t) asm_handler_irq6);
+    insert_idt_entry(39, (uint32_t) asm_handler_irq7);
+    insert_idt_entry(40, (uint32_t) asm_handler_irq8);
+    insert_idt_entry(41, (uint32_t) asm_handler_irq9);
+    insert_idt_entry(42, (uint32_t) asm_handler_irq10);
+    insert_idt_entry(43, (uint32_t) asm_handler_irq11);
+    insert_idt_entry(44, (uint32_t) asm_handler_irq12);
+    insert_idt_entry(45, (uint32_t) asm_handler_irq13);
+    insert_idt_entry(46, (uint32_t) asm_handler_irq14);
+    insert_idt_entry(47, (uint32_t) asm_handler_irq15);
 
     // Mask out unused IRQs
-    irq_clear_mask(0);
-    irq_set_mask(1);//irq_clear_mask(1);
-    irq_clear_mask(2);
-    irq_clear_mask(3);
-    irq_clear_mask(4);
-    irq_clear_mask(5);
-    irq_clear_mask(6);
-    irq_clear_mask(7);
-    irq_clear_mask(8);
-    irq_clear_mask(9);
-    irq_clear_mask(10);
-    irq_clear_mask(11);
-    irq_clear_mask(12);
-    irq_clear_mask(13);
-    irq_clear_mask(14);
-    irq_clear_mask(15);
+    irq_set_mask(0);
+    irq_clear_mask(1);
+    irq_set_mask(2);
+    irq_set_mask(3);
+    irq_set_mask(4);
+    irq_set_mask(5);
+    irq_set_mask(6);
+    irq_set_mask(7);
+    irq_set_mask(8);
+    irq_set_mask(9);
+    irq_set_mask(10);
+    irq_set_mask(11);
+    irq_set_mask(12);
+    irq_set_mask(13);
+    irq_set_mask(14);
+    irq_set_mask(15);
 
     // Still don't know why its 1 less byte than actual
     idt.length = (uint16_t) (sizeof(idt_entry) * 48) - 1;
@@ -164,6 +164,6 @@ void init_idt()
     asm_init_idt((uint32_t) &idt);
     kernprintf("IDT loaded\n");
 
-    // Remap the PIC and disable IRQs we don't handle
+    // Remap the PIC
     remap_pic_irq();
 }

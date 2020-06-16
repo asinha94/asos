@@ -24,7 +24,7 @@ static void insert_gdt_entry(
     if (entry >= GDT_SIZE) return;
 
     // Whats ironic is that all of these are 0
-    segments[entry].base_lower  = (uint16_t) ((base >> 00) & 0xFF); // Bottom word
+    segments[entry].base_lower  = (uint16_t) ((base >> 00) & 0xFFFF); // Bottom 2 bytes
     segments[entry].base_middle = (uint16_t) ((base >> 16) & 0xFF); // Sandwich byte
     segments[entry].base_upper  = (uint16_t) ((base >> 24) & 0xFF); // MSB
 
