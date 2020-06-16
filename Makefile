@@ -1,4 +1,5 @@
 
+# Directories
 PREFIX = $(shell pwd)
 BUILD_DIR = $(PREFIX)/build
 BIN_DIR = $(PREFIX)/bin
@@ -7,11 +8,17 @@ CC_VERSION = gcc-7.5.0
 CROSS_CC_DIR = $(BIN_DIR)/$(CC_VERSION)/bin
 ISODIR = $(BUILD_DIR)/isodir
 
-QEMU = /mnt/c/Program\ Files/qemu/qemu-system-i386.exe
-BOCHS = /mnt/c/Program\ Files/Bochs-2.6.11/bochs.exe
+# Compiler & Build
 CC = $(CROSS_CC_DIR)/i686-elf-gcc
 ASM = nasm
 
+# Emulators
+QEMU = /mnt/c/Program\ Files/qemu/qemu-system-i386.exe
+BOCHS = /mnt/c/Program\ Files/Bochs-2.6.11/bochs.exe
+BOCHSDBG = /mnt/c/Program\ Files/Bochs-2.6.11/bochsdbg.exe
+
+
+# Files
 LINKSCRIPT = $(SRC_DIR)/boot/linker.ld
 KERNSOURCES_C := $(shell find $(SRC_DIR)/ -name *.c)
 KERNSOURCES_ASM := $(shell find $(SRC_DIR)/ -name *.asm)
@@ -69,6 +76,9 @@ qemu-run: asos.bin
 
 bochs-run: asos.bin
 	@$(BOCHS) -f bochsrc.cd
+
+bochs-dbg: asos.bin
+	@$(BOCHSDBG) -f bochsrc.cd
 
 gdb: asos.bin
 	@gdb -x ./debug/debug.gdbinit
