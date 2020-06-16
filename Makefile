@@ -5,6 +5,7 @@ BIN_DIR = $(PREFIX)/bin
 SRC_DIR = $(PREFIX)/kernel
 CC_VERSION = gcc-7.5.0
 CROSS_CC_DIR = $(BIN_DIR)/$(CC_VERSION)/bin
+ISODIR = $(BUILD_DIR)/isodir
 
 QEMU = /mnt/c/Program\ Files/qemu/qemu-system-i386.exe
 BOCHS = /mnt/c/Program\ Files/Bochs-2.6.11/bochs.exe
@@ -15,11 +16,6 @@ LINKSCRIPT = $(SRC_DIR)/boot/linker.ld
 KERNSOURCES_C := $(shell find $(SRC_DIR)/ -name *.c)
 KERNSOURCES_ASM := $(shell find $(SRC_DIR)/ -name *.asm)
 KERNOBJS := $(KERNSOURCES_C:%.c=%.o)  $(KERNSOURCES_ASM:%.asm=%.o)
-
-
-#############################
-# Make Targets              #
-#############################
 
 WARNINGS := -Wall -Wextra -pedantic -Wshadow -Wpointer-arith -Wcast-align \
 	    -Wwrite-strings -Wmissing-prototypes -Wmissing-declarations \
@@ -32,6 +28,9 @@ CFLAGS := -g -Wall -Wextra -std=gnu99 -ffreestanding -nostdlib $(INCLUDES) $(LIB
 ASFLAGS := -f elf32 -g
 CPPFLAGS =
 
+#############################
+# Make Targets              #
+#############################
 
 .PHONY: clean qemu-run
 .SUFFIXES: .o .c .asm
@@ -59,18 +58,23 @@ bochs-run: asos.bin
 gdb: asos.bin
 	@gdb -x ./debug/debug.gdbinit
 
-iso: asos.bin
-	@cp $(BUILD_DIR)/asos.bin isodir/boot
-	@grub-mkrescue -o $(BUILD_DIR)/asos.iso isodir
+iso-dir: asos.bin
+	@mkdir -p $(ISODIR)/boot/grub
+	@cp $(BUILD_DIR)/asos.bin $(ISODIR)/boot
+	@cp utils/grub.cfg $(ISODIR)/boot/grub
+	@cp utils/stage2_eltorito $(ISODIR)/boot/grub
 
-iso9660: asos.bin
-	@cp $(BUILD_DIR)/asos.bin isodir/boot
+iso: iso-dir
+	@grub-mkrescue -o $(BUILD_DIR)/asos.iso $(ISODIR)
+
+# This shouldn't be necessary anymore
+iso9660: iso-dir
 	@mkisofs -R -b boot/grub/stage2_eltorito -no-emul-boot \
 			 -boot-load-size 4 -boot-info-table \
-			 -o $(BUILD_DIR)/asos9960.iso isodir
+			 -o $(BUILD_DIR)/asos9960.iso $(ISODIR)
 
 clean:
-	@rm -rf $(BUILD_DIR) $(KERNOBJS) $(shell find $(PREFIX)/isodir -name *.bin)
+	@rm -rf $(BUILD_DIR) $(KERNOBJS)
 
 print-%:
 	@echo $* = $($*)
