@@ -50,7 +50,7 @@ void init_gdt()
     // load GDT at table address
     // why is the size - 1?
     gdt.length = sizeof(segments) - 1;
-    gdt.segments_addr = (uint32_t) &segments;
+    gdt.segments = (uint32_t) &segments;
     asm_init_gdt((uint32_t) &gdt);
     kernprintf("GDT initialized\n");
 }

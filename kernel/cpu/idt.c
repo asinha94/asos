@@ -59,6 +59,9 @@ extern void asm_handler_irq13();
 extern void asm_handler_irq14();
 extern void asm_handler_irq15();
 
+// Software Interrupt
+extern void asm_handler_isr48();
+
 // IDT table to be loaded
 idt_entry entries[IDT_SIZE];
 idt_table idt;
@@ -157,10 +160,13 @@ void init_idt()
     irq_set_mask(14);
     irq_set_mask(15);
 
+    // Software Interrupts
+    insert_idt_entry(48, (uint32_t) asm_handler_isr48);
+
     // Still don't know why its 1 less byte than actual
     //(uint16_t) (sizeof(idt_entry) * 48) - 1;
     idt.length = (uint16_t) (sizeof(idt_entry) * IDT_SIZE) - 1;
-    idt.entries_addr = (uint32_t) &entries;
+    idt.entries = (uint32_t) &entries;
     // load the IDT same way as the GDT
     asm_init_idt((uint32_t) &idt);
     kernprintf("IDT loaded\n");

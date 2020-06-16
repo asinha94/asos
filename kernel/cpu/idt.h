@@ -14,7 +14,7 @@ typedef struct idt_entry_struct idt_entry;
 
 struct idt_table_struct {
    uint16_t length;
-   uint32_t entries_addr;
+   uint32_t entries;
 } __attribute__ ((packed));
 typedef struct idt_table_struct idt_table;
 

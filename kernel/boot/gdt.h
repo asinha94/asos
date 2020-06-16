@@ -16,7 +16,7 @@ typedef struct gdt_segment_struct gdt_segment;
 
 struct gdt_table_struct {
     uint16_t length;
-    uint32_t segments_addr;
+    uint32_t segments;
 } __attribute__ ((packed));
 typedef struct gdt_table_struct gdt_table;
 

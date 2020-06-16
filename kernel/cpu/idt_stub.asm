@@ -212,3 +212,8 @@ asm_handler_irq14:
 global asm_handler_irq15
 asm_handler_irq15:
     iret
+
+;; Software Interrupts
+global asm_handler_isr48
+asm_handler_isr48:
+    iret
