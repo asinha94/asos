@@ -7,6 +7,7 @@ CC_VERSION = gcc-7.5.0
 CROSS_CC_DIR = $(BUILD_DIR)/$(CC_VERSION)/bin
 
 QEMU = /mnt/c/Program\ Files/qemu/qemu-system-i386.exe
+BOCHS = /mnt/c/Program\ Files/Bochs-2.6.11/bochs.exe
 CC = $(CROSS_CC_DIR)/i686-elf-gcc
 ASM = nasm
 
@@ -52,8 +53,15 @@ qemu-dbg: asos.bin
 qemu-run: asos.bin
 	@$(QEMU) -kernel $(DEST_DIR)/asos.bin -no-reboot  -monitor stdio
 
+bochs-run: asos.bin
+	@$(BOCHS) 
+
 gdb: asos.bin
 	@gdb -x ./debug/debug.gdbinit
+
+iso: asos.bin
+	@cp $(DEST_DIR)/asos.bin isodir/boot
+	@grub-mkrescue -o $(DEST_DIR)/asos.iso isodir
 
 clean:
 	@rm -rf $(DEST_DIR) $(ARCHOBJS) $(KERNOBJS)  $(shell find $(SRC_DIR)/ -name *.o)
