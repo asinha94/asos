@@ -33,7 +33,7 @@ ASFLAGS := -f elf32 -g
 CPPFLAGS =
 
 
-.PHONY: clean run
+.PHONY: clean qemu-run
 .SUFFIXES: .o .c .asm
 
 asos.bin: $(KERNOBJS) $(LINKSCRIPT)
