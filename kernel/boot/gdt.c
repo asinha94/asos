@@ -5,14 +5,11 @@
 
 #define GDT_SIZE 5
 
-
 gdt_segment segments[GDT_SIZE];
 gdt_table gdt;
 
-
 /* ASM function which loads the GDT for us */
 extern int asm_init_gdt(uint32_t gdt_address);
-
 
 static void insert_gdt_entry(
     size_t entry,
@@ -25,8 +22,8 @@ static void insert_gdt_entry(
 
     // Whats ironic is that all of these are 0
     segments[entry].base_lower  = (uint16_t) ((base >> 00) & 0xFFFF); // Bottom 2 bytes
-    segments[entry].base_middle = (uint16_t) ((base >> 16) & 0xFF); // Sandwich byte
-    segments[entry].base_upper  = (uint16_t) ((base >> 24) & 0xFF); // MSB
+    segments[entry].base_middle = (uint8_t)  ((base >> 16) & 0xFF); // Sandwich byte
+    segments[entry].base_upper  = (uint8_t)  ((base >> 24) & 0xFF); // MSB
 
     
     segments[entry].limit_lower = (uint16_t) (limit & 0xFFFF);

@@ -54,7 +54,7 @@ qemu-run: asos.bin
 	@$(QEMU) -kernel $(DEST_DIR)/asos.bin -no-reboot  -monitor stdio
 
 bochs-run: asos.bin
-	@$(BOCHS) 
+	@$(BOCHS)
 
 gdb: asos.bin
 	@gdb -x ./debug/debug.gdbinit

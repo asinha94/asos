@@ -68,8 +68,8 @@ static void insert_idt_entry(
     uint8_t index,
     uint32_t handler)
 {
-    entries[index].offset_h = (handler & 0xFFFF0000) >> 16; // Upper 16 bits, SHR
-    entries[index].offset_l = handler & 0xFFFF; // Lower 16 bits
+    entries[index].offset_l = (handler >>  0) & 0xFFFF; // Lower 16 bits
+    entries[index].offset_h = (handler >> 16) & 0xFFFF; // Upper 16 bits
 
     // Selector tells the CPU what GDT segment, CPL etc... we want to be in
     // when we run this handler. The Answer is always the same...Kernel code segment
