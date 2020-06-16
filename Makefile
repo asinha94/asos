@@ -64,7 +64,7 @@ iso: asos.bin
 	@grub-mkrescue -o $(DEST_DIR)/asos.iso isodir
 
 clean:
-	@rm -rf $(DEST_DIR) $(ARCHOBJS) $(KERNOBJS)  $(shell find $(SRC_DIR)/ -name *.o)
+	@rm -rf $(DEST_DIR) $(KERNOBJS)
 
 print-%:
 	@echo $* = $($*)
