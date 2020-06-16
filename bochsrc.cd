@@ -1,0 +1,3 @@
+memory: guest=128, host=128
+ata0-master: type=cdrom, path="build/asos.iso", status=inserted
+boot: cdrom

@@ -44,19 +44,7 @@ asos.bin: $(KERNOBJS) $(LINKSCRIPT)
 	@$(CC) -c $< -o $@ $(CFLAGS)
 
 %.o : %.asm
-	@$(ASM) $(ASFLAGS) $< -o $@ 
-
-qemu-dbg: asos.bin
-	@$(QEMU) -s -S -kernel $(BUILD_DIR)/asos.bin -no-reboot -monitor stdio
-
-qemu-run: asos.bin
-	@$(QEMU) -kernel $(BUILD_DIR)/asos.bin -no-reboot  -monitor stdio
-
-bochs-run: asos.bin
-	@$(BOCHS)
-
-gdb: asos.bin
-	@gdb -x ./debug/debug.gdbinit
+	@$(ASM) $(ASFLAGS) $< -o $@
 
 iso-dir: asos.bin
 	@mkdir -p $(ISODIR)/boot/grub
@@ -71,7 +59,19 @@ iso: iso-dir
 iso9660: iso-dir
 	@mkisofs -R -b boot/grub/stage2_eltorito -no-emul-boot \
 			 -boot-load-size 4 -boot-info-table \
-			 -o $(BUILD_DIR)/asos9960.iso $(ISODIR)
+			 -o $(BUILD_DIR)/asos9960.iso $(ISODIR) 
+
+qemu-dbg: asos.bin
+	@$(QEMU) -s -S -kernel $(BUILD_DIR)/asos.bin -no-reboot -monitor stdio
+
+qemu-run: asos.bin
+	@$(QEMU) -kernel $(BUILD_DIR)/asos.bin -no-reboot  -monitor stdio
+
+bochs-run: asos.bin
+	@$(BOCHS) -f bochsrc.cd
+
+gdb: asos.bin
+	@gdb -x ./debug/debug.gdbinit
 
 clean:
 	@rm -rf $(BUILD_DIR) $(KERNOBJS)
