@@ -40,9 +40,6 @@ void insert_idt_entry(
 
 void init_idt()
 {
-    // Software Interrupts
-    insert_idt_entry(48, (uint32_t) asm_handler_isr48, NULL);
-
     // Still don't know why its 1 less byte than actual
     //(uint16_t) (sizeof(idt_entry) * 48) - 1;
     idt.length = (uint16_t) (sizeof(entries) - 1);
@@ -53,7 +50,7 @@ void init_idt()
 }
 
 void isr_dispatcher(isr_data * regs)
-{   kprintf("Hello World");
+{   kprintf("Int %u; Err: %u\n", regs->int_no, regs->err_no);
     ivect handler = ivt[regs->int_no];
     if (handler == NULL) {
         kprintf("Invalid Interrupt Number passed to Dispatcher\n");

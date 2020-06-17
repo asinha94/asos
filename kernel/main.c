@@ -14,7 +14,6 @@ void kernel_main(void)
 {
     // Init a TTY for us to log to
     init_tty();
-    kprintf("%s is a t%dst; u: %u; %x\n", "this", 3, 42, 0xDEAD);
     kprintf("Initializing Kernel\n");
     
     // create linear address space for OS
@@ -26,9 +25,6 @@ void kernel_main(void)
     init_irq();
     init_cpu_exceptions();
     init_idt();
-
-    // Clear console
-    tty_clear_tty();
 
     // Enables Interrupts
     enable_interrupts();
