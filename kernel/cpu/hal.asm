@@ -1,7 +1,7 @@
 
 ; Output byte to port
-global outportb
-outportb:
+global outport8
+outport8:
     mov dx, [esp + 4] ; port
     mov al, [esp + 8] ; copy byte data
     out dx, al
@@ -9,16 +9,11 @@ outportb:
 
 
 ; Grab byte from port
-global inportb
-inportb:
+global inport8
+inport8:
     mov dx, [esp + 4] ; port
     in al, dx ; put byte in ax
     ret
-
-
-global io_wait
-io_wait:
-    ret ; not really needed on modern PCs
 
 
 global disable_interrupts 

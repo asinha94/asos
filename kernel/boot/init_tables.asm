@@ -1,3 +1,10 @@
+; Loads IDT
+global asm_init_idt
+asm_init_idt:
+    mov eax, [esp + 4] ; copy 4 byte address
+    lidt [eax]
+    ret
+
 global asm_init_gdt
 asm_init_gdt:
     ; 4-byte gdt table address passed onto stack

@@ -1,7 +1,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <display/tty.h>
-#include <boot/gdt.h>
+#include <mm/gdt.h>
 
 #define GDT_SIZE 5
 

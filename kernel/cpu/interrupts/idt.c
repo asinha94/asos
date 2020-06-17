@@ -1,7 +1,7 @@
 #include <stddef.h>
-#include <cpu/idt.h>
-#include <cpu/isr.h>
-#include <cpu/pic.h>
+#include <cpu/interrupts/idt.h>
+#include <cpu/interrupts/isr.h>
+#include <cpu/interrupts/pic.h>
 #include <display/tty.h>
 
 #define IDT_SIZE 256

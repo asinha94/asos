@@ -1,9 +1,6 @@
-; Loads IDT
-global asm_init_idt
-asm_init_idt:
-    mov eax, [esp + 4] ; copy 4 byte address
-    lidt [eax]
-    ret
+;; This file lists contains the definitions for
+;; the ISRs. These are just stubs which will 
+;; call the real workers (in C)
 
 ;; ISR handler for Vect 0-31
 

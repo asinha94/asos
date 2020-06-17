@@ -11,7 +11,7 @@ struct gdt_segment_struct {
     uint8_t  type;
     uint8_t  granularity;
     uint8_t  base_upper;
-} __attribute__ ((packed));
+};
 typedef struct gdt_segment_struct gdt_segment;
 
 struct gdt_table_struct {

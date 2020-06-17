@@ -1,5 +1,5 @@
 #include <stdint.h>
-#include <cpu/pic.h>
+#include <cpu/interrupts/pic.h>
 #include <cpu/hal.h>
 #include <display/tty.h>
 
@@ -26,32 +26,24 @@
 void remap_pic_irq()
 {
     // Start initialization sequence of both master and slace
-    outportb(PIC_MASTER_CMD_PORT, ICW1_INIT | PIC_ICW1_ICW4);
-    io_wait();
-    outportb(PIC_SLAVE_CMD_PORT,  ICW1_INIT | PIC_ICW1_ICW4);
-    io_wait();
+    outport8(PIC_MASTER_CMD_PORT, ICW1_INIT | PIC_ICW1_ICW4);
+    outport8(PIC_SLAVE_CMD_PORT,  ICW1_INIT | PIC_ICW1_ICW4);
 
     // Remap Vector offsets to non-reserved range
-    outportb(PIC_MASTER_DATA_PORT, PIC_MASTER_VECTOR_OFFSET);
-    io_wait();
-    outportb(PIC_SLAVE_DATA_PORT, PIC_SLAVE_VECTOR_OFFSET);
-    io_wait();
+    outport8(PIC_MASTER_DATA_PORT, PIC_MASTER_VECTOR_OFFSET);
+    outport8(PIC_SLAVE_DATA_PORT, PIC_SLAVE_VECTOR_OFFSET);
 
     // Init Cascade topology i.e slace IRQ2 wired to master
-    outportb(PIC_MASTER_DATA_PORT, PIC_MASTER_CASCADE_IRQ);
-    io_wait();
-    outportb(PIC_SLAVE_DATA_PORT, PIC_SLAVE_CASCADE_IRQ);
-    io_wait();
+    outport8(PIC_MASTER_DATA_PORT, PIC_MASTER_CASCADE_IRQ);
+    outport8(PIC_SLAVE_DATA_PORT, PIC_SLAVE_CASCADE_IRQ);
 
     // 8086 mode
-    outportb(PIC_MASTER_DATA_PORT, ICW4_8086);
-    io_wait();
-    outportb(PIC_SLAVE_DATA_PORT, ICW4_8086);
-    io_wait();
+    outport8(PIC_MASTER_DATA_PORT, ICW4_8086);
+    outport8(PIC_SLAVE_DATA_PORT, ICW4_8086);
 
     // Enable all IRQs
-    outportb(PIC_MASTER_DATA_PORT, 0);
-    outportb(PIC_SLAVE_DATA_PORT, 0);
+    outport8(PIC_MASTER_DATA_PORT, 0);
+    outport8(PIC_SLAVE_DATA_PORT, 0);
     kernprintf("PIC re-mapped\n");
 }
 
@@ -70,9 +62,9 @@ void irq_clear_mask(uint8_t irq_number)
     }
 
     // Current mask
-    data = inportb(port) & ~(1 << irq_number);
+    data = inport8(port) & ~(1 << irq_number);
     // Flip bit corresponding to irq_number
-    outportb(port, data);
+    outport8(port, data);
 }
 
 
@@ -91,15 +83,15 @@ void irq_set_mask(uint8_t irq_number)
     }
 
     // Current mask
-    data = inportb(port) | (1 << irq_number);
-    outportb(port, data);
+    data = inport8(port) | (1 << irq_number);
+    outport8(port, data);
 }
 
 void irq_eoi(uint8_t irq_number)
 {
     if (irq_number > 7) {
-        outportb(PIC_SLAVE_DATA_PORT, PIC_EOI);
+        outport8(PIC_SLAVE_DATA_PORT, PIC_EOI);
     }
     // Always send EOI to master
-    outportb(PIC_MASTER_DATA_PORT, PIC_EOI);
+    outport8(PIC_MASTER_DATA_PORT, PIC_EOI);
 }

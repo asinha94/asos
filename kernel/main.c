@@ -3,9 +3,9 @@
 #include <stdint.h>
 
 #include <display/tty.h>
-#include <boot/gdt.h>
-#include <cpu/idt.h>
+#include <cpu/interrupts/idt.h>
 #include <cpu/hal.h>
+#include <mm/gdt.h>
 
 
 void kernel_main(void)
