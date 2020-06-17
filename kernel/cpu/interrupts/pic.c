@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <cpu/interrupts/idt.h>
 #include <cpu/interrupts/pic.h>
 #include <cpu/hal.h>
 #include <display/tty.h>
@@ -22,8 +23,26 @@
 #define PIC_MASTER_CASCADE_IRQ   0x04
 #define PIC_SLAVE_CASCADE_IRQ    0x02
 
+// IRQ handlers in assembly
+extern void asm_handler_irq0();
+extern void asm_handler_irq1();
+extern void asm_handler_irq2();
+extern void asm_handler_irq3();
+extern void asm_handler_irq4();
+extern void asm_handler_irq5();
+extern void asm_handler_irq6();
+extern void asm_handler_irq7();
+extern void asm_handler_irq8();
+extern void asm_handler_irq9();
+extern void asm_handler_irq10();
+extern void asm_handler_irq11();
+extern void asm_handler_irq12();
+extern void asm_handler_irq13();
+extern void asm_handler_irq14();
+extern void asm_handler_irq15();
 
-void remap_pic_irq()
+
+void init_irq()
 {
     // Start initialization sequence of both master and slave
     outport8(PIC_MASTER_CMD_PORT, ICW1_INIT | PIC_ICW1_ICW4);
@@ -45,7 +64,28 @@ void remap_pic_irq()
     outport8(PIC_MASTER_DATA_PORT, 0);
     outport8(PIC_SLAVE_DATA_PORT, 0);
     kprintf("PIC re-mapped\n");
+
+    //  Install IRQ handlers into IDT
+    // Entries [32-47] are the IRQs we just re-mapped
+    uint8_t idt_entry = PIC_MASTER_VECTOR_OFFSET;
+    insert_idt_entry(idt_entry++, (uint32_t) asm_handler_irq0);
+    insert_idt_entry(idt_entry++, (uint32_t) asm_handler_irq1);
+    insert_idt_entry(idt_entry++, (uint32_t) asm_handler_irq2);
+    insert_idt_entry(idt_entry++, (uint32_t) asm_handler_irq3);
+    insert_idt_entry(idt_entry++, (uint32_t) asm_handler_irq4);
+    insert_idt_entry(idt_entry++, (uint32_t) asm_handler_irq5);
+    insert_idt_entry(idt_entry++, (uint32_t) asm_handler_irq6);
+    insert_idt_entry(idt_entry++, (uint32_t) asm_handler_irq7);
+    insert_idt_entry(idt_entry++, (uint32_t) asm_handler_irq8);
+    insert_idt_entry(idt_entry++, (uint32_t) asm_handler_irq9);
+    insert_idt_entry(idt_entry++, (uint32_t) asm_handler_irq10);
+    insert_idt_entry(idt_entry++, (uint32_t) asm_handler_irq11);
+    insert_idt_entry(idt_entry++, (uint32_t) asm_handler_irq12);
+    insert_idt_entry(idt_entry++, (uint32_t) asm_handler_irq13);
+    insert_idt_entry(idt_entry++, (uint32_t) asm_handler_irq14);
+    insert_idt_entry(idt_entry++, (uint32_t) asm_handler_irq15);
 }
+
 
 void irq_clear_mask(uint8_t irq_number)
 {

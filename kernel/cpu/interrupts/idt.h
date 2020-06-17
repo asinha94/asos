@@ -1,6 +1,8 @@
 #ifndef ASOS_IDT_H
 #define ASOS_IDT_H
 
+#define IDT_LEN 256
+
 #include <stdint.h>
 
 struct idt_entry_struct {
@@ -18,6 +20,7 @@ struct idt_table_struct {
 } __attribute__ ((packed));
 typedef struct idt_table_struct idt_table;
 
+extern void insert_idt_entry(uint8_t index, uint32_t handler);
 extern void init_idt();
 
 #endif

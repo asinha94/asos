@@ -3,6 +3,7 @@
 #include <stdint.h>
 
 #include <display/tty.h>
+#include <cpu/interrupts/pic.h>
 #include <cpu/interrupts/idt.h>
 #include <cpu/hal.h>
 #include <mm/gdt.h>
@@ -17,8 +18,10 @@ void kernel_main(void)
     // create linear address space for OS
     // includes Kernel and Userspace
     init_gdt();
+    // init paging here
 
     // Install IDT and IRQ handlers
+    init_irq();
     init_idt();
 
     // Enables Interrupts

@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-void remap_pic_irq();
+void init_irq();
 void irq_clear_mask(uint8_t irq_number);
 void irq_set_mask(uint8_t irq_number);
 void irq_eoi(uint8_t irq_number);

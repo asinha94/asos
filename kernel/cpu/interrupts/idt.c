@@ -1,10 +1,6 @@
 #include <stddef.h>
 #include <cpu/interrupts/idt.h>
-#include <cpu/interrupts/isr.h>
-#include <cpu/interrupts/pic.h>
 #include <display/tty.h>
-
-#define IDT_SIZE 256
 
 // LIDT init function
 extern void asm_init_idt(uint32_t idt_address);
@@ -41,33 +37,17 @@ extern void asm_handler_isr28();
 extern void asm_handler_isr29();
 extern void asm_handler_isr30();
 extern void asm_handler_isr31();
-// IRQs
-extern void asm_handler_irq0();
-extern void asm_handler_irq1();
-extern void asm_handler_irq2();
-extern void asm_handler_irq3();
-extern void asm_handler_irq4();
-extern void asm_handler_irq5();
-extern void asm_handler_irq6();
-extern void asm_handler_irq7();
-extern void asm_handler_irq8();
-extern void asm_handler_irq9();
-extern void asm_handler_irq10();
-extern void asm_handler_irq11();
-extern void asm_handler_irq12();
-extern void asm_handler_irq13();
-extern void asm_handler_irq14();
-extern void asm_handler_irq15();
+
 
 // Software Interrupt
 extern void asm_handler_isr48();
 
 // IDT table to be loaded
-idt_entry entries[IDT_SIZE];
+idt_entry entries[IDT_LEN];
 idt_table idt;
 
 
-static void insert_idt_entry(
+void insert_idt_entry(
     uint8_t index,
     uint32_t handler)
 {
@@ -124,24 +104,6 @@ void init_idt()
     insert_idt_entry(30, (uint32_t) asm_handler_isr30);
     insert_idt_entry(31, (uint32_t) asm_handler_isr31);
 
-    // Next 16 [32-47] are the IRQs 
-    insert_idt_entry(32, (uint32_t) asm_handler_irq0);
-    insert_idt_entry(33, (uint32_t) asm_handler_irq1);
-    insert_idt_entry(34, (uint32_t) asm_handler_irq2);
-    insert_idt_entry(35, (uint32_t) asm_handler_irq3);
-    insert_idt_entry(36, (uint32_t) asm_handler_irq4);
-    insert_idt_entry(37, (uint32_t) asm_handler_irq5);
-    insert_idt_entry(38, (uint32_t) asm_handler_irq6);
-    insert_idt_entry(39, (uint32_t) asm_handler_irq7);
-    insert_idt_entry(40, (uint32_t) asm_handler_irq8);
-    insert_idt_entry(41, (uint32_t) asm_handler_irq9);
-    insert_idt_entry(42, (uint32_t) asm_handler_irq10);
-    insert_idt_entry(43, (uint32_t) asm_handler_irq11);
-    insert_idt_entry(44, (uint32_t) asm_handler_irq12);
-    insert_idt_entry(45, (uint32_t) asm_handler_irq13);
-    insert_idt_entry(46, (uint32_t) asm_handler_irq14);
-    insert_idt_entry(47, (uint32_t) asm_handler_irq15);
-
     // Software Interrupts
     insert_idt_entry(48, (uint32_t) asm_handler_isr48);
 
@@ -152,7 +114,4 @@ void init_idt()
     // load the IDT same way as the GDT
     asm_init_idt((uint32_t) &idt);
     kprintf("IDT loaded\n");
-
-    // Remap the PIC
-    remap_pic_irq();
 }
