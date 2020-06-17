@@ -23,7 +23,7 @@ void kernel_main(void)
 
     // Install IDT and IRQ handlers
     init_irq();
-    init_cpu_exceptions()
+    init_cpu_exceptions();
     init_idt();
 
     // Enables Interrupts
