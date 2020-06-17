@@ -1,5 +1,5 @@
-#include <stdbool.h>
-
+#include <stdarg.h>
+#include <stdint.h>
 #include <display/tty.h>
 
 const size_t VGA_WIDTH = 80;
@@ -14,12 +14,13 @@ size_t strlen(const char* str);
 static void tty_writechars(const char* data, size_t size);
 static void tty_clear_from(uint8_t linum);
 static void tty_scroll_up_lines(uint8_t num_lines);
-static inline bool is_escape_char(char c);
+static inline uint8_t is_escape_char(char c);
 static void handle_escape_char(char c);
 static void tty_putchar(char c);
 static void tty_writechars(const char* data, size_t size);
 
 
+// move to libk string.h
 size_t strlen(const char* str) {
     size_t len = 0;
     while (*str++)
@@ -64,7 +65,7 @@ static void tty_scroll_up_lines(uint8_t num_lines)
 
 }
 
-static inline bool is_escape_char(char c)
+static inline uint8_t is_escape_char(char c)
 {
     return c == '\n' || c == '\r' || c == '\t';
 }
@@ -116,10 +117,84 @@ static void tty_writechars(const char* data, size_t size)
 
 }
 
-
-void kprintf(const char* data)
+static void tty_puts(const char* data)
 {
-    tty_writechars(data, strlen(data));
+    const char * s = data;
+    // This can't go wrong
+    while (*s) tty_putchar(*s++);
+
+}
+
+
+static char * itoa(char * s, uint32_t x, int8_t base)
+{
+    // s is a pointer to the end of a buffer
+    // 2**32 is the max representable value
+    // and fits in 10 chars (negative sign inserted beforehand)
+    // Buffer is larger than 10 so dont worry about space
+    char * digits = "0123456789ABCDEF";
+    uint16_t i;
+
+    // Its itoa's job to insert the null terminator
+    *s = 0;
+    do {
+        i = x % base;
+        *(--s) = digits[i];
+        x /= base;
+    } while (x);
+    return s;
+}
+
+void kprintf(const char * format, ...)
+{
+    // temp for conversions
+    char temp[12];
+    // Only %d, %s, %u, %x supported
+    uint32_t u;
+    int32_t i;
+    char *s;
+
+    // variadic argument macro
+    va_list arg; 
+    va_start(arg, format); 
+
+    const char * iter;
+    for (iter = format; *iter != 0; ++iter) {
+        if (*iter != '%') {
+            tty_putchar(*iter);
+            continue;
+        }
+
+        iter++;
+        switch(*iter) {
+            case 'd':
+                i = va_arg(arg, int);
+                if (i < 0) {
+                    i = -i;
+                    tty_putchar('-');
+                }
+                s = itoa(&temp[11], i, 10);
+                tty_puts(s);
+                break;
+            case 'u':
+                u = va_arg(arg, unsigned int);
+                s = itoa(&temp[11], u, 10);
+                tty_puts(s);
+                break;
+            case 's':
+                s = va_arg(arg, char *);
+                tty_puts(s);
+                break;
+            case 'x':
+                u = va_arg(arg, unsigned int);
+                s = itoa(&temp[11], u, 16);
+                tty_writechars("0x", 2);
+                tty_puts(s);
+                break; 
+        }
+
+    }
+    va_end(arg);
 }
 
 void tty_clear_tty()

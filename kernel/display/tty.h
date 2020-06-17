@@ -3,6 +3,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <stdarg.h>
 
 enum vga_color {
     VGA_COLOR_BLACK         = 0,
@@ -35,7 +36,7 @@ static inline uint16_t vga_entry(unsigned char uc, uint8_t color)
 
 extern const size_t VGA_WIDTH;
 extern const size_t VGA_HEIGHT;
-extern void kprintf(const char* data);
+extern void kprintf(const char * format, ...);
 extern void tty_clear_tty();
 extern void init_tty();
 
