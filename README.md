@@ -7,9 +7,9 @@ My pet project in bootstrapping a bare-bones OS. The goal is for this to eventua
 - [X] Load GDT
 - [X] Enable Protected Mode
 - [X] Create IDT
+- [X] Create software interrupt
 
 ## Work to be completed
-- [ ] Double check GDT and IDT again
 - [ ] Create keyboard handler
 - [ ] Create kprintf for debugging
 - [ ] Create PIT/RTC drivers
