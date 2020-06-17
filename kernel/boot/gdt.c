@@ -39,9 +39,8 @@ void init_gdt()
 {
     // // Null segment
     insert_gdt_entry(0, 0, 0x00000000, 0x00, 0x00); 
-    // You will notice that the bottom 4 entries look very similar
-    // this is because segmentation is a lot of work
-    // we prefer to handle memory management through paging
+    // Create linear address space
+    // handle memory isolation through paging
     insert_gdt_entry(1, 0, 0xFFFFFFFF, 0x9A, 0xC0); // Kernel Code segment
     insert_gdt_entry(2, 0, 0xFFFFFFFF, 0x92, 0xC0); // Kernel Data segment
     insert_gdt_entry(3, 0, 0xFFFFFFFF, 0xFA, 0xC0); // User Code segment

@@ -147,7 +147,7 @@ void init_idt()
 
     // Still don't know why its 1 less byte than actual
     //(uint16_t) (sizeof(idt_entry) * 48) - 1;
-    idt.length = (uint16_t) (sizeof(idt_entry) * IDT_SIZE) - 1;
+    idt.length = (uint16_t) (sizeof(entries) - 1);
     idt.entries = (uint32_t) &entries;
     // load the IDT same way as the GDT
     asm_init_idt((uint32_t) &idt);

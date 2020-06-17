@@ -49,7 +49,7 @@ void remap_pic_irq()
     outportb(PIC_SLAVE_DATA_PORT, ICW4_8086);
     io_wait();
 
-    // Once we have handlers for all IRQs, enabled them
+    // Enable all IRQs
     outportb(PIC_MASTER_DATA_PORT, 0);
     outportb(PIC_SLAVE_DATA_PORT, 0);
     kernprintf("PIC re-mapped\n");
