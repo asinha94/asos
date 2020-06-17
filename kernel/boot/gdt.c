@@ -27,8 +27,8 @@ static void insert_gdt_entry(
 
     
     segments[entry].limit_lower = (uint16_t) (limit & 0xFFFF);
-    uint8_t lower_byte_of_upper_word = ((limit >> 16) & 0x0F);
-    segments[entry].granularity = granularity | lower_byte_of_upper_word;
+    uint8_t lower_nibble_of_upper_word = ((limit >> 16) & 0x0F);
+    segments[entry].granularity = granularity | lower_nibble_of_upper_word;
     
     // Set type; Look here https://wiki.osdev.org/Global_Descriptor_Table for details
     segments[entry].type = type;

@@ -83,7 +83,7 @@ static void insert_idt_entry(
     // Type attribute tells us who/what is calling this routine
     // https://wiki.osdev.org/Interrupts_Descriptor_Table for more details
     entries[index].type_attr =  0x8E;
-    // for syscalls we probably want 0xEF
+    // 0xEF for trap which doesn't disable interrupts
     
 }
 
@@ -141,24 +141,6 @@ void init_idt()
     insert_idt_entry(45, (uint32_t) asm_handler_irq13);
     insert_idt_entry(46, (uint32_t) asm_handler_irq14);
     insert_idt_entry(47, (uint32_t) asm_handler_irq15);
-
-    // Mask out unused IRQs
-    irq_set_mask(0);
-    irq_clear_mask(1);
-    irq_set_mask(2);
-    irq_set_mask(3);
-    irq_set_mask(4);
-    irq_set_mask(5);
-    irq_set_mask(6);
-    irq_set_mask(7);
-    irq_set_mask(8);
-    irq_set_mask(9);
-    irq_set_mask(10);
-    irq_set_mask(11);
-    irq_set_mask(12);
-    irq_set_mask(13);
-    irq_set_mask(14);
-    irq_set_mask(15);
 
     // Software Interrupts
     insert_idt_entry(48, (uint32_t) asm_handler_isr48);
