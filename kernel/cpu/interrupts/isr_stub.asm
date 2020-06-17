@@ -243,20 +243,6 @@ asm_handler_irq1:
     push 33
     jmp isr_common_handler
 
-
-    ;; we won't get here because of iret
-    push eax
-    ; get KBD data
-    in al, 0x60
-    mov byte [0xB8000], al
-    ; eoi
-    mov al, 0x20
-    out 0x20, al
-    
-    ;; restore registers
-    pop eax
-    iret
-
 global asm_handler_irq2
 asm_handler_irq2:
     push 0
