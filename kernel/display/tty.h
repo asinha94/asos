@@ -36,6 +36,7 @@ static inline uint16_t vga_entry(unsigned char uc, uint8_t color)
 extern const size_t VGA_WIDTH;
 extern const size_t VGA_HEIGHT;
 extern void kprintf(const char* data);
-extern void init_tty(void);
+extern void tty_clear_tty();
+extern void init_tty();
 
 #endif

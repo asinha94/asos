@@ -19,7 +19,10 @@ struct idt_table_struct {
 typedef struct idt_table_struct idt_table;
 
 struct isr_data_struct {
-    uint32_t eax;
+    uint32_t gs, fs, es, ds;
+    uint32_t edi, esi, ebp, esp, ebx, edx, ecx, eax;
+    uint32_t int_no, err_code;
+    uint32_t eip, cs, eflags, useresp, ss;
 };
 typedef struct isr_data_struct isr_data;
 
@@ -28,5 +31,6 @@ typedef void (*ivect)(isr_data * );
 
 extern void insert_idt_entry(uint8_t index, uint32_t handler, ivect c_handler);
 extern void init_idt();
+extern void isr_dispatcher(isr_data * regs);
 
 #endif

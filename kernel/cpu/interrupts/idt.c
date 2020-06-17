@@ -21,10 +21,6 @@ void insert_idt_entry(
     uint32_t handler,
     ivect c_handler)
 {
-    if (index >= IDT_LEN) {
-        // log when kprintf workd
-        return;
-    }
     // Insert the C handler
     ivt[index] = c_handler;
 
@@ -54,4 +50,14 @@ void init_idt()
     // load the IDT same way as the GDT
     asm_init_idt((uint32_t) &idt);
     kprintf("IDT loaded\n");
+}
+
+void isr_dispatcher(isr_data * regs)
+{   kprintf("Hello World");
+    ivect handler = ivt[regs->int_no];
+    if (handler == NULL) {
+        kprintf("Invalid Interrupt Number passed to Dispatcher\n");
+        return;
+    }
+    //handler(regs);
 }

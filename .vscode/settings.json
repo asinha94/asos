@@ -2,6 +2,8 @@
     "files.associations": {
         "stddef.h": "c",
         "pic.h": "c",
-        "idt.h": "c"
+        "idt.h": "c",
+        "rope": "c",
+        "variant": "c"
     }
 }

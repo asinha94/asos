@@ -12,26 +12,24 @@ gdt_table gdt;
 extern int asm_init_gdt(uint32_t gdt_address);
 
 static void insert_gdt_entry(
-    size_t entry,
+    uint8_t index,
     uint32_t base,
     uint32_t limit,
     uint8_t type,
     uint8_t granularity)
 {
-    if (entry >= GDT_SIZE) return;
-
     // Whats ironic is that all of these are 0
-    segments[entry].base_lower  = (uint16_t) ((base >> 00) & 0xFFFF); // Bottom 2 bytes
-    segments[entry].base_middle = (uint8_t)  ((base >> 16) & 0xFF); // Sandwich byte
-    segments[entry].base_upper  = (uint8_t)  ((base >> 24) & 0xFF); // MSB
+    segments[index].base_lower  = (uint16_t) ((base >> 00) & 0xFFFF); // Bottom 2 bytes
+    segments[index].base_middle = (uint8_t)  ((base >> 16) & 0xFF); // Sandwich byte
+    segments[index].base_upper  = (uint8_t)  ((base >> 24) & 0xFF); // MSB
 
     
-    segments[entry].limit_lower = (uint16_t) (limit & 0xFFFF);
+    segments[index].limit_lower = (uint16_t) (limit & 0xFFFF);
     uint8_t lower_nibble_of_upper_word = ((limit >> 16) & 0x0F);
-    segments[entry].granularity = granularity | lower_nibble_of_upper_word;
+    segments[index].granularity = granularity | lower_nibble_of_upper_word;
     
     // Set type; Look here https://wiki.osdev.org/Global_Descriptor_Table for details
-    segments[entry].type = type;
+    segments[index].type = type;
     
 }
 

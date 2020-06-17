@@ -26,11 +26,14 @@ void kernel_main(void)
     init_cpu_exceptions();
     init_idt();
 
+    // Clear console
+    tty_clear_tty();
+
     // Enables Interrupts
     enable_interrupts();
 
     // test software interrupt
-    asm("int $48");
+    //asm("int $48");
 
     while (1) {
         asm("hlt");

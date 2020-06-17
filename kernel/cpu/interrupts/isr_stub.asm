@@ -2,213 +2,341 @@
 ;; the ISRs. These are just stubs which will 
 ;; call the real workers (in C)
 
+extern isr_dispatcher
+isr_common_handler:
+    ;; All these routines use the interrupt gate
+    ;; which automatically disables interrupts
+    pushad
+    push ds
+    push es
+    push fs
+    push gs
+
+    cld ; SysV ABI requires DF clear on function entry
+    ; The dispatcher takes a pointer to the start of memory
+    ; where all the data is stored i.e esp
+    push esp 
+    call isr_dispatcher
+    add esp, 4
+    ; Need to 'decrease' stack size so that everything we pushed
+    ; is popped in the right place
+    ; we could also pop esp but it means another memory access
+
+    pop gs
+    pop fs
+    pop es
+    pop ds
+    popad
+    ; clean up error codes we manually added
+    add esp, 8
+    iret
+
 ;; ISR handler for Vect 0-31
 
 global asm_handler_isr0
 asm_handler_isr0:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 global asm_handler_isr1
 asm_handler_isr1:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 global asm_handler_isr2
 asm_handler_isr2:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 global asm_handler_isr3
 asm_handler_isr3:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 global asm_handler_isr4
 asm_handler_isr4:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 global asm_handler_isr5
 asm_handler_isr5:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 global asm_handler_isr6
 asm_handler_isr6:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 global asm_handler_isr7
 asm_handler_isr7:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 global asm_handler_isr8
 asm_handler_isr8:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 global asm_handler_isr9
 asm_handler_isr9:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 global asm_handler_isr10
 asm_handler_isr10:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 global asm_handler_isr11
 asm_handler_isr11:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 global asm_handler_isr12
 asm_handler_isr12:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 global asm_handler_isr13
 asm_handler_isr13:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 global asm_handler_isr14
 asm_handler_isr14:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 global asm_handler_isr15
 asm_handler_isr15:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 global asm_handler_isr16
 asm_handler_isr16:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 global asm_handler_isr17
 asm_handler_isr17:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 global asm_handler_isr18
 asm_handler_isr18:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 global asm_handler_isr19
 asm_handler_isr19:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 global asm_handler_isr20
 asm_handler_isr20:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 global asm_handler_isr21
 asm_handler_isr21:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 global asm_handler_isr22
 asm_handler_isr22:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 global asm_handler_isr23
 asm_handler_isr23:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 global asm_handler_isr24
 asm_handler_isr24:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 global asm_handler_isr25
 asm_handler_isr25:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 global asm_handler_isr26
 asm_handler_isr26:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 global asm_handler_isr27
 asm_handler_isr27:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 global asm_handler_isr28
 asm_handler_isr28:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 global asm_handler_isr29
 asm_handler_isr29:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 global asm_handler_isr30
 asm_handler_isr30:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 global asm_handler_isr31
 asm_handler_isr31:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 
 ;; ISR handler for Vect 32-47 (IRQ 0-15)
 
 global asm_handler_irq0
 asm_handler_irq0:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 global asm_handler_irq1
 asm_handler_irq1:
-    ;;pushad
-    ;;extern isr_real_handler_33
-    ;;call isr_real_handler_33
-    ;;popad
+    push 0
+    push 0
+    jmp isr_common_handler
+
+
+    ;; we won't get here because of iret
     push eax
     ; get KBD data
     in al, 0x60
+    mov byte [0xB8000], al
     ; eoi
     mov al, 0x20
     out 0x20, al
+    
+    ;; restore registers
     pop eax
     iret
 
 global asm_handler_irq2
 asm_handler_irq2:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 global asm_handler_irq3
 asm_handler_irq3:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 global asm_handler_irq4
 asm_handler_irq4:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 global asm_handler_irq5
 asm_handler_irq5:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 global asm_handler_irq6
 asm_handler_irq6:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 global asm_handler_irq7
 asm_handler_irq7:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 global asm_handler_irq8
 asm_handler_irq8:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 global asm_handler_irq9
 asm_handler_irq9:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 global asm_handler_irq10
 asm_handler_irq10:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 global asm_handler_irq11
 asm_handler_irq11:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 global asm_handler_irq12
 asm_handler_irq12:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 global asm_handler_irq13
 asm_handler_irq13:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 global asm_handler_irq14
 asm_handler_irq14:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 global asm_handler_irq15
 asm_handler_irq15:
-    iret
+    push 0
+    push 0
+    jmp isr_common_handler
 
 ;; Software Interrupts
 global asm_handler_isr48
