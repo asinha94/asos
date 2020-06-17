@@ -20,6 +20,14 @@ struct idt_table_struct {
 } __attribute__ ((packed));
 typedef struct idt_table_struct idt_table;
 
+struct isr_data_struct {
+    uint32_t eax;
+};
+typedef struct isr_data_struct isr_data;
+
+// ivect is a pointer to void function which takes a pointer to isr_input
+typedef void (*ivect)(isr_data * );
+
 extern void insert_idt_entry(uint8_t index, uint32_t handler);
 extern void init_idt();
 
