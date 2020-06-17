@@ -216,4 +216,9 @@ asm_handler_irq15:
 ;; Software Interrupts
 global asm_handler_isr48
 asm_handler_isr48:
+    push eax
+    mov eax, 0xB8000
+    mov byte [eax], 0x51
+    mov byte [eax+2], 0x51
+    pop eax
     iret
