@@ -89,7 +89,7 @@ static void insert_idt_entry(
 
 void init_idt()
 {
-    kernprintf("Creating IDT entries\n");
+    kprintf("Creating IDT entries\n");
     // first 32 [0-31] are the Intel Reserved Exceptions
     insert_idt_entry(0, (uint32_t) asm_handler_isr0);
     insert_idt_entry(1, (uint32_t) asm_handler_isr1);
@@ -151,7 +151,7 @@ void init_idt()
     idt.entries = (uint32_t) &entries;
     // load the IDT same way as the GDT
     asm_init_idt((uint32_t) &idt);
-    kernprintf("IDT loaded\n");
+    kprintf("IDT loaded\n");
 
     // Remap the PIC
     remap_pic_irq();

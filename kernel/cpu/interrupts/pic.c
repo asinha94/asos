@@ -25,7 +25,7 @@
 
 void remap_pic_irq()
 {
-    // Start initialization sequence of both master and slace
+    // Start initialization sequence of both master and slave
     outport8(PIC_MASTER_CMD_PORT, ICW1_INIT | PIC_ICW1_ICW4);
     outport8(PIC_SLAVE_CMD_PORT,  ICW1_INIT | PIC_ICW1_ICW4);
 
@@ -44,7 +44,7 @@ void remap_pic_irq()
     // Enable all IRQs
     outport8(PIC_MASTER_DATA_PORT, 0);
     outport8(PIC_SLAVE_DATA_PORT, 0);
-    kernprintf("PIC re-mapped\n");
+    kprintf("PIC re-mapped\n");
 }
 
 void irq_clear_mask(uint8_t irq_number)

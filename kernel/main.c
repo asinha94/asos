@@ -12,7 +12,7 @@ void kernel_main(void)
 {
     // Init a TTY for us to log to
     init_tty();
-    kernprintf("Initializing Kernel\n");
+    kprintf("Initializing Kernel\n");
 
     // create linear address space for OS
     // includes Kernel and Userspace

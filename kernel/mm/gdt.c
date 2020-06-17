@@ -51,5 +51,5 @@ void init_gdt()
     gdt.length = sizeof(segments) - 1;
     gdt.segments = (uint32_t) &segments;
     asm_init_gdt((uint32_t) &gdt);
-    kernprintf("GDT initialized\n");
+    kprintf("GDT initialized\n");
 }

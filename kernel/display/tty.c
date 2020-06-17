@@ -124,7 +124,7 @@ static void tty_writechars(const char* data, size_t size)
 }
 
 
-void kernprintf(const char* data)
+void kprintf(const char* data)
 {
     tty_writechars(data, strlen(data));
 }
