@@ -50,11 +50,11 @@ void init_idt()
 }
 
 void isr_dispatcher(isr_data * regs)
-{   kprintf("Int %u; Err: %u\n", regs->int_no, regs->err_code);
+{
     ivect handler = ivt[regs->int_no];
     if (handler == NULL) {
-        kprintf("Invalid Interrupt Number passed to Dispatcher\n");
+        kprintf("No handler found for: int %u\n", regs->int_no);
         return;
     }
-    //handler(regs);
+    handler(regs);
 }
