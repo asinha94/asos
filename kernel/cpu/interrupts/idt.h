@@ -1,8 +1,6 @@
 #ifndef ASOS_IDT_H
 #define ASOS_IDT_H
 
-#define IDT_LEN 256
-
 #include <stdint.h>
 
 struct idt_entry_struct {
@@ -28,7 +26,7 @@ typedef struct isr_data_struct isr_data;
 // ivect is a pointer to void function which takes a pointer to isr_input
 typedef void (*ivect)(isr_data * );
 
-extern void insert_idt_entry(uint8_t index, uint32_t handler);
+extern void insert_idt_entry(uint8_t index, uint32_t handler, ivect c_handler);
 extern void init_idt();
 
 #endif
