@@ -1,28 +1,9 @@
 #include <stdint.h>
+#include <cpu/hal.h>
 #include <cpu/interrupts/idt.h>
 #include <cpu/interrupts/pic.h>
-#include <cpu/hal.h>
 #include <display/tty.h>
-
-
-// Master PIC
-#define PIC_MASTER_CMD_PORT      0x20
-#define PIC_MASTER_DATA_PORT     (PIC_MASTER_CMD_PORT + 1)
-#define PIC_MASTER_VECTOR_OFFSET 0x20
-// Slave PIC
-#define PIC_SLAVE_CMD_PORT       0xA0
-#define PIC_SLAVE_DATA_PORT      (PIC_SLAVE_CMD_PORT + 1)
-#define PIC_SLAVE_VECTOR_OFFSET  (PIC_MASTER_VECTOR_OFFSET + 8)
-// Common Commands
-#define PIC_EOI                  0x20 // End of Instruction
-#define ICW1_INIT	             0x10
-#define PIC_ICW1_ICW4            0x01 // ICW4 not needed
-#define ICW4_8086	             0x01
-// Cascading
-#define PIC_MASTER_CASCADE_IRQ   0x04
-#define PIC_SLAVE_CASCADE_IRQ    0x02
-// IRQ Specific
-#define KBD_SCAN_CODE            0x60
+#include <drivers/keyboard.h>
 
 
 // IRQ handlers in assembly
@@ -46,84 +27,97 @@ extern void asm_handler_irq15();
 // Handlers in C
 static void handler_irq0(isr_data * data)
 {
-    kprintf("Entered IRQ 0\n");
+    kprintf("Entered ISR %u\n", data->int_no);
     irq_eoi(0);
 }
 
 static void handler_irq1(isr_data * data)
 {
-    uint8_t kbd_data = inport8(KBD_SCAN_CODE);
-    kprintf("Got %u from Keyboard\n", kbd_data);
+    keyboard_handler(data);
     irq_eoi(1);
 }
 
 static void handler_irq2(isr_data * data)
 {
+    kprintf("Entered ISR %u\n", data->int_no);
     irq_eoi(2);
 }
 
 static void handler_irq3(isr_data * data)
 {
+    kprintf("Entered ISR %u\n", data->int_no);
     irq_eoi(3);
 }
 
 static void handler_irq4(isr_data * data)
 {
+    kprintf("Entered ISR %u\n", data->int_no);
     irq_eoi(4);
 }
 
 static void handler_irq5(isr_data * data)
 {
+    kprintf("Entered ISR %u\n", data->int_no);
     irq_eoi(5);
 }
 
 static void handler_irq6(isr_data * data)
 {
+    kprintf("Entered ISR %u\n", data->int_no);
     irq_eoi(6);
 }
 
 static void handler_irq7(isr_data * data)
 {
+    kprintf("Entered ISR %u\n", data->int_no);
     irq_eoi(7);
 }
 
 static void handler_irq8(isr_data * data)
 {
+    kprintf("Entered ISR %u\n", data->int_no);
     irq_eoi(8);
 }
 
 static void handler_irq9(isr_data * data)
 {
+    kprintf("Entered ISR %u\n", data->int_no);
     irq_eoi(9);
 }
 
 static void handler_irq10(isr_data * data)
 {
+    kprintf("Entered ISR %u\n", data->int_no);
     irq_eoi(10);
 }
 
 static void handler_irq11(isr_data * data)
 {
+    kprintf("Entered ISR %u\n", data->int_no);
     irq_eoi(11);
 }
 
 static void handler_irq12(isr_data * data)
 {
+    kprintf("Entered ISR %u\n", data->int_no);
     irq_eoi(12);
 }
 
 static void handler_irq13(isr_data * data)
 {
+    kprintf("Entered ISR %u\n", data->int_no);
     irq_eoi(13);
 }
 
 static void handler_irq14(isr_data * data)
 {
+    kprintf("Entered ISR %u\n", data->int_no);
     irq_eoi(14);
 }
 
 static void handler_irq15(isr_data * data)
 {
+    kprintf("Entered ISR %u\n", data->int_no);
     irq_eoi(15);
 }
 
@@ -147,9 +141,12 @@ void init_irq()
     outport8(PIC_SLAVE_DATA_PORT, ICW4_8086);
 
     // Enable all IRQs
-    outport8(PIC_MASTER_DATA_PORT, 1);
-    outport8(PIC_SLAVE_DATA_PORT, 0);
+    outport8(PIC_MASTER_DATA_PORT, 0xFF);
+    outport8(PIC_SLAVE_DATA_PORT, 0xFF);
     kprintf("PIC re-mapped\n");
+
+    // Init all the PIC connected devices
+    keyboard_init();
 
     //  Install IRQ handlers into IDT
     // Entries [32-47] are the IRQs we just re-mapped

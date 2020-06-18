@@ -14,8 +14,6 @@ size_t strlen(const char* str);
 static void tty_writechars(const char* data, size_t size);
 static void tty_clear_from(uint8_t linum);
 static void tty_scroll_up_lines(uint8_t num_lines);
-static inline uint8_t is_escape_char(char c);
-static void handle_escape_char(char c);
 static void tty_putchar(char c);
 static void tty_writechars(const char* data, size_t size);
 
@@ -65,46 +63,38 @@ static void tty_scroll_up_lines(uint8_t num_lines)
 
 }
 
-static inline uint8_t is_escape_char(char c)
+static void tty_putchar(char c)
 {
-    return c == '\n' || c == '\r' || c == '\t';
-}
+    // caclulate index in case we need it
+    const size_t index = tty_row * VGA_WIDTH + tty_column;
 
-static void handle_escape_char(char c)
-{
     switch (c) {
     case '\n':
-        tty_column = 0;
-        tty_row++;
-        break;
     case '\r':
         tty_column = 0;
         tty_row++;
-        break;
+        break;;
     case '\t':
-        tty_writechars("    ", 4);
+        tty_writechars("    ",  4);
+        return;
     default:
+        tty_buffer[index] = vga_entry(c, tty_color);
+        tty_column++;
         break;
     }
-}
 
-static void tty_putchar(char c)
-{
-    if (is_escape_char(c)) {
-        handle_escape_char(c);
-        return;
+    // put on newline if need be
+    if (tty_column == VGA_WIDTH) {
+        tty_column = 0;
+        tty_row++;
+    }
+
+    // strip the first line, print from bottom line
+    if (tty_row == VGA_HEIGHT) {
+        tty_row--;
+        tty_scroll_up_lines(1);
     }
     
-    /* Set char in position*/
-    const size_t index = tty_row * VGA_WIDTH + tty_column;
-    tty_buffer[index] = vga_entry(c, tty_color);
-    if (++tty_column == VGA_WIDTH) {
-        tty_column = 0;
-        if (++tty_row == VGA_HEIGHT) {
-            --tty_row;
-            tty_scroll_up_lines(1);
-        }
-    }
 
 }
 
@@ -148,7 +138,7 @@ static char * itoa(char * s, uint32_t x, int8_t base)
 void kprintf(const char * format, ...)
 {
     // temp for conversions
-    char temp[12];
+    static char temp[12];
     // Only %d, %s, %u, %x supported
     uint32_t u;
     int32_t i;
@@ -197,7 +187,7 @@ void kprintf(const char * format, ...)
     va_end(arg);
 }
 
-void tty_clear_tty()
+void tty_clear()
 {
     tty_clear_from(0);
 }
@@ -209,7 +199,7 @@ void init_tty()
     tty_column = 0;
     tty_buffer = (uint16_t*) 0xB8000;
     tty_color = vga_entry_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
-    tty_clear_from(0);
+    tty_clear();
 }
 
 

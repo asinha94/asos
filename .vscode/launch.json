@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "cwd": "${workspaceFolder}",
-            "program": "./bin/asos.bin",
+            "program": "./build/asos.bin",
             "miDebuggerServerAddress": "localhost:1234",
             "MIMode": "gdb",
             "setupCommands": [

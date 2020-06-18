@@ -26,6 +26,30 @@ void kernel_main(void)
     init_cpu_exceptions();
     init_idt();
 
+    kprintf("The\n");
+    kprintf("quick\n");
+    kprintf("brown\n");
+    kprintf("fox\n");
+    kprintf("jumps\n");
+    kprintf("over\n");
+    kprintf("the\n");
+    kprintf("lazy\n");
+    kprintf("dog\n");
+    kprintf("who\n");
+    kprintf("sleeps\n");
+    kprintf("all\n");
+    kprintf("day\n");
+    kprintf("and\n");
+    kprintf("doesnt\n");
+    kprintf("event\n");
+    kprintf("pay\n");
+    kprintf("rent\n");
+    kprintf("but\n");
+    kprintf("is\n");
+    kprintf("still\n");
+    kprintf("a\n");
+    kprintf("well\n");
+
     // Enables Interrupts
     enable_interrupts();
 
