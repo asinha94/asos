@@ -1,13 +1,17 @@
-#include <drivers/keyboard.h>
+#include <drivers/keyboard/keyboard.h>
 #include <cpu/interrupts/pic.h>
 #include <cpu/interrupts/idt.h>
 #include <display/tty.h>
 
-#define KBD_SCAN_CODE            0x60
+
+
+
+
+
 
 void keyboard_init()
 {
-    irq_clear_mask(1);
+    irq_clear_mask(0x1);
 }
 
 inline void keyboard_handler(isr_data * data)
