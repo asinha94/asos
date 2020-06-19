@@ -4,8 +4,20 @@
 #include <stdint.h>
 #include <cpu/interrupts/idt.h>
 
+/* */
 #define KBD_SCAN_CODE_PORT 0x60
 #define KBD_SCAN_CODES 128
+
+/* Modifier Bitmasks */
+#define KBD_MASK_NONE       0x00
+#define KBD_MASK_CAPSLOCK   0x01 // 0b00000001
+#define KBD_MASK_SHIFT      0x02 // 0b00000010
+#define KBD_MASK_CTRL       0x04 // 0b00000100
+#define KBD_MASK_WINKEY     0x08 // 0b00001000
+#define KBD_MASK_ALT        0x10 // 0b00010000
+#define KBD_MASK_FN         0x20 // 0b00100000
+#define KBD_MASK_NUMLOCK    0x40 // 0x01000000
+#define KBD_MODIFIER        0x80 // 0b10000000
 
 /* Currently only 104-key US-QWERTY layout supported */
 typedef enum {
@@ -123,14 +135,17 @@ typedef enum {
 } kdb_key;
 // Letters
 
+
+
 struct kbd_event_struct {
     uint8_t scancode_base;
     uint8_t scancode_modified;
-};
+    uint8_t modifier_bitmask;
+} __attribute__ ((packed));
 typedef struct kbd_event_struct kbd_event;
 
 
-extern char scancode_set2[KBD_SCAN_CODES];
+extern const kbd_event scancode_set2[KBD_SCAN_CODES];
 void keyboard_init();
 extern inline void keyboard_handler(isr_data * data);
 
