@@ -3,6 +3,7 @@
 #include <drivers/keyboard/keyboard.h>
 
 const kbd_event scancode_set1[KBD_SCAN_CODES] = {
+    [0x00] = {KBD_INPUT_NONE, KBD_INPUT_NONE, KBD_INPUT_NONE}, // NULL
     [0x01] = { ASCII_ESCAPE, ASCII_ESCAPE, KBD_MASK_NONE }, // ESC - Replace with ctrl msg
     [0x02] = { ASCII_ONE, ASCII_EXCLAMATION_MARK, KBD_MASK_SHIFT },
     [0x03] = { ASCII_TWO, ASCII_AT_SIGN, KBD_MASK_SHIFT },
