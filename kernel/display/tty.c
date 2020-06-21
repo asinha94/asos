@@ -142,6 +142,7 @@ void kprintf(const char * format, ...)
     // Only %d, %s, %u, %x supported
     uint32_t u;
     int32_t i;
+    char c;
     char *s;
 
     // variadic argument macro
@@ -157,6 +158,10 @@ void kprintf(const char * format, ...)
 
         iter++;
         switch(*iter) {
+            case 'c':
+                c = va_arg(arg, int);
+                tty_putchar(c);
+                break;
             case 'd':
                 i = va_arg(arg, int);
                 if (i < 0) {

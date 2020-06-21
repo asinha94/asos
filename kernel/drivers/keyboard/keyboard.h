@@ -30,7 +30,7 @@ struct kbd_event_struct {
 typedef struct kbd_event_struct kbd_event;
 
 
-const kbd_event scancode_set2[KBD_SCAN_CODES];
+const kbd_event scancode_set1[KBD_SCAN_CODES];
 void keyboard_init();
 void keyboard_handler(isr_data * data);
 
