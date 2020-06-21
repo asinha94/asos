@@ -4,8 +4,9 @@
 #include <stdint.h>
 #include <cpu/interrupts/idt.h>
 
+#define KBD_SCAN_CODES      0x100
 #define KBD_SCAN_CODE_PORT  0x60
-#define KBD_SCAN_CODES      128
+#define KBD_SCAN_MORE_DATA  0xE0
 
 /* Modifier Bitmasks */
 #define KBD_MASK_NONE       0x00
@@ -22,8 +23,8 @@
 #define KBD_INPUT_NONE      0x00
 
 struct kbd_event_struct {
-    uint8_t scancode_reg;
-    uint8_t scancode_mod;
+    uint8_t data;
+    uint8_t data_mod;
     uint8_t modifier_mask;
 //    uint8_t function; // add back in once things are stable
 } __attribute__((packed));

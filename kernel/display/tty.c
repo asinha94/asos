@@ -66,7 +66,8 @@ void tty_putchar(char c)
     const size_t index = tty_row * VGA_WIDTH + tty_column;
 
     switch (c) {
-    //case '\r':
+    case '\0':
+        break;
     case '\n':
         tty_column = 0;
         tty_row++;
