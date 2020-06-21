@@ -18,7 +18,7 @@ void keyboard_handler(isr_data * data)
 {
     uint8_t kbd_data = inport8(KBD_SCAN_CODE_PORT);
     // Highest but just tells is if its pressed (0) or released (1)
-    uint8_t pressed = 0x80 ^ kbd_data;
+    uint8_t depressed = 0x80 & kbd_data;
     uint8_t scancode = 0x7F & kbd_data;
     kbd_event * evt = &scancode_set1[scancode];
 
@@ -26,7 +26,7 @@ void keyboard_handler(isr_data * data)
     // Mask has hightest bit set to indicate it is the modifier key itself
     uint8_t is_modifier = 0x80 & evt->modifier_mask;
     if (is_modifier) {
-        if (pressed) {
+        if (!depressed) {
             current_modifiers |=  evt->modifier_mask;
         } else {
             // remove all high bits in modifier_mask
@@ -34,7 +34,7 @@ void keyboard_handler(isr_data * data)
         }
     } else {
         current_value = 0;
-        if (pressed) {
+        if (!depressed) {
             current_value = evt->scancode_reg;
             if (evt->modifier_mask & current_modifiers) {
                 current_value = evt->scancode_mod;
