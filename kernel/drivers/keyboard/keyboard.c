@@ -22,10 +22,8 @@ void keyboard_handler()
     uint8_t scancode = 0x7F & kbd_data;
     const kbd_event * evt = &scancode_set1[scancode];
 
-    // Logic below I think can be cleaned up and consolidated
-    // Mask has hightest bit set to indicate it is the modifier key itself
-    uint8_t is_modifier = 0x80 & evt->modifier_mask;
-    if (is_modifier) {
+    // Modifier bit indicate if it is the modifier key itself
+    if (KBD_MODIFIER & evt->modifier_mask) {
         if (pressed) {
             // insert bit indicating modifier is currently pressed
             current_modifiers |= evt->modifier_mask;
@@ -52,7 +50,7 @@ void keyboard_handler()
             current_value = last_pressed->scancode_mod;
         }
 
-        // In future when we have userspace, this will be replaces
+        // In future when we have userspace, this will be replaced
         // with a send and/or read with readline
         tty_putchar(current_value);        
     }
