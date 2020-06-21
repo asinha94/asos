@@ -23,7 +23,7 @@ void keyboard_handler()
     // Check if we need more bytes to proceed
     if (kbd_data == KBD_SCAN_MORE_DATA) {
         kbd_data = inport8(KBD_SCAN_CODE_PORT);
-        is_multiple = 0xff;
+        is_multiple = 0xFF;
     }
     // Highest but just tells is if its pressed (0) or released (1)
     uint8_t pressed = 0x80 & ~kbd_data;

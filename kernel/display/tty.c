@@ -67,7 +67,7 @@ void tty_putchar(char c)
 
     switch (c) {
     case '\0':
-        break;
+        return;
     case '\n':
         tty_column = 0;
         tty_row++;
