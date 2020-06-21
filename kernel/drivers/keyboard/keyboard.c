@@ -4,12 +4,12 @@
 #include <drivers/keyboard/keyboard.h>
 #include <display/tty.h>
 
-uint8_t current_value;
+kbd_event * last_pressed;
 uint8_t current_modifiers;
 
 void keyboard_init()
 {
-    current_value = 0;
+    last_pressed = &scancode_set1[0];
     current_modifiers = 0;
     irq_clear_mask(0x1);
 }
@@ -18,7 +18,7 @@ void keyboard_handler(isr_data * data)
 {
     uint8_t kbd_data = inport8(KBD_SCAN_CODE_PORT);
     // Highest but just tells is if its pressed (0) or released (1)
-    uint8_t depressed = 0x80 & kbd_data;
+    uint8_t pressed = 0x80 & ~kbd_data;
     uint8_t scancode = 0x7F & kbd_data;
     kbd_event * evt = &scancode_set1[scancode];
 
@@ -26,21 +26,34 @@ void keyboard_handler(isr_data * data)
     // Mask has hightest bit set to indicate it is the modifier key itself
     uint8_t is_modifier = 0x80 & evt->modifier_mask;
     if (is_modifier) {
-        if (!depressed) {
-            current_modifiers |=  evt->modifier_mask;
+        if (pressed) {
+            // insert bit indicating modifier is currently pressed
+            current_modifiers |= evt->modifier_mask;
         } else {
-            // remove all high bits in modifier_mask
+            // remove bit to indicate not pressed
             current_modifiers &= ~(evt->modifier_mask);
         }
     } else {
-        current_value = 0;
-        if (!depressed) {
-            current_value = evt->scancode_reg;
-            if (evt->modifier_mask & current_modifiers) {
-                current_value = evt->scancode_mod;
+        if (pressed) {
+            last_pressed = evt;
+        } else {
+            // If the last key pressed is depressed, insert nothing
+            if (last_pressed == evt) {
+                last_pressed = &scancode_set1[0];
             }
         }
     }
+
+    // Print char if available not 0. 
     
-    if (current_value) kprintf("Got %c from Keyboard\n", current_value);
+    if (last_pressed->scancode_reg) {
+        uint8_t current_value = last_pressed->scancode_reg;
+        if (last_pressed->modifier_mask & current_modifiers) {
+            current_value = last_pressed->scancode_mod;
+        }
+
+        // In future when we have userspace, this will be replaces
+        // with a send and/or read with readline
+        kprintf("Got %c from Keyboard\n", current_value);        
+    }
 }

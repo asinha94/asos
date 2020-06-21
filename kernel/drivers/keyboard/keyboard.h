@@ -26,7 +26,7 @@ struct kbd_event_struct {
     uint8_t scancode_mod;
     uint8_t modifier_mask;
 //    uint8_t function; // add back in once things are stable
-} __attribute__ ((packed));
+} __attribute__((packed));
 typedef struct kbd_event_struct kbd_event;
 
 
