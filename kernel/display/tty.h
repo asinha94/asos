@@ -34,10 +34,12 @@ static inline uint16_t vga_entry(unsigned char uc, uint8_t color)
     return (((uint16_t) color) << 8) | ((uint16_t) uc);
 }
 
-extern const size_t VGA_WIDTH;
-extern const size_t VGA_HEIGHT;
-extern void kprintf(const char * format, ...);
-extern void tty_clear();
-extern void init_tty();
+const size_t VGA_WIDTH;
+const size_t VGA_HEIGHT;
+
+void tty_puts(const char* data);
+void tty_putchar(char c);
+void kprintf(const char * format, ...);
+void init_tty();
 
 #endif

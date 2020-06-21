@@ -4,7 +4,7 @@
 #include <drivers/keyboard/keyboard.h>
 #include <display/tty.h>
 
-kbd_event * last_pressed;
+const kbd_event * last_pressed;
 uint8_t current_modifiers;
 
 void keyboard_init()
@@ -14,13 +14,13 @@ void keyboard_init()
     irq_clear_mask(0x1);
 }
 
-void keyboard_handler(isr_data * data)
+void keyboard_handler()
 {
     uint8_t kbd_data = inport8(KBD_SCAN_CODE_PORT);
     // Highest but just tells is if its pressed (0) or released (1)
     uint8_t pressed = 0x80 & ~kbd_data;
     uint8_t scancode = 0x7F & kbd_data;
-    kbd_event * evt = &scancode_set1[scancode];
+    const kbd_event * evt = &scancode_set1[scancode];
 
     // Logic below I think can be cleaned up and consolidated
     // Mask has hightest bit set to indicate it is the modifier key itself
@@ -54,6 +54,6 @@ void keyboard_handler(isr_data * data)
 
         // In future when we have userspace, this will be replaces
         // with a send and/or read with readline
-        kprintf("Got %c from Keyboard\n", current_value);        
+        tty_putchar(current_value);        
     }
 }
