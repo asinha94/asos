@@ -3,7 +3,7 @@
 #include <cpu/interrupts/idt.h>
 #include <cpu/interrupts/pic.h>
 #include <display/tty.h>
-#include <drivers/keyboard.h>
+#include <drivers/keyboard/keyboard.h>
 
 
 // IRQ handlers in assembly

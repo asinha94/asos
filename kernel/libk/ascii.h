@@ -12,7 +12,7 @@ typedef enum {
     ASCII_BELL,
     ASCII_BACKSPACE,
     ASCII_H_TAB,
-    ASCII_LINE_FEED,
+    ASCII_LINE_FEED, // \n or LF 
     ASCII_V_TAB,
     ASCII_FORM_FEED,
     ASCII_CR,

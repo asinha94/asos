@@ -12,12 +12,11 @@ My pet project in bootstrapping a bare-bones OS. The goal is for this to eventua
 
 ## Work to be completed
 - [ ] Create keyboard handler
+- [ ] Create handler for interrupt 0-31
+- [ ] High-half kernel
+- [ ] Enable paging
 - [ ] Move the blinking cursor
 - [ ] Create PIT/RTC drivers
-- [ ] Create handler for interrupt 0-31
-- [ ] Enabled Paging and move kernel to higher half?
-- [ ] Configure VGA/VESA graphics
-- [ ] Replace PIC with APIC
 
 ## Optional
 - [ ] Use multiboot2
