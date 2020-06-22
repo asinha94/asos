@@ -11,11 +11,8 @@ static uint8_t tty_color;
 static uint16_t* tty_buffer;
 
 size_t strlen(const char* str);
-static void tty_writechars(const char* data, size_t size);
 static void tty_clear_from(uint8_t linum);
 static void tty_scroll_up_lines(uint8_t num_lines);
-static void tty_putchar(char c);
-static void tty_writechars(const char* data, size_t size);
 
 
 // move to libk string.h
@@ -63,19 +60,20 @@ static void tty_scroll_up_lines(uint8_t num_lines)
 
 }
 
-static void tty_putchar(char c)
+void tty_putchar(char c)
 {
     // caclulate index in case we need it
     const size_t index = tty_row * VGA_WIDTH + tty_column;
 
     switch (c) {
+    case '\0':
+        return;
     case '\n':
-    case '\r':
         tty_column = 0;
         tty_row++;
         break;;
     case '\t':
-        tty_writechars("    ",  4);
+        tty_puts("    ");
         return;
     default:
         tty_buffer[index] = vga_entry(c, tty_color);
@@ -99,15 +97,7 @@ static void tty_putchar(char c)
 }
 
 
-static void tty_writechars(const char* data, size_t size)
-{
-    for (size_t i = 0; i < size; i++ ) {
-        tty_putchar(data[i]);
-    }
-
-}
-
-static void tty_puts(const char* data)
+void tty_puts(const char* data)
 {
     const char * s = data;
     // This can't go wrong
@@ -157,6 +147,10 @@ void kprintf(const char * format, ...)
 
         iter++;
         switch(*iter) {
+            case 'c':
+                i = va_arg(arg, int);
+                tty_putchar((char) i);
+                break;
             case 'd':
                 i = va_arg(arg, int);
                 if (i < 0) {
@@ -178,18 +172,13 @@ void kprintf(const char * format, ...)
             case 'x':
                 u = va_arg(arg, unsigned int);
                 s = itoa(&temp[11], u, 16);
-                tty_writechars("0x", 2);
+                tty_puts("0x");
                 tty_puts(s);
                 break; 
         }
 
     }
     va_end(arg);
-}
-
-void tty_clear()
-{
-    tty_clear_from(0);
 }
 
 
@@ -199,7 +188,7 @@ void init_tty()
     tty_column = 0;
     tty_buffer = (uint16_t*) 0xB8000;
     tty_color = vga_entry_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
-    tty_clear();
+    tty_clear_from(0);
 }
 
 

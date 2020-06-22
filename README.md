@@ -10,14 +10,26 @@ My pet project in bootstrapping a bare-bones OS. The goal is for this to eventua
 - [X] Create kprintf for debugging
 - [X] Create software interrupt
 
-## Work to be completed
+## Short-Term Work
 - [ ] Create keyboard handler
+- [ ] Create handler for interrupt 0-31
+- [ ] High-half kernel
+- [ ] Enable paging
 - [ ] Move the blinking cursor
 - [ ] Create PIT/RTC drivers
-- [ ] Create handler for interrupt 0-31
-- [ ] Enabled Paging and move kernel to higher half?
-- [ ] Configure VGA/VESA graphics
-- [ ] Replace PIC with APIC
+
+## Long-Term Work
+- [ ] Process Scheduling
+- [ ] File-system support (FAT initially)  
 
 ## Optional
+- [ ] Use APIC instead of PIC
 - [ ] Use multiboot2
+
+
+## Resources
+None of this would be possible without the amazing information from these sources
+
+- wiki.osdev.org
+- http://www.osdever.net/tutorials/
+- https://github.com/cfenollosa/os-tutorial

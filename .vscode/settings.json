@@ -4,6 +4,9 @@
         "pic.h": "c",
         "idt.h": "c",
         "rope": "c",
-        "variant": "c"
+        "variant": "c",
+        "array": "c",
+        "string": "c",
+        "string_view": "c"
     }
 }
