@@ -7,6 +7,7 @@
 #define KBD_SCAN_CODES      0x100
 #define KBD_SCAN_CODE_PORT  0x60
 #define KBD_SCAN_MORE_DATA  0xE0
+#define KBD_ACK_BYTE        0xFA
 
 /* Modifier Bitmasks */
 #define KBD_MASK_NONE       0x00

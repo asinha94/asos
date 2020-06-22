@@ -9,10 +9,16 @@ uint8_t current_modifiers;
 
 void keyboard_init()
 {
-    last_pressed = NULL;
-    current_modifiers = 0;
+    uint8_t data;
+    uint8_t max_tries = 3;
+    kprintf("Initializing Keyboard\n");
+
     // get/set scan code set 1 here
     // disalbe all LED
+    // set type rate
+
+    last_pressed = NULL;
+    current_modifiers = 0;
     irq_clear_mask(0x1);
 }
 
