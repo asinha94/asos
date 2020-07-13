@@ -3,24 +3,21 @@
 My pet project in bootstrapping a bare-bones OS. The goal is for this to eventually become a POSIX compliant OS
 
 ## Completed:
-- [X] Enable Protected Mode
-- [X] Boot into C kernel
-- [X] Create GDT
-- [X] Create IDT
-- [X] Create kprintf for debugging
-- [X] Create software interrupt
+- [X] Boot intp Protected Mode C Kernel
+- [X] Interrupt driven kernel architecture
+- [X] Partial driver support (keyboard)
 
 ## Short-Term Work
-- [ ] Create keyboard handler
 - [ ] Create handler for interrupt 0-31
-- [ ] High-half kernel
-- [ ] Enable paging
+- [ ] High-half kernel and paging
 - [ ] Move the blinking cursor
 - [ ] Create PIT/RTC drivers
 
 ## Long-Term Work
 - [ ] Process Scheduling
 - [ ] File-system support (FAT initially)  
+- [ ] Basic syscalls (read/write/fork/exec)
+- [ ] bash (or variant) shell
 
 ## Optional
 - [ ] Use APIC instead of PIC
