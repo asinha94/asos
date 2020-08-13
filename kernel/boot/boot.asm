@@ -59,6 +59,10 @@ _start:
 extern kernel_main
 section .text
 _kernel_start:
+        ; Clear identity mapped page entry
+        mov dword [identity_page_directory], 0
+        invlpg [0]
+
         ; setup stack
         mov esp, stack_start
 

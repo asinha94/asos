@@ -186,7 +186,7 @@ void init_tty()
 {
     tty_row = 0;
     tty_column = 0;
-    tty_buffer = (uint16_t*) 0xB8000;
+    tty_buffer = (uint16_t*) 0xC00B8000; // 0xB8000 + Kernel Offset
     tty_color = vga_entry_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
     tty_clear_from(0);
 }
