@@ -33,6 +33,7 @@ static void handler_irq0(isr_data * data)
 
 static void handler_irq1(isr_data * data)
 {
+    (void) data;
     keyboard_handler();
     irq_eoi(1);
 }
