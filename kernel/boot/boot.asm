@@ -10,18 +10,11 @@ CHECKSUM equ -(MAGIC + FLAGS)   ; Checksum of above to prove to multiboot that t
 ; Declare the Header for the multiboot standard
 section .multiboot
 align 4
+multiboot_header:
         dd MAGIC
         dd FLAGS
         dd CHECKSUM
 
-
-; Time to create our own small stack
-; System V ABI requires a 16-byte aligned stack
-section .bss
-align 16  
-stack_bottom:
-        resb 16384 ; 16 KiB
-stack_top:
 
 ; Create Paging structures for loading kernel at higher-half
 KERNEL_PG_VA_OFFSET equ 0xC0000000
@@ -50,10 +43,12 @@ _start:
         ; Enable 4MiB pages
         mov eax, cr4
         or eax, 0x00000010
+        mov cr4, eax
 
-        ; Enable Paging (and protected mode which)
+        ; Enable Paging
         mov eax, cr0
         or eax, 0x80000000
+        mov cr0, eax
 
         ; Paging is enabled but the CPU still has physical addresses
         ; in its instruction cache, we need to long jump (similar to GDT jump)
@@ -65,13 +60,17 @@ extern kernel_main
 section .text
 _kernel_start:
         ; setup stack
-        mov esp, stack_top
+        mov esp, stack_start
 
         ; Startup the C kernel
         call kernel_main
-        ; If somehow our kernel has exited then we need to do nothing
-        ; disable all interrupts, wait for interrupts which won't come
-        ; Then if we somehow escape from that then jump back into waiting
+        ; If somehow our kernel has exited then do nothing
         cli
         hlt
-;.end:
+
+; 16 KiB stack. SysV ABI requires a 16-byte aligned stack
+section .bss
+align 16  
+stack_end:
+        resb 16384 ; 16 KiB
+stack_start:
