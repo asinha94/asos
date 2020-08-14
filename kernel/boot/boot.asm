@@ -10,50 +10,71 @@ CHECKSUM equ -(MAGIC + FLAGS)   ; Checksum of above to prove to multiboot that t
 ; Declare the Header for the multiboot standard
 section .multiboot
 align 4
+multiboot_header:
         dd MAGIC
         dd FLAGS
         dd CHECKSUM
 
-; Time to create our own small stack
-; System V ABI requires a 16-byte aligned stack
-section .bss
-align 16  
-stack_bottom:
-        resb 16384 ; 16 KiB
-stack_top:
+
+; Create Paging structures for loading kernel at higher-half
+KERNEL_PG_VA_OFFSET equ 0xC0000000
+KERNEL_PG_DIR_OFFSET equ 768 ; Number of pages before kernel page
+section .data
+align 4096
+identity_page_directory:
+        dd 0x83 ; Identity Map first 4MiB. use single RW 4MiB Page
+        times (KERNEL_PG_DIR_OFFSET - 1) dd 0
+        dd 0x83 ; Kernel 4MiB RW Page
+        times (1024 - KERNEL_PG_DIR_OFFSET - 1) dd 0 ; Remaining Pages
 
 
 section .text
-global _start:function (_start.end - _start)
+global _start
 _start:
-        ;; disable interrupts
+        ; disable interrupts
         cli
 
-        ; setup stack
-        mov esp, stack_top
-        
-        ; If grub is removed, we need to setup 80x25 video mode ourselves
-        ; this should be done here maybe?
+        ; Load page-dir. The PIC addresses are used because
+        ; the BIOS has loaded us in at 1MiB, but we told the linker
+        ; to use our VA offsets
+        mov eax, (identity_page_directory - KERNEL_PG_VA_OFFSET)
+        mov cr3, eax
 
-        ; Set A20 so we can access >1 MB of memory
-        ; This is unecceary atm because Grub has already done this
-        in al, 0x92
-        or al, 2
-        out 0x92, al
+        ; Enable 4MiB pages
+        mov eax, cr4
+        or eax, 0x00000010
+        mov cr4, eax
 
-        ; Set protected mode bit on CR0
+        ; Enable Paging
         mov eax, cr0
-        or eax, 0x1
+        or eax, 0x80000000
         mov cr0, eax
 
-        ; Startup the higher level kernel
-        extern kernel_main
-        call kernel_main
-        ; If somehow our kernel has exited then we need to do nothing
-        ; disable all interrupts, wait for interrupts which won't come
-        ; Then if we somehow escape from that then jump back into waiting
-        cli
-.hang:  hlt
-        jmp .hang
+        ; Paging is enabled but the CPU still has physical addresses
+        ; in its instruction cache, we need to long jump (similar to GDT jump)
+        lea eax, [_kernel_start]
+        jmp eax ; Need a virtual address to cement it
 
-.end:
+
+extern kernel_main
+section .text
+_kernel_start:
+        ; Clear identity mapped page entry
+        mov dword [identity_page_directory], 0
+        invlpg [0]
+
+        ; setup stack
+        mov esp, stack_start
+
+        ; Startup the C kernel
+        call kernel_main
+        ; If somehow our kernel has exited then do nothing
+        cli
+        hlt
+
+; 16 KiB stack. SysV ABI requires a 16-byte aligned stack
+section .bss
+align 16  
+stack_end:
+        resb 16384 ; 16 KiB
+stack_start:

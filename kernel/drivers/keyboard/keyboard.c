@@ -9,8 +9,6 @@ uint8_t current_modifiers;
 
 void keyboard_init()
 {
-    uint8_t data;
-    uint8_t max_tries = 3;
     kprintf("Initializing Keyboard\n");
 
     // get/set scan code set 1 here

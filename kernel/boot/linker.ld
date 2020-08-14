@@ -3,27 +3,28 @@ ENTRY(_start)
 
 SECTIONS
 {
-        /* Kernel and other sections start at 1MiB (Convention) */
-        . = 1M;
-
-        /* First 4KiB contains only the multiboot headers */
-        .text BLOCK(4K) : ALIGN(4K)
+        /* Kernel by convention will be mapped at 3GiB + 1MiB */
+        KERNEL_VA_OFFSET = 0xC0000000;
+        . = 0xC0100000;
+        _kernel_start = .;
+        
+        .text ALIGN(4K) : AT( ADDR(.text) - KERNEL_VA_OFFSET)
         {
                 *(.multiboot)
                 *(.text)
         }
-
-        /* read only data */
-        .rodata BLOCK(4K) : ALIGN(4K)
+        .rodata ALIGN(4K) : AT( ADDR(.rodata) - KERNEL_VA_OFFSET)
+        {
+                *(.rodata)
+        }
+        .data ALIGN(4K) : AT( ADDR(.data) - KERNEL_VA_OFFSET)
         {
                 *(.data)
         }
-
-        /*rw data including the stack */
-        .bss BLOCK(4K) : ALIGN(4K)
+        .bss ALIGN(4K) : AT( ADDR(.bss) - KERNEL_VA_OFFSET)
         {
                 *(COMMON)
                 *(.bss)
         }
-
+        _kernel_end = .;
 }

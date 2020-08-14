@@ -28,7 +28,7 @@ void init_paging()
     }
 
     // assign table as only entry in directory
-    page_directory[0] = page_table;
+    page_directory[0] = (uint32_t) page_table;
 
 }
 

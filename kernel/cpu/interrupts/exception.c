@@ -1,5 +1,6 @@
 #include <cpu/interrupts/exception.h>
 #include <cpu/interrupts/idt.h>
+#include <display/tty.h>
 
 // CPU Exception handlers
 extern void asm_handler_isr0();
@@ -37,162 +38,162 @@ extern void asm_handler_isr31();
 
 static void handler_isr0(isr_data * data)
 {
-
+    (void) data;
 }
 
 static void handler_isr1(isr_data * data)
 {
-
+    (void) data;
 }
 
 static void handler_isr2(isr_data * data)
 {
-
+    (void) data;
 }
 
 static void handler_isr3(isr_data * data)
 {
-
+    (void) data;
 }
 
 static void handler_isr4(isr_data * data)
 {
-
+    (void) data;
 }
 
 static void handler_isr5(isr_data * data)
 {
-
+    (void) data;
 }
 
 static void handler_isr6(isr_data * data)
 {
-
+    (void) data;
 }
 
 static void handler_isr7(isr_data * data)
 {
-
+    (void) data;
 }
 
 static void handler_isr8(isr_data * data)
 {
-
+    (void) data;
 }
 
 static void handler_isr9(isr_data * data)
 {
-
+    (void) data;
 }
 
 static void handler_isr10(isr_data * data)
 {
-
+    (void) data;
 }
 
 static void handler_isr11(isr_data * data)
 {
-
+    (void) data;
 }
 
 static void handler_isr12(isr_data * data)
 {
-
+    (void) data;
 }
 
 static void handler_isr13(isr_data * data)
 {
-
+    (void) data;
 }
 
 static void handler_isr14(isr_data * data)
 {
-
+    (void) data;
 }
 
 static void handler_isr15(isr_data * data)
 {
-
+    (void) data;
 }
 
 static void handler_isr16(isr_data * data)
 {
-
+    (void) data;
 }
 
 static void handler_isr17(isr_data * data)
 {
-
+    (void) data;
 }
 
 static void handler_isr18(isr_data * data)
 {
-
+    (void) data;
 }
 
 static void handler_isr19(isr_data * data)
 {
-
+    (void) data;
 }
 
 static void handler_isr20(isr_data * data)
 {
-
+    (void) data;
 }
 
 static void handler_isr21(isr_data * data)
 {
-
+    (void) data;
 }
 
 static void handler_isr22(isr_data * data)
 {
-
+    (void) data;
 }
 
 static void handler_isr23(isr_data * data)
 {
-
+    (void) data;
 }
 
 static void handler_isr24(isr_data * data)
 {
-
+    (void) data;
 }
 
 static void handler_isr25(isr_data * data)
 {
-
+    (void) data;
 }
 
 static void handler_isr26(isr_data * data)
 {
-
-}
+    (void) data;
+}   
 
 static void handler_isr27(isr_data * data)
 {
-
+    (void) data;
 }
 
 static void handler_isr28(isr_data * data)
 {
-
+    (void) data;
 }
 
 static void handler_isr29(isr_data * data)
 {
-
+    (void) data;
 }
 
 static void handler_isr30(isr_data * data)
 {
-
+    (void) data;
 }
 
 static void handler_isr31(isr_data * data)
 {
-
+    (void) data;
 }
 
 void init_cpu_exceptions()
