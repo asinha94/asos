@@ -1,7 +1,3 @@
-#include <stdbool.h>
-#include <stddef.h>
-#include <stdint.h>
-
 #include <display/tty.h>
 #include <cpu/interrupts/pic.h>
 #include <cpu/interrupts/exception.h>

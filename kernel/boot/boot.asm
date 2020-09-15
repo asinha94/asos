@@ -23,9 +23,9 @@ section .data
 align 4096
 identity_page_directory:
         dd 0x83 ; Identity Map first 4MiB. use single RW 4MiB Page
-        times (KERNEL_PG_DIR_OFFSET - 1) dd 0
-        dd 0x83 ; Kernel 4MiB RW Page
-        times (1024 - KERNEL_PG_DIR_OFFSET - 1) dd 0 ; Remaining Pages
+        times (KERNEL_PG_DIR_OFFSET - 1) dd 0 ; Unmap next ~767 pages
+        dd 0x83 ; Also map first 4MiB to Kernel position i.e 786 * 4096 Bytes up
+        times (1024 - KERNEL_PG_DIR_OFFSET - 1) dd 0 ; Unmap remaining pages
 
 
 section .text
