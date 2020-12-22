@@ -63,7 +63,7 @@ void init_pmm()
     pmm_set_range(0x0, VMM_PG_SZ_LARGE);
 
     // Set final 1 MiB  as used i.e the place where all our paging structures are held
-    uint32_t last_page_addr = PMM_RAM_SIZE - PMM_BITMAP_SZ_BYTES;
+    uint32_t last_page_addr = PMM_END_ADDR - PMM_BITMAP_SZ_BYTES + 1;
     pmm_set_range(last_page_addr, PMM_BITMAP_SZ_BYTES);
 
     // Mark everything else as unused i.e [4 MB, 4GB-1MB]

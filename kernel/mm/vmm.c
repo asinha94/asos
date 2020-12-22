@@ -8,7 +8,7 @@ static uint32_t * kernel_page_directory;
 static uint32_t * kernel_page_table;
 
 
-void init_vmm_structures()
+void init_vmm()
 {
 }
 

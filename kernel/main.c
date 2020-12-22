@@ -18,6 +18,7 @@ void kernel_main(void)
     kprintf("Initializing MM\n");
     init_gdt();
     init_pmm();
+    init_vmm();
 
     // Install IDT and IRQ handlers
     kprintf("Initializing CPU exception handlers\n");
