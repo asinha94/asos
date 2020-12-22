@@ -38,7 +38,7 @@ const size_t VGA_WIDTH;
 const size_t VGA_HEIGHT;
 
 void tty_puts(const char* data);
-void tty_putchar(char c);
+void tty_putchar(unsigned char c);
 void kprintf(const char * format, ...);
 void init_tty();
 

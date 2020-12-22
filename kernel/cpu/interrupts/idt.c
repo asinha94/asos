@@ -5,11 +5,11 @@
 #define IDT_LEN 256
 
 // IDT table to be loaded
-idt_table idt;
-idt_entry entries[IDT_LEN];
+static idt_table idt;
+static idt_entry entries[IDT_LEN];
 
 // Pointers to C handler functions
-ivect ivt[IDT_LEN];
+static ivect ivt[IDT_LEN];
 
 // LIDT init function
 extern void asm_init_idt(uint32_t idt_address);

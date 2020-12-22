@@ -4,6 +4,7 @@
 #include <cpu/interrupts/idt.h>
 #include <cpu/hal.h>
 #include <mm/gdt.h>
+#include <mm/pmm.h>
 
 
 void kernel_main(void)
@@ -14,13 +15,16 @@ void kernel_main(void)
     
     // create linear address space for OS
     // includes Kernel and Userspace
+    kprintf("Initializing MM\n");
     init_gdt();
-    // init paging here
+    init_pmm();
 
     // Install IDT and IRQ handlers
+    kprintf("Initializing CPU exception handlers\n");
     init_irq();
     init_cpu_exceptions();
     init_idt();
+    
 
     // Enables Interrupts
     enable_interrupts();

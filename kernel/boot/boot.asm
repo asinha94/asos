@@ -24,8 +24,10 @@ align 4096
 identity_page_directory:
         dd 0x83 ; Identity Map first 4MiB. use single RW 4MiB Page
         times (KERNEL_PG_DIR_OFFSET - 1) dd 0 ; Unmap next ~767 pages
-        dd 0x83 ; Also map first 4MiB to Kernel position i.e 786 * 4096 Bytes up
-        times (1024 - KERNEL_PG_DIR_OFFSET - 1) dd 0 ; Unmap remaining pages
+        dd 0x83 ; Map first 4MiB to Kernel position i.e 786 * 4096 Bytes up
+        times (1024 - KERNEL_PG_DIR_OFFSET - 1) dd 0 ; Unmap all pages except last
+        dd 0x83 ; Map last 4MiB for Paging structureus
+        
 
 
 section .text
@@ -36,7 +38,7 @@ _start:
 
         ; Load page-dir. The PIC addresses are used because
         ; the BIOS has loaded us in at 1MiB, but we told the linker
-        ; to use our VA offsets
+        ; to use our VA offsets so the C code works with VA addresses
         mov eax, (identity_page_directory - KERNEL_PG_VA_OFFSET)
         mov cr3, eax
 
