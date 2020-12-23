@@ -25,13 +25,12 @@ KERNSOURCES_ASM := $(shell find $(SRC_DIR)/ -name *.asm)
 KERNOBJS := $(KERNSOURCES_C:%.c=%.o)  $(KERNSOURCES_ASM:%.asm=%.o)
 
 WARNINGS := -Wall -Wextra -pedantic -Wshadow -Wpointer-arith -Wcast-align \
-	    -Wwrite-strings -Wmissing-prototypes -Wmissing-declarations \
-	    -Wredundant-decls -Wnested-externs -Winline -Wno-long-long \
-	    -Wconversion -Wstrict-prototypes
-
+	        -Wwrite-strings -Wcast-qual -Wconversion -Wno-long-long \
+	        -Wredundant-decls -Wnested-externs -Winline  -Wno-sign-conversion -Wno-conversion\
+	     
 LIBS = -lgcc
 INCLUDES := -Ikernel
-CFLAGS := -g -Wall -Wextra -std=gnu99 -ffreestanding -nostdlib $(INCLUDES) $(LIBS)
+CFLAGS := -g $(WARNINGS) -std=gnu99 -ffreestanding -nostdlib $(INCLUDES) $(LIBS)
 ASFLAGS := -f elf32 -g
 CPPFLAGS =
 
@@ -72,7 +71,7 @@ qemu-dbg: asos.bin
 	@$(QEMU) -s -S -kernel $(BUILD_DIR)/asos.bin -no-reboot -monitor stdio
 
 qemu-run: asos.bin
-	@$(QEMU) -kernel $(BUILD_DIR)/asos.bin -no-reboot  -monitor stdio
+	@$(QEMU) -kernel $(BUILD_DIR)/asos.bin -no-reboot -monitor stdio
 
 bochs-run: iso
 	@$(BOCHS) -f bochsrc.cd -q

@@ -4,8 +4,8 @@
 #include <drivers/keyboard/keyboard.h>
 #include <display/tty.h>
 
-const kbd_event * last_pressed;
-uint8_t current_modifiers;
+static const kbd_event * last_pressed;
+static uint8_t current_modifiers;
 
 void keyboard_init()
 {

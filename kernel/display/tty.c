@@ -60,7 +60,7 @@ static void tty_scroll_up_lines(uint8_t num_lines)
 
 }
 
-void tty_putchar(char c)
+void tty_putchar(unsigned char c)
 {
     // caclulate index in case we need it
     const size_t index = tty_row * VGA_WIDTH + tty_column;
@@ -106,13 +106,13 @@ void tty_puts(const char* data)
 }
 
 
-static char * itoa(char * s, uint32_t x, int8_t base)
+static char * itoa(char * s, uint32_t x, uint32_t base)
 {
     // s is a pointer to the end of a buffer
     // 2**32 is the max representable value
     // and fits in 10 chars (negative sign inserted beforehand)
     // Buffer is larger than 10 so dont worry about space
-    char * digits = "0123456789ABCDEF";
+    const char * digits = "0123456789ABCDEF";
     uint16_t i;
 
     // Its itoa's job to insert the null terminator

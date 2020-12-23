@@ -5,8 +5,8 @@
 
 #define GDT_SIZE 5
 
-gdt_segment segments[GDT_SIZE];
-gdt_table gdt;
+static gdt_segment segments[GDT_SIZE];
+static gdt_table gdt;
 
 /* ASM function which loads the GDT for us */
 extern int asm_init_gdt(uint32_t gdt_address);
