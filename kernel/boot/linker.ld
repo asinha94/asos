@@ -3,7 +3,7 @@ ENTRY(_start)
 
 SECTIONS
 {
-        /* Kernel by convention will be mapped at 3GiB + 1MiB */
+        /* Kernel by convention will be mapped at 3GB + 1MB */
         KERNEL_VA_OFFSET = 0xC0000000;
         . = 0xC0100000;
         _kernel_start = .;

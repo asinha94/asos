@@ -3,16 +3,13 @@
 #include <mm/pmm.h>
 #include <mm/vmm.h>
 
-static uint32_t * pmm_memory_map;
-static uint32_t pmm_map_len     = PMM_BITMAP_LEN;
-static size_t next_free_page    = 0;
-
-
 static void pmm_set_page(size_t pg_num);
 static void pmm_unset_page(size_t pg_num);
 static void pmm_set_range(uint32_t addr, uint32_t len);
 static void pmm_unset_range(uint32_t addr, uint32_t len);
 
+static uint32_t * pmm_memory_map;
+static size_t next_free_page = 0;
 
 static void pmm_set_page(size_t pg_num)
 {
@@ -46,6 +43,7 @@ static void pmm_unset_range(uint32_t addr, uint32_t len)
     if (len % VMM_PG_SZ_SMALL) {
         ++pages;
     }
+
     for (size_t i = 0; i < pages; ++i) {
         pmm_unset_page(pg_num + i);
     }
@@ -60,13 +58,13 @@ void init_pmm()
     pmm_memory_map = (uint32_t *) PMM_BITMAP_ADDR;
 
     // Mark first Page dir entry i.e real-mode address and loaded Kernel
+    // TODO: Use memory map to see how much is actually used
     pmm_set_range(0x0, VMM_PG_SZ_LARGE);
 
-    // Set final 1 MiB  as used i.e the place where all our paging structures are held
-    uint32_t last_page_addr = PMM_END_ADDR - PMM_BITMAP_SZ_BYTES + 1;
-    pmm_set_range(last_page_addr, PMM_BITMAP_SZ_BYTES);
+    // Set final 1 MiB as used i.e the place where all our paging structures are held
+    pmm_set_range(PMM_BITMAP_ADDR, PMM_BITMAP_SZ_BYTES);
 
-    // Mark everything else as unused i.e [4 MB, 4GB-1MB]
-    uint32_t ununsed_len = last_page_addr - VMM_PG_SZ_LARGE;
+    // Mark everything else as unused i.e [4 MB:-1 MB]
+    uint32_t ununsed_len = PMM_BITMAP_ADDR - VMM_PG_SZ_LARGE;
     pmm_unset_range(VMM_PG_SZ_LARGE, ununsed_len);
 }
