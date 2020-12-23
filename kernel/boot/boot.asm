@@ -25,7 +25,7 @@ identity_page_directory:
         dd 0x83 ; Identity Map first 4MB. use single RW 4MB PDE
         times (KERNEL_PG_DIR_OFFSET - 1) dd 0 ; Unmap next ~767 PDEs
         dd 0x83 ; Map first 4MB to Kernel position i.e 786 * 4096 Bytes up
-        times (1024 - KERNEL_PG_DIR_OFFSET - 1) dd 0 ; Unmap all but last entry
+        times (1024 - KERNEL_PG_DIR_OFFSET - 2) dd 0 ; Unmap all but last entry
         dd 0xFFC00083 ; Map last 4MB PDE for paging structures
 
 section .text

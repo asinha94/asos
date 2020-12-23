@@ -30,9 +30,6 @@ void kernel_main(void)
     // Enables Interrupts
     enable_interrupts();
 
-    // test software interrupt
-    //asm("int $48");
-
     while (1) {
         asm("hlt");
     }
