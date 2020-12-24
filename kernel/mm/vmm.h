@@ -4,7 +4,7 @@
 #define VMM_PG_ENTRIES_PER_TABLE 1024
 #define VMM_KERN_ADDR_START      0xC0000000
 #define VMM_KERN_ADDR_END        0xFFFFFFFF
-#define VMM_PG_SZ_SMALL          4096
+#define VMM_PG_SZ_SMALL          (4*1024)
 #define VMM_PG_SZ_LARGE          (4 * 1024 * 1024)
 #define VMM_PAGING_ADDR          (VMM_KERN_ADDR_END-VMM_PG_SZ_LARGE+1)
 #define VMM_PDIR_LEN             1024
@@ -34,21 +34,22 @@ enum VMM_PTE_FLAG
     PTE_CACHE_DISABLE = 0x010,
     PTE_ACCESSED      = 0x020,
     PTE_DIRTY         = 0x040,
-    PTE_4MB_PAGE_SZ   = 0x080,
     PTE_GLOBAL_ENABLE = 0x100
 };
 
 typedef struct
 {
-    uint32_t dir[VMM_PDIR_LEN];
+    uint32_t entries[VMM_PDIR_LEN];
 } page_directory;
 
 typedef struct
 {
-    uint32_t table[VMM_PTABLE_LEN];
+    uint32_t entries[VMM_PTABLE_LEN];
 } page_table;
 
 
 void init_vmm();
+void insert_pde_into_directory(page_directory * dir, uint32_t vaddr, uint32_t paddr, uint32_t flags);
+//void insert_pte_into_directory(page_directory * tbl, uint32_t vaddr, uint32_t paddr, uint32_t flags);
 
 #endif
