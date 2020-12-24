@@ -76,6 +76,7 @@ static void * get_page_in_range(uint32_t start_addr, uint32_t end_addr)
 
     // Assume all addresses are 4K aligned
     uint32_t div = VMM_PG_SZ_SMALL * 32;
+    // pg group being the 32 4K pages per array entry
     size_t start_pggroup = start_addr / div;
     size_t end_pggroup = div_ceil(end_addr, div);
     for (size_t i = start_pggroup; i < end_pggroup; i++) {
