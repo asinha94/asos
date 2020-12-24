@@ -13,10 +13,10 @@ void init_vmm()
     // Boot code has already identity mapped last page
     // So we grab a 4KB chunk from that area. This area is limited to ~4MB
     // so we might need to grab something from kmalloc when it fails
-    // TODO: we should probably grab this from kmalloc?
-    kernel_page_dir = (page_directory *) pmm_page_alloc();
+    // TODO: we should extend this functionality to work with kmalloc?
+    kernel_page_dir = pmm_page_alloc();
 
-    // Map kernel  to higher half i.e from 3GB onwards
+    // Map kernel to higher half i.e from 3GB onwards
     insert_pde_into_directory(kernel_page_dir, VMM_KERN_ADDR_START, 0x0,
         PDE_PRESENT | PDE_RW_ACCESS | PDE_4MB_PAGE_SZ);
 
