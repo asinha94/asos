@@ -13,7 +13,7 @@ CC = $(CROSS_CC_DIR)/i686-elf-gcc
 ASM = nasm
 
 # Emulators
-QEMU_TERM = ./qemu-system-i386
+QEMU_TERM = /usr/bin/qemu-system-i386
 QEMU = /mnt/c/Program\ Files/qemu/qemu-system-i386.exe
 BOCHS = /mnt/c/Program\ Files/Bochs-2.6.11/bochs.exe
 BOCHSDBG = /mnt/c/Program\ Files/Bochs-2.6.11/bochsdbg.exe
@@ -69,7 +69,7 @@ iso9660: iso-dir
 			 -o $(BUILD_DIR)/asos9960.iso $(ISODIR) 
 
 qemu-termdbg: asos.bin
-	@$(QEMU) -s -S -kernel $(BUILD_DIR)/asos.bin -no-reboot -curses
+	@$(QEMU_TERM) -s -S -kernel $(BUILD_DIR)/asos.bin -no-reboot -curses
 
 qemu-dbg: asos.bin
 	@$(QEMU) -s -S -kernel $(BUILD_DIR)/asos.bin -no-reboot -monitor stdio

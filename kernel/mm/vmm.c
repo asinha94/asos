@@ -29,7 +29,7 @@ void init_vmm()
 void insert_pde_into_directory(page_directory * dir, uint32_t v_addr, uint32_t p_addr, uint32_t flags)
 {
     // Mask out addr[10:21] if its a 4MB Page. Not sure if its actually necessary
-    uint32_t entry =  p_addr & (flags & PDE_4MB_PAGE_SZ) ? VMM_4MB_ALIGN_MASK : VMM_4KB_ALIGN_MASK;
+    uint32_t entry =  p_addr & ((flags & PDE_4MB_PAGE_SZ) ? VMM_4MB_ALIGN_MASK : VMM_4KB_ALIGN_MASK);
     dir->entries[v_addr / VMM_PG_SZ_LARGE] = entry | flags;
 }
 

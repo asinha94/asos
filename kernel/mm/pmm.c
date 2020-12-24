@@ -61,11 +61,7 @@ static void pmm_set_range(uint32_t addr, uint32_t len)
 static void pmm_unset_range(uint32_t addr, uint32_t len)
 {
     uint32_t pg_num = addr / VMM_PG_SZ_SMALL;
-    uint32_t pages = len / VMM_PG_SZ_SMALL;
-    // Clear page if bytes bleed over boundary
-    if (len % VMM_PG_SZ_SMALL) {
-        ++pages;
-    }
+    uint32_t pages = div_ceil(len, VMM_PG_SZ_SMALL);
 
     for (size_t i = 0; i < pages; ++i) {
         pmm_unset_page(pg_num + i);
@@ -80,9 +76,9 @@ static void * get_page_in_range(uint32_t start_addr, uint32_t end_addr)
 
     // Assume all addresses are 4K aligned
     uint32_t div = VMM_PG_SZ_SMALL * 32;
-    size_t start_pgnum = start_addr / div;
-    size_t end_pgnum = div_ceil(end_addr, div);
-    for (size_t i = start_pgnum; i < end_pgnum; i++) {
+    size_t start_pggroup = start_addr / div;
+    size_t end_pggroup = div_ceil(end_addr, div);
+    for (size_t i = start_pggroup; i < end_pggroup; i++) {
         // Check if this set of 32 pages are free or not
         if (pmm_mmap[i] == 0xFFFFFFFF) {
             continue;
