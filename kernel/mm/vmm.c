@@ -23,7 +23,7 @@ void init_vmm()
     insert_pde_into_directory(kernel_pdir, VMM_PAGING_ADDR, VMM_PAGING_ADDR, flags);
 
     // Map kernel heap location
-
+    // inline asm here
 }
 
 void insert_pde_into_directory(page_directory * dir, uint32_t v_addr, uint32_t p_addr, uint32_t flags)

@@ -26,7 +26,6 @@ static inline void outport8(uint16_t port, uint8_t byte)
         "outb %0, %1"
         :
         : "d"(port), "a"(byte)
-        
         );
 
 }
