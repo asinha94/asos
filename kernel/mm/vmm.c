@@ -5,7 +5,7 @@
 
 
 // Align tables to 4KB address
-static page_directory * kernel_page_dir;
+static page_directory * kernel_pdir;
 
 
 void init_vmm()
@@ -14,15 +14,15 @@ void init_vmm()
     // So we grab a 4KB chunk from that area. This area is limited to ~4MB
     // so we might need to grab something from kmalloc when it fails
     // TODO: use kmalloc if this fails
-    kernel_page_dir = pmm_page_alloc();
+    kernel_pdir = pmm_page_alloc();
 
     // Map kernel to higher half i.e from 3GB onwards
-    insert_pde_into_directory(kernel_page_dir, VMM_KERN_ADDR_START, 0x0,
-        PDE_PRESENT | PDE_RW_ACCESS | PDE_4MB_PAGE_SZ);
-
+    uint32_t flags = PDE_PRESENT | PDE_RW_ACCESS | PDE_4MB_PAGE_SZ;
+    insert_pde_into_directory(kernel_pdir, VMM_KERN_ADDR_START, 0x0, flags);
     // Identity map last 4MB for paging
-    insert_pde_into_directory(kernel_page_dir, VMM_PAGING_ADDR, VMM_PAGING_ADDR,
-        PDE_PRESENT | PDE_RW_ACCESS | PDE_4MB_PAGE_SZ);
+    insert_pde_into_directory(kernel_pdir, VMM_PAGING_ADDR, VMM_PAGING_ADDR, flags);
+
+    // Map kernel heap location
 
 }
 

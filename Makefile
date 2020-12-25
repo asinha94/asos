@@ -31,7 +31,7 @@ WARNINGS := -Wall -Wextra -pedantic -Wshadow -Wpointer-arith -Wcast-align \
 	     
 LIBS = -lgcc
 INCLUDES := -Ikernel
-CFLAGS := -g $(WARNINGS) -std=gnu99 -ffreestanding -nostdlib $(INCLUDES) $(LIBS)
+CFLAGS := -g $(WARNINGS) -std=gnu99 -ffreestanding -nostdlib -masm=intel $(INCLUDES) $(LIBS)
 ASFLAGS := -f elf32 -g
 CPPFLAGS =
 

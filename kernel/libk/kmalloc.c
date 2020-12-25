@@ -20,10 +20,3 @@ void free(void * ptr)
 {
 
 }
-
-
-int main()
-{
-    uint32_t * ptr = kmalloc(10);
-    free(ptr);
-}
