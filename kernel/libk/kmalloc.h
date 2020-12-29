@@ -11,6 +11,13 @@ void * kcalloc(size_t num, size_t size);
 void * krealloc(size_t size);
 void free(void * ptr);
 
+struct memory {
+    uint32_t addr;
+    uint32_t size;
+    unsigned char data;
+    uint32_t checksum;
+};
+
 
 
 #endif
