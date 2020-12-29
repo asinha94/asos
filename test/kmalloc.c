@@ -48,9 +48,9 @@ void * kmalloc(size_t size)
             break;
         }
 
+        // block large enough found
         if (p->block_size >= block_size) {
-            // Check for reasonably-sized block
-            // return the whole block, no fragmentation
+            // Check if we can just return the block as-is
             size_t thresh = 2 * sizeof(block_header);
             if (p->block_size - block_size < thresh) {
                 prev->next_block = p->next_block;
@@ -83,8 +83,9 @@ void * kmalloc(size_t size)
 
 void kfree(void * addr)
 {
-    // addr is of address memory, not whole block (starting from header)
-    block_header * blk_addr = (block_header *)((char *) addr - sizeof(block_header));
+    // addr is address memory, not whole block.
+    // -1 to move back 1*sizeof(block_header) to start of header
+    block_header * blk_addr = (block_header *) addr - 1;
     used_size -= blk_addr->block_size;
 
     // We maintain the freelist by storing blocks in ascending order
@@ -106,26 +107,26 @@ void kfree(void * addr)
         p = p->next_block;
     }
 
-    // can we merge with the prev block?
-    block_header * merged_blk_addr = (block_header *)((char *)prev + prev->block_size);
-    if (merged_blk_addr == blk_addr) {
-        prev->next_block = blk_addr->next_block;
-        prev->block_size += blk_addr->block_size;
-        // Assign to blk_addr to give us the opportunity
-        // to merge block after as well if possible
-        blk_addr = prev;
-    } else {
-        prev->next_block = blk_addr;
-    }
-    
-    // Can we merge with the block after
-    merged_blk_addr = (block_header *)((char *)blk_addr + blk_addr->block_size);
-    if (merged_blk_addr == p) {
+    // Can we merge with the block after?
+    block_header * mergeable_blk_addr = (block_header *)((char *)blk_addr + blk_addr->block_size);
+    if (mergeable_blk_addr == p) {
         blk_addr->next_block = p->next_block;
         blk_addr->block_size += p->block_size;
     } else {
         blk_addr->next_block = p;
     }
+
+    // can we merge with the prev block?
+    mergeable_blk_addr = (block_header *)((char *)prev + prev->block_size);
+    if (mergeable_blk_addr == blk_addr) {
+        prev->next_block = blk_addr->next_block;
+        prev->block_size += blk_addr->block_size;
+    } else {
+        prev->next_block = blk_addr;
+    }
+
+    // Set pointer back 1 before where we just inserted
+    free_block_ptr = prev;
 
 }
 
@@ -137,16 +138,17 @@ void * __increase_heap_size_for_block(size_t block_size)
     heap_size += ALLOC_SIZE;
 
     // Split into 2 chunks, the chunk we want, and the unused part
-    // we free the unused part
+    // we use kfree on the unused part to insert into the freelist
     p->block_size = block_size;
     p->next_block = (block_header *)((char *) p + p->block_size);
 
     // Use kfree to insert new chunks into free list
-    block_header * unused = p->next_block; 
-    unused->block_size = ALLOC_SIZE - block_size;
-    void * unused_mem = (char *) unused + sizeof(block_header);
-    used_size += unused->block_size;
-    kfree(unused_mem);
+    // TODO: use same heauristic here to determine if we fragment
+    block_header * fragmented_blk = p->next_block; 
+    fragmented_blk->block_size = ALLOC_SIZE - block_size;
+    void * fragmented_mem = (char *) fragmented_blk + sizeof(block_header);
+    used_size += fragmented_blk->block_size;
+    kfree(fragmented_mem);
 
     return p;
 }
@@ -167,8 +169,12 @@ int main()
 {
     init_kmalloc();
     print_free_list();
-    kmalloc(900);
+    void * p = kmalloc(900);
     print_free_list();
     kmalloc(200);
+    print_free_list();
+
+    // return some memory
+    kfree(p);
     print_free_list();
 }
