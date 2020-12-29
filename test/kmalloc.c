@@ -31,11 +31,11 @@ void init_kmalloc()
 
 void * kmalloc(size_t size)
 {    
-    // block_size in block contains header size
+    // block_size includes header as well
     size_t block_size = size + sizeof(block_header);
 
     // Iterate through the freelist till we get a suitable size block
-    // O(N) algorithm, which is bad, so optimize later
+    // O(N) algorithm, but this is only temporary
     block_header * prev = free_block_ptr;
     block_header * p = prev->next_block;
     while (1) {
@@ -48,19 +48,23 @@ void * kmalloc(size_t size)
             break;
         }
 
-        // Found a perfect block, remove it
-        if (p->block_size == block_size) {
-            prev->next_block = p->next_block;
-            break;
-        }
+        if (p->block_size >= block_size) {
+            // Check for reasonably-sized block
+            // return the whole block, no fragmentation
+            size_t thresh = 2 * sizeof(block_header);
+            if (p->block_size - block_size < thresh) {
+                prev->next_block = p->next_block;
+                break;
+            }
 
-        // Found a block that slightly larger, split apart and use
-        if (p->block_size > block_size) {
-            // split the blocks in 2
-            p->block_size -= block_size;
-            p = p + p->block_size;
-            p->block_size = block_size;
-            break;
+            // Found a block that slightly larger, split apart and use
+            if (p->block_size > block_size) {
+                // split the blocks in 2
+                p->block_size -= block_size;
+                p = p + p->block_size;
+                p->block_size = block_size;
+                break;
+            }
         }
 
         // incremement
@@ -69,17 +73,17 @@ void * kmalloc(size_t size)
     }
 
     // Point free_block_ptr at last block previous to one removed
-    // Kind of breaks apart when we increase heap size
+    // doesn't really work if we increased heap size
     free_block_ptr = prev;
+    used_size += p->block_size;
 
     void * block_addr = (char *) p + sizeof(block_header);
-    used_size += p->block_size;
     return block_addr;
 }
 
 void kfree(void * addr)
 {
-    // Address returned is of memory, not whole block (starting from header)
+    // addr is of address memory, not whole block (starting from header)
     block_header * blk_addr = (block_header *)((char *) addr - sizeof(block_header));
     used_size -= blk_addr->block_size;
 
