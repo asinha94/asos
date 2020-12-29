@@ -61,7 +61,7 @@ void * kmalloc(size_t size)
             if (p->block_size > block_size) {
                 // split the blocks in 2
                 p->block_size -= block_size;
-                p = p + p->block_size;
+                p = (block_header *)((char *)p + p->block_size);
                 p->block_size = block_size;
                 break;
             }
@@ -137,30 +137,35 @@ void * __increase_heap_size_for_block(size_t block_size)
     block_header * p = malloc(ALLOC_SIZE);
     heap_size += ALLOC_SIZE;
 
-    // Split into 2 chunks, the chunk we want, and the unused part
+    // Split into 2 chunks, the chunk + remaining fragment
     // we use kfree on the unused part to insert into the freelist
+    // TODO: use same heauristic here to determine if we fragment
     p->block_size = block_size;
-    p->next_block = (block_header *)((char *) p + p->block_size);
+    block_header * fragmented_blk = (block_header *)((char *) p + p->block_size);
+    fragmented_blk->block_size = ALLOC_SIZE - block_size;
 
     // Use kfree to insert new chunks into free list
-    // TODO: use same heauristic here to determine if we fragment
-    block_header * fragmented_blk = p->next_block; 
-    fragmented_blk->block_size = ALLOC_SIZE - block_size;
-    void * fragmented_mem = (char *) fragmented_blk + sizeof(block_header);
     used_size += fragmented_blk->block_size;
+    void * fragmented_mem = (char *) fragmented_blk + sizeof(block_header);
     kfree(fragmented_mem);
 
     return p;
 }
 
+void print_block(block_header * p)
+{
+    if (p != &base)
+        printf("addr: %p | block_size: %lu\n", p, p->block_size);
+}
+
 void print_free_list()
 {
-    printf("----------------------------------------------------------------\n");
-    printf("Heap Usage: %lu bytes, Size Used: %lu bytes\n", heap_size, used_size);
+    printf("Heap Size: %lu bytes, Size Used: %lu bytes\n", heap_size, used_size);
     block_header * p = free_block_ptr->next_block;
     for (;p != free_block_ptr; p = p->next_block)
-        if (p != &base)
-            printf("addr: 0x%lx | block_size: %lu\n", (uintptr_t)p, p->block_size);
+        print_block(p);
+    print_block(p);
+    printf("----------------------------------------------------------------\n");
         
 }
 
@@ -169,12 +174,23 @@ int main()
 {
     init_kmalloc();
     print_free_list();
-    void * p = kmalloc(900);
+
+    void * a = kmalloc(10);
     print_free_list();
-    kmalloc(200);
+
+    void * b = kmalloc(900);
+    print_free_list();
+
+    void * c = kmalloc(200);
     print_free_list();
 
     // return some memory
-    kfree(p);
+    printf("Using Addr(a): %p\n", a);
+    kfree(a);
     print_free_list();
+    kfree(b);
+    print_free_list();
+    kfree(c);
+    print_free_list();
+
 }
