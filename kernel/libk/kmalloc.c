@@ -3,8 +3,8 @@
 #include <mm/vmm.h>
 #include <mm/pmm.h>
 
-static char * __kernel_heap_start;
-static char * __kernel_heap_end;
+static uint32_t __kernel_heap_start;
+static uint32_t __kernel_heap_end;
 static size_t __heap_size;
 static size_t __used_size;
 static block_header __base;
@@ -21,7 +21,7 @@ void init_kmalloc()
     __last_used_block = &__base;
     __base.next_block = &__base;
     __base.block_size = 0;
-    __kernel_heap_start = 0;
+    __kernel_heap_start = 0xC8000000;
     __kernel_heap_end = __kernel_heap_start;
 }
 
@@ -45,12 +45,12 @@ void * kmalloc(size_t size)
             break;
         }
 
-        // block large enough found
+        // large enough block found
         if (p->block_size >= block_size) {
-            // Split if necessary'
+            // Split if necessary, p points to new block if split
             block_header * orig_block = p;
             p = __split_block(p, block_size);
-            // if no split re remove block from free_list
+            // no split, remove whole block from free_list
             if (p == orig_block)
                 prev->next_block = p->next_block;
             break;
@@ -66,6 +66,7 @@ void * kmalloc(size_t size)
     __last_used_block = prev;
     __used_size += p->block_size;
 
+    // could also return p + 1 due to pointer arithmetic
     void * block_addr = (char *) p + sizeof(block_header);
     return block_addr;
 }
@@ -73,14 +74,14 @@ void * kmalloc(size_t size)
 
 void kfree(void * addr)
 {
-    // addr is address memory, not whole block.
-    // -1 to move back 1*sizeof(block_header) to start of header
+    // addr is address memory, not block (header).
+    // -1 to move back by 1*sizeof(block_header) to start of header
     block_header * blk_addr = (block_header *) addr - 1;
     __used_size -= blk_addr->block_size;
 
-    // We maintain the freelist by storing blocks in ascending order
-    // in terms of address, so that adjacent blocks can be merged
-    // the goals is to insert between prev and p so that prev < addr < p
+    // We store block in freelist by address in ascending order
+    // so adjacent blocks can be merged easily.
+    // The goals is to insert between prev and p so that prev < addr < p
     block_header * prev = __last_used_block;
     block_header * p = prev->next_block;
     while (1) {
@@ -123,7 +124,7 @@ void kfree(void * addr)
 
 /*
     We return the block that meets the size requirement,
-    whether or not we split i.e if block is too large, split
+    whether or not we split. If block is much larger, split
     and return the split block ptr otherwise return unchanged block.
     Caller will need to update references and bookkeeping.
     block->block_size has to be >= block_size
@@ -149,9 +150,13 @@ void * __increase_heap_size_for_block(size_t block_size)
     // Increase kernel heap 1 page at a time, probably extrememly inefficient
     // TODO: I guess change this in future if we're allocating lots of large
     // objects. Will also need to update pmm to give us a range of pages instead
-    void * phys_page_addr = pmm_get_page();
-    if (phys_page_addr == NULL)
-        return phys_page_addr;
+    uint32_t phys_page_addr = (uint32_t) pmm_get_page();
+    if (!phys_page_addr)
+        return (void *) phys_page_addr;
+
+    // Map new page for kernel heap at __kernel_heap_end
+    uint32_t flags = PTE_PRESENT | PTE_RW_ACCESS;
+    insert_kernel_pde_into_dir(__kernel_heap_end, phys_page_addr, flags);
 
     block_header * new_block = (block_header *)__kernel_heap_end;
     __kernel_heap_end += VMM_PG_SZ_SMALL;
