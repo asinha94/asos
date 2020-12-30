@@ -152,19 +152,13 @@ void * __increase_heap_size_for_block(size_t block_size)
     return p;
 }
 
-void print_block(block_header * p)
-{
-    if (p != &base)
-        printf("addr: %p | block_size: %lu\n", p, p->block_size);
-}
 
 void print_free_list()
 {
     printf("Heap Size: %lu bytes, Size Used: %lu bytes\n", heap_size, used_size);
-    block_header * p = free_block_ptr->next_block;
-    for (;p != free_block_ptr; p = p->next_block)
-        print_block(p);
-    print_block(p);
+    block_header * p = base.next_block;
+    for (;p != &base; p = p->next_block)
+        printf("addr: %p | block_size: %lu\n", p, p->block_size);
     printf("----------------------------------------------------------------\n");
         
 }

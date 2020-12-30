@@ -71,7 +71,7 @@ static void pmm_unset_range(uint32_t addr, uint32_t len)
 static void * get_page_in_range(uint32_t start_addr, uint32_t end_addr)
 {
     if (used_pages >= PMM_BITMAP_VALUES) {
-        return 0;
+        return NULL;
     }
 
     // Assume all addresses are 4K aligned
@@ -99,7 +99,7 @@ static void * get_page_in_range(uint32_t start_addr, uint32_t end_addr)
         }
     }
 
-    return 0;
+    return NULL;
 } 
 
 void * pmm_get_page()

@@ -6,17 +6,17 @@
 #include <mm/vmm.h>
 #include <mm/pmm.h>
 
+void init_kmalloc();
 void * kmalloc(size_t size);
 void * kcalloc(size_t num, size_t size);
 void * krealloc(size_t size);
-void free(void * ptr);
+void kfree(void * addr);
 
-struct memory {
-    uint32_t addr;
-    uint32_t size;
-    unsigned char data;
-    uint32_t checksum;
-};
+
+typedef struct block_header{
+    struct block_header * next_block;
+    uint64_t block_size;
+} block_header;
 
 
 
