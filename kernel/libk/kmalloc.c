@@ -50,12 +50,9 @@ void * kmalloc(size_t size)
             // Split if necessary'
             block_header * orig_block = p;
             p = __split_block(p, block_size);
-            if (p == orig_block) {
-                // No split i.e we return the block as is
-                // so we need to remove it from the free_list
+            // if no split re remove block from free_list
+            if (p == orig_block)
                 prev->next_block = p->next_block;
-            }
-            // noop if not split, otherwise
             break;
         }
 
