@@ -16,8 +16,6 @@ static inline uint8_t inport8(uint16_t port)
     return byte;
 }
 
-//uint8_t inport8(uint16_t port);
-
 
 __attribute__((always_inline))
 static inline void outport8(uint16_t port, uint8_t byte)

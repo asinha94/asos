@@ -156,7 +156,7 @@ void * __increase_heap_size_for_block(size_t block_size)
 
     // Map new page for kernel heap at __kernel_heap_end
     uint32_t flags = PTE_PRESENT | PTE_RW_ACCESS;
-    insert_kernel_pde_into_dir(__kernel_heap_end, phys_page_addr, flags);
+    insert_kernel_pte(__kernel_heap_end, phys_page_addr, flags);
 
     block_header * new_block = (block_header *)__kernel_heap_end;
     __kernel_heap_end += VMM_PG_SZ_SMALL;
