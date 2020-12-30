@@ -1,5 +1,4 @@
 #include <stdint.h>
-#include <stdlib.h>
 #include <libk/kmalloc.h>
 #include <mm/vmm.h>
 #include <mm/pmm.h>
