@@ -4,7 +4,8 @@
 #include <mm/vmm.h>
 #include <mm/pmm.h>
 
-static uintptr_t __kernel_heap_start;
+static char * __kernel_heap_start;
+static char * __kernel_heap_end;
 static size_t __heap_size;
 static size_t __used_size;
 static block_header __base;
@@ -21,6 +22,8 @@ void init_kmalloc()
     __last_used_block = &__base;
     __base.next_block = &__base;
     __base.block_size = 0;
+    __kernel_heap_start = 0;
+    __kernel_heap_end = __kernel_heap_start;
 }
 
 
@@ -45,15 +48,15 @@ void * kmalloc(size_t size)
 
         // block large enough found
         if (p->block_size >= block_size) {
-            // Split if necessary
-            block_header * q = __split_block(p, block_size);
-            if (p == q) {
+            // Split if necessary'
+            block_header * orig_block = p;
+            p = __split_block(p, block_size);
+            if (p == orig_block) {
                 // No split i.e we return the block as is
                 // so we need to remove it from the free_list
                 prev->next_block = p->next_block;
             }
             // noop if not split, otherwise
-            p = q;
             break;
         }
 
@@ -154,21 +157,23 @@ void * __increase_heap_size_for_block(size_t block_size)
     if (phys_page_addr == NULL)
         return phys_page_addr;
 
-    // TODO: replace with address at new heap location
-    block_header * new_block = malloc(VMM_PG_SZ_SMALL);
+    block_header * new_block = (block_header *)__kernel_heap_end;
+    __kernel_heap_end += VMM_PG_SZ_SMALL;
     __heap_size += VMM_PG_SZ_SMALL;
 
     // Split into 2 chunks, the chunk + remaining fragment
-    // we use kfree on the unused part to insert into the freelist
-    // TODO: use same heauristic here to determine if we fragment
-    new_block->block_size = VMM_PG_SZ_SMALL - block_size;
-    block_header * p = (block_header *)((char *) new_block + new_block->block_size);
-    p->block_size = block_size;
-
-    // Use kfree to insert new chunks into free list
-    __used_size += new_block->block_size;
-    void * new_block_mem = (char *) new_block + sizeof(block_header);
-    kfree(new_block_mem);
+    new_block->block_size = VMM_PG_SZ_SMALL;
+    block_header * p = __split_block(new_block, block_size);
+    if (p != new_block) {
+        // split occurred, need to 'free' the other block
+        // kfree assumes memory was returned so it decrements
+        // from used_size, so we need to prematurely add the size
+        __used_size += new_block->block_size;
+        // new_block+1 incremements pointer addr by sizeof(block_header)
+        // which makes it point to the actual memory. kfree will decrement
+        // again to get to the header
+        kfree(new_block + 1);
+    }
 
     return p;
 }
