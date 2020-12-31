@@ -13,9 +13,9 @@ static inline void __update_page_directory(page_directory * pdir)
 {
     // put pointer to kernel_page in cr3
     asm volatile(
-        "mov cr3, %0"
+        "mov cr3, %0\n"
         :
-        : "a"(pdir)
+        : "r"(pdir)
     );
 }
 
@@ -26,7 +26,7 @@ void init_vmm()
     // So we grab a 4KB chunk from that area. This area is limited to ~4MB
     // so we might need to grab something from kmalloc when it fails
     // TODO: use kmalloc if this fails
-    __kernel_pdir = pmm_page_alloc(); //0xc0300000;
+    __kernel_pdir = pmm_page_alloc();
 
     // Map kernel to higher half i.e from 3GB onwards
     // and identity map last 4MB for paging structures
@@ -63,7 +63,7 @@ void insert_kernel_pte(uint32_t vaddr, uint32_t paddr, uint32_t flags)
     }
 
     // bits [21:12] are what we want to find index in the page table
-    // so we need to mask those 10 bits, then divide by 4KB i.e addr >> 12
+    // so we need to divide those 10 bits by 4KB (addr >> 12)
     idx = (vaddr >> 12) & 0x3FF;
     pt->entries[idx] = paddr | flags;
 }
