@@ -8,26 +8,20 @@
 
 
 void kernel_main(void)
-{
+{    
     // Init a TTY for us to log to
     init_tty();
     kprintf("Initializing Kernel\n");
-    
-    // create linear address space for OS
-    // includes Kernel and Userspace
-    kprintf("Initializing MM\n");
+    // descriptor tables and exception handlers
     init_gdt();
-    init_pmm();
-    init_vmm();
-
-    // Install IDT and IRQ handlers
-    kprintf("Initializing CPU exception handlers\n");
     init_irq();
     init_cpu_exceptions();
     init_idt();
-    
+    // Memory Management
+    init_pmm();
+    init_vmm();
 
-    // Enables Interrupts
+    // Let loose the dogs of war
     enable_interrupts();
 
     while (1) {

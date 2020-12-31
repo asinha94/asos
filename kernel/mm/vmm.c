@@ -3,6 +3,7 @@
 #include <mm/vmm.h>
 #include <mm/pmm.h>
 #include <libk/kmalloc.h>
+#include <cpu/hal.h>
 
 
 // Align tables to 4KB address
@@ -22,21 +23,20 @@ static inline void __update_page_directory(page_directory * pdir)
 
 void init_vmm()
 {
-    // Boot code has already identity mapped last page
-    // So we grab a 4KB chunk from that area. This area is limited to ~4MB
-    // so we might need to grab something from kmalloc when it fails
-    // TODO: use kmalloc if this fails
-    __kernel_pdir = pmm_page_alloc();
+    // Boot code has already mapped the 2nd 4MB PDE, grab a 4KB chunk
+    // from that area. This area is limited to ~4MB so be wary
+    void * pd_paddr = pmm_page_alloc();
+    __kernel_pdir = PG_P2V(pd_paddr);
 
     // Map kernel to higher half i.e from 3GB onwards
-    // and identity map last 4MB for paging structures
+    // and next 4MB for paging structures at the end of virtual memory
     uint32_t flags = PDE_PRESENT | PDE_RW_ACCESS | PDE_4MB_PAGE_SZ;
     insert_kernel_pde(VMM_KERN_ADDR_START, 0x0, flags);
-    insert_kernel_pde(VMM_PAGING_ADDR, VMM_PAGING_ADDR, flags);
+    insert_kernel_pde(VMM_PAGING_ADDR_START, PMM_PAGING_ADDR_START, flags);
 
     init_kmalloc();
     // load new page directory
-    __update_page_directory(__kernel_pdir);
+    __update_page_directory(pd_paddr);
     
 }
 
@@ -53,17 +53,17 @@ void insert_kernel_pde(uint32_t vaddr, uint32_t paddr, uint32_t flags)
 void insert_kernel_pte(uint32_t vaddr, uint32_t paddr, uint32_t flags)
 {
     uint32_t idx = vaddr >> 22; // Divide by 4MB
-    page_table * pt =  (page_table *) (__kernel_pdir->entries[idx] & VMM_4KB_ALIGN_MASK);
+    uint32_t pd_addr =  __kernel_pdir->entries[idx] & VMM_4KB_ALIGN_MASK;
 
     // No page present, need to allocate one
-    if (pt == NULL) {
-        pt = pmm_page_alloc(); // TODO: Handle NULL
-        uint32_t pde_flags = PDE_PRESENT | PDE_RW_ACCESS;
-        __kernel_pdir->entries[idx] = (uint32_t) pt | pde_flags;
+    if (!pd_addr) {
+        pd_addr = (uint32_t) pmm_page_alloc(); // TODO: Handle NULL
+        __kernel_pdir->entries[idx] = pd_addr | PDE_PRESENT | PDE_RW_ACCESS;
     }
 
     // bits [21:12] are what we want to find index in the page table
     // so we need to divide those 10 bits by 4KB (addr >> 12)
     idx = (vaddr >> 12) & 0x3FF;
+    page_table * pt = PG_P2V((void *)pd_addr);
     pt->entries[idx] = paddr | flags;
 }
