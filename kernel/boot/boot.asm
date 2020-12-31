@@ -22,9 +22,9 @@ KERNEL_PG_DIR_OFFSET equ 768 ; Number of pages before kernel page
 section .data
 align 4096
 identity_page_directory:
-        dd 0x83 ; Identity Map first 4MB. use single RW 4MB PDE
+        dd 0x00000083 ; Identity Map first 4MB. use single RW 4MB PDE
         times (KERNEL_PG_DIR_OFFSET - 1) dd 0 ; Unmap next ~767 PDEs
-        dd 0x83 ; Map first 4MB to Kernel position i.e 786 * 4096 Bytes up
+        dd 0x00000083 ; Map first 4MB to Kernel position i.e 786 * 4096 Bytes up
         times (1024 - KERNEL_PG_DIR_OFFSET - 2) dd 0 ; Unmap all but last entry
         dd 0xFFC00083 ; Map last 4MB PDE for paging structures
 
@@ -34,9 +34,14 @@ _start:
         ; disable interrupts
         cli
 
+        ; Enable A20 line. Probably unnecessary
+        in al, 0x92
+        or al, 0x02
+        out 0x92, al
+
         ; Load page-dir. The PIC addresses are used because
         ; the BIOS has loaded us in at 1MB, but we told the linker
-        ; to use our VA offsets so the C code works with VA addresses
+        ; to use our VA offsets so the C code works with virtual addresses
         mov eax, (identity_page_directory - KERNEL_PG_VA_OFFSET)
         mov cr3, eax
 
@@ -45,9 +50,9 @@ _start:
         or eax, 0x00000010
         mov cr4, eax
 
-        ; Enable Paging
+        ; Enable Paging and Protected mode
         mov eax, cr0
-        or eax, 0x80000000
+        or eax, 0x80000001
         mov cr0, eax
 
         ; Paging is enabled but the CPU still has physical addresses
@@ -59,7 +64,7 @@ _start:
 extern kernel_main
 section .text
 _kernel_start:
-        ; Clear identity mapped page entry
+        ; Clear identity mapped entry from dir and tlb
         mov dword [identity_page_directory], 0
         invlpg [0]
 

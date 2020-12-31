@@ -1,6 +1,6 @@
 #include <stddef.h>
 
-// TODO: Optimize using assembly
+// TODO: Optimize using inline assembly
 __attribute__((always_inline))
 static inline void * memset(void * dest, unsigned char ch, size_t n) {
 

@@ -13,6 +13,7 @@ CC = $(CROSS_CC_DIR)/i686-elf-gcc
 ASM = nasm
 
 # Emulators
+QEMU_TERM = /usr/bin/qemu-system-i386
 QEMU = /mnt/c/Program\ Files/qemu/qemu-system-i386.exe
 BOCHS = /mnt/c/Program\ Files/Bochs-2.6.11/bochs.exe
 BOCHSDBG = /mnt/c/Program\ Files/Bochs-2.6.11/bochsdbg.exe
@@ -30,7 +31,7 @@ WARNINGS := -Wall -Wextra -pedantic -Wshadow -Wpointer-arith -Wcast-align \
 	     
 LIBS = -lgcc
 INCLUDES := -Ikernel
-CFLAGS := -g $(WARNINGS) -std=gnu99 -ffreestanding -nostdlib $(INCLUDES) $(LIBS)
+CFLAGS := -g $(WARNINGS) -std=gnu99 -ffreestanding -nostdlib -masm=intel $(INCLUDES) $(LIBS)
 ASFLAGS := -f elf32 -g
 CPPFLAGS =
 
@@ -66,6 +67,9 @@ iso9660: iso-dir
 	@mkisofs -R -b boot/grub/stage2_eltorito -no-emul-boot \
 			 -boot-load-size 4 -boot-info-table \
 			 -o $(BUILD_DIR)/asos9960.iso $(ISODIR) 
+
+qemu-termdbg: asos.bin
+	@$(QEMU_TERM) -s -S -kernel $(BUILD_DIR)/asos.bin -no-reboot -curses
 
 qemu-dbg: asos.bin
 	@$(QEMU) -s -S -kernel $(BUILD_DIR)/asos.bin -no-reboot -monitor stdio
