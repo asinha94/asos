@@ -3,6 +3,7 @@
 #include <mm/vmm.h>
 #include <mm/pmm.h>
 #include <libk/kmalloc.h>
+#include <cpu/hal.h>
 
 
 // Align tables to 4KB address
@@ -24,8 +25,6 @@ void init_vmm()
 {
     // Boot code has already identity mapped last page
     // So we grab a 4KB chunk from that area. This area is limited to ~4MB
-    // so we might need to grab something from kmalloc when it fails
-    // TODO: use kmalloc if this fails
     __kernel_pdir = pmm_page_alloc();
 
     // Map kernel to higher half i.e from 3GB onwards

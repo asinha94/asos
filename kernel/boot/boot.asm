@@ -35,9 +35,9 @@ _start:
         cli
 
         ; Enable A20 line. Probably unnecessary
-        in al, 0x92
-        or al, 0x02
-        out 0x92, al
+        ;in al, 0x92
+        ;or al, 0x02
+        ;out 0x92, al
 
         ; Load page-dir. The PIC addresses are used because
         ; the BIOS has loaded us in at 1MB, but we told the linker

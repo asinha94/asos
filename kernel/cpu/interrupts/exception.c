@@ -103,7 +103,7 @@ static void handler_isr12(isr_data * data)
 
 static void handler_isr13(isr_data * data)
 {
-    (void) data;
+    kprintf("Handling GPF@eip:%x\n", data->eip);
 }
 
 static void handler_isr14(isr_data * data)

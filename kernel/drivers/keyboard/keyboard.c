@@ -20,7 +20,7 @@ void keyboard_init()
     irq_clear_mask(0x1);
 }
 
-void keyboard_handler()
+void keyboard_handler(isr_data * data)
 {
     uint8_t kbd_data = inport8(KBD_SCAN_CODE_PORT);
     uint8_t is_multiple = 0;
@@ -29,6 +29,9 @@ void keyboard_handler()
         kbd_data = inport8(KBD_SCAN_CODE_PORT);
         is_multiple = 0xFF;
     }
+
+    irq_eoi(data->int_no);
+
     // Highest but just tells is if its pressed (0) or released (1)
     uint8_t pressed = 0x80 & ~kbd_data;
 

@@ -33,9 +33,7 @@ static void handler_irq0(isr_data * data)
 
 static void handler_irq1(isr_data * data)
 {
-    (void) data;
-    keyboard_handler();
-    irq_eoi(1);
+    keyboard_handler(data);
 }
 
 static void handler_irq2(isr_data * data)
@@ -133,7 +131,7 @@ void init_irq()
     outport8(PIC_MASTER_DATA_PORT, PIC_MASTER_VECTOR_OFFSET);
     outport8(PIC_SLAVE_DATA_PORT, PIC_SLAVE_VECTOR_OFFSET);
 
-    // Init Cascade topology i.e slace IRQ2 wired to master
+    // Init Cascade topology i.e slacv IRQ2 wired to master
     outport8(PIC_MASTER_DATA_PORT, PIC_MASTER_CASCADE_IRQ);
     outport8(PIC_SLAVE_DATA_PORT, PIC_SLAVE_CASCADE_IRQ);
 
@@ -213,9 +211,7 @@ void irq_set_mask(uint8_t irq_number)
 
 void irq_eoi(uint8_t irq_number)
 {
-    if (irq_number > 7) {
+    if (irq_number > 7)
         outport8(PIC_SLAVE_CMD_PORT, PIC_EOI);
-    }
-    // Always send EOI to master
     outport8(PIC_MASTER_CMD_PORT, PIC_EOI);
 }
