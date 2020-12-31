@@ -10,22 +10,31 @@ My pet project in bootstrapping a bare-bones OS. The goal is for this to eventua
 - [X] Boot intp Protected Mode C Kernel
 - [X] Interrupt driven kernel architecture
 - [X] Partial driver support (keyboard)
+- [x] High-half kernel and paging support
+- [x] Kernel Malloc implementation
 
 ## Short-Term Work
-- [ ] Create handler for interrupt 0-31
-- [ ] High-half kernel and paging
-- [ ] Move the blinking cursor
+- [ ] Use multiboot2 (Memory Map)
+- [ ] Improve keyboard handler
+- [ ] Create handlers for interrupt 0-31
+- [ ] Handle exceptions (beyond just logging)
 - [ ] Create PIT/RTC drivers
+- [ ] Improve malloc to use slab allocation
+- [ ] Use buddy allocator for PMM
+- [ ] Move the blinking cursor
+- [ ] Use APIC instead of PIC
 
 ## Long-Term Work
-- [ ] Process Scheduling
-- [ ] File-system support (FAT initially)  
-- [ ] Basic syscalls (read/write/fork/exec)
 - [ ] bash (or variant) shell
+- [ ] Process Scheduling
+- [ ] File-system support (FAT/ext2/ntfs?)  
+- [ ] Basic syscalls (read/write/fork/exec/mmap)
+- [ ] TCP/IP networking stack
+- [ ] Minimal Windowing/Graphics
 
 ## Optional
-- [ ] Use APIC instead of PIC
-- [ ] Use multiboot2
+- [ ] 64-bit
+- [ ] UEFI
 
 --- 
 ## Development
@@ -44,6 +53,7 @@ You will need the following programs as well
 - nasm
 - grub2
 - gdb
+- bochs/qemu
 - [xorriso](http://www.gnu.org/software/xorriso/#download) (optional)
 - VSCode (optional)
 
@@ -65,12 +75,11 @@ When using qemu-dbg, the os will be paused waiting for GDB or another interface 
 
 
 ### Bochs
-Bochs debugging is useful when debugging hardware i.e making sure your CPU is in hte correct state, exceptions are being handled, investigate triple-faults etc... It has it's own built in debugger which is similar to GDB, but not 100% compatible.
+Bochs debugging is useful when debugging hardware i.e making sure your CPU is in the correct state, exceptions are being handled, investigate triple-faults etc... It has it's own built in debugger which is similar to GDB, but not 100% compatible.
 
 ---
 
-## Resources
-None of this would be possible without the amazing information from these sources
+## Resources/References
 
 - wiki.osdev.org
 - http://www.osdever.net/tutorials/
