@@ -131,7 +131,7 @@ void init_irq()
     outport8(PIC_MASTER_DATA_PORT, PIC_MASTER_VECTOR_OFFSET);
     outport8(PIC_SLAVE_DATA_PORT, PIC_SLAVE_VECTOR_OFFSET);
 
-    // Init Cascade topology i.e slacv IRQ2 wired to master
+    // Init Cascade topology i.e slave IRQ2 wired to master
     outport8(PIC_MASTER_DATA_PORT, PIC_MASTER_CASCADE_IRQ);
     outport8(PIC_SLAVE_DATA_PORT, PIC_SLAVE_CASCADE_IRQ);
 
