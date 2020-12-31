@@ -150,7 +150,7 @@ void * __increase_heap_size_for_block(size_t block_size)
     // Increase kernel heap 1 page at a time, probably extrememly inefficient
     // TODO: I guess change this in future if we're allocating lots of large
     // objects. Will also need to update pmm to give us a range of pages instead
-    uint32_t phys_page_addr = (uint32_t) pmm_get_page();
+    uint32_t phys_page_addr = pmm_get_page_addr();
     if (!phys_page_addr)
         return (void *) phys_page_addr;
 

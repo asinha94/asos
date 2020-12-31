@@ -12,15 +12,15 @@ void kernel_main(void)
     // Init a TTY for us to log to
     init_tty();
     kprintf("Initializing Kernel\n");
+    // Exceptions and hardware support
     init_gdt();
     init_irq();
     init_cpu_exceptions();
     init_idt();
     enable_interrupts();
+    // Memory Management
     init_pmm();
     init_vmm();
-
-    
 
     while (1) {
         asm("hlt");

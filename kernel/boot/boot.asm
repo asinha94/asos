@@ -26,7 +26,7 @@ identity_page_directory:
         times (KERNEL_PG_DIR_OFFSET - 1) dd 0 ; Unmap next ~767 PDEs
         dd 0x00000083 ; Map first 4MB to Kernel position i.e 786 * 4096 Bytes up
         times (1024 - KERNEL_PG_DIR_OFFSET - 2) dd 0 ; Unmap all but last entry
-        dd 0xFFC00083 ; Map last 4MB PDE for paging structures
+        dd 0x00400083 ; Map 2nd physical 4MB page to last PDE
 
 section .text
 global _start
@@ -34,7 +34,7 @@ _start:
         ; disable interrupts
         cli
 
-        ; Enable A20 line. Probably unnecessary
+        ; Enable A20 line. Unnecessary in Bochs, maybe QEMU
         ;in al, 0x92
         ;or al, 0x02
         ;out 0x92, al

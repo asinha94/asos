@@ -25,8 +25,10 @@ void init_pmm()
         pmm_mmap[i] = 0x0; 
     }
 
-    // Mark first Page dir entry i.e real-mode address and loaded Kernel
+    // Mark first PDE as used i.e loaded Kernel + addresses < 1MB
     // TODO: Use memory map to see how much is actually used
+    // Once we get a memory map, it will make sense to allocate the array
+    // dynamically again, instead of a 128KB array which might be overkill
     pmm_set_range(0x0, VMM_PG_SZ_LARGE);
 }
 
@@ -102,15 +104,21 @@ static void * get_page_in_range(uint32_t start_addr, uint32_t end_addr)
     return NULL;
 } 
 
-void * pmm_get_page()
+uint32_t pmm_get_page_addr()
 {
-    return get_page_in_range(0x0, VMM_PAGING_ADDR);
+    // TODO: replace VMM_KERN_ADDR_END with the actual end of memory
+    return (uint32_t) get_page_in_range(PMM_PAGING_ADDR_END+1, VMM_KERN_ADDR_END);
 }
 
 void * pmm_page_alloc()
 {
-    uint32_t * paddr = get_page_in_range(VMM_PAGING_ADDR, VMM_KERN_ADDR_END);
-    memset(paddr, 0, VMM_PG_SZ_SMALL);
+    uint32_t * paddr = get_page_in_range(PMM_PAGING_ADDR_START, PMM_PAGING_ADDR_END);
+    if(!paddr)
+        return paddr;
+
+    // Need to convert the physical address to virtual to memset it
+    uint32_t * vaddr = PG_P2V(paddr);
+    memset(vaddr, 0, VMM_PG_SZ_SMALL);
     return paddr;
 }
 
