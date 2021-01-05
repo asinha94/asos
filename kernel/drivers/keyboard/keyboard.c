@@ -82,8 +82,10 @@ void keyboard_handler(isr_data * data)
     // Modifier bit indicate if it is the modifier key itself
     uint8_t is_modifier = KBD_MODIFIER & evt->modifier_mask;
     if (is_modifier) {
-        if (pressed) current_modifiers |= evt->modifier_mask;
-        else current_modifiers &= ~(evt->modifier_mask);
+        if (pressed)
+            current_modifiers |= evt->modifier_mask;
+        else
+            current_modifiers &= ~(evt->modifier_mask);
         return;
     } 
     
