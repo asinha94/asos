@@ -40,7 +40,7 @@ extern void asm_handler_isr31();
 
 static void default_isr_handler(isr_data * data)
 {
-    kprintf("Unhandled Exception!!!@eip:%x\n", data->eip);
+    kprintf("Unhandled Exception: %d\n", data->int_no);
     for(;;);
 }
 
