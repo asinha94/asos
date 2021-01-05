@@ -49,7 +49,6 @@ global asm_handler_isr2
 asm_handler_isr2:
     push 0
     push 2
-    push 0
     jmp isr_common_handler
 
 global asm_handler_isr3
@@ -68,25 +67,23 @@ global asm_handler_isr5
 asm_handler_isr5:
     push 0
     push 5
-    push 0
     jmp isr_common_handler
 
 global asm_handler_isr6
 asm_handler_isr6:
     push 0
     push 6
-    push 0
     jmp isr_common_handler
 
 global asm_handler_isr7
 asm_handler_isr7:
     push 0
     push 7
-    push 0
     jmp isr_common_handler
 
 global asm_handler_isr8
 asm_handler_isr8:
+    ; push 0 is done by CPU
     push 8
     jmp isr_common_handler
 
@@ -94,7 +91,6 @@ global asm_handler_isr9
 asm_handler_isr9:
     push 0
     push 9
-    push 0
     jmp isr_common_handler
 
 global asm_handler_isr10
@@ -104,20 +100,16 @@ asm_handler_isr10:
 
 global asm_handler_isr11
 asm_handler_isr11:
-    push 0
     push 11
-    push 0
     jmp isr_common_handler
 
 global asm_handler_isr12
 asm_handler_isr12:
-    push 0
     push 12
     jmp isr_common_handler
 
 global asm_handler_isr13
 asm_handler_isr13:
-    push 0
     push 13
     jmp isr_common_handler
 
@@ -140,7 +132,6 @@ asm_handler_isr16:
 
 global asm_handler_isr17
 asm_handler_isr17:
-    push 0
     push 17
     jmp isr_common_handler
 
@@ -164,9 +155,11 @@ asm_handler_isr20:
 
 global asm_handler_isr21
 asm_handler_isr21:
-    push 0
     push 21
     jmp isr_common_handler
+
+
+;; Intel Reserved Exceptions; Not Used currently
 
 global asm_handler_isr22
 asm_handler_isr22:

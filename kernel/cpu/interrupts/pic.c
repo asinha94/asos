@@ -25,99 +25,10 @@ extern void asm_handler_irq14();
 extern void asm_handler_irq15();
 
 // Handlers in C
-static void handler_irq0(isr_data * data)
+static void default_irq_handler(isr_data * data)
 {
     kprintf("Entered ISR %u\n", data->int_no);
-    irq_eoi(0);
-}
-
-static void handler_irq1(isr_data * data)
-{
-    keyboard_handler(data);
-}
-
-static void handler_irq2(isr_data * data)
-{
-    kprintf("Entered ISR %u\n", data->int_no);
-    irq_eoi(2);
-}
-
-static void handler_irq3(isr_data * data)
-{
-    kprintf("Entered ISR %u\n", data->int_no);
-    irq_eoi(3);
-}
-
-static void handler_irq4(isr_data * data)
-{
-    kprintf("Entered ISR %u\n", data->int_no);
-    irq_eoi(4);
-}
-
-static void handler_irq5(isr_data * data)
-{
-    kprintf("Entered ISR %u\n", data->int_no);
-    irq_eoi(5);
-}
-
-static void handler_irq6(isr_data * data)
-{
-    kprintf("Entered ISR %u\n", data->int_no);
-    irq_eoi(6);
-}
-
-static void handler_irq7(isr_data * data)
-{
-    kprintf("Entered ISR %u\n", data->int_no);
-    irq_eoi(7);
-}
-
-static void handler_irq8(isr_data * data)
-{
-    kprintf("Entered ISR %u\n", data->int_no);
-    irq_eoi(8);
-}
-
-static void handler_irq9(isr_data * data)
-{
-    kprintf("Entered ISR %u\n", data->int_no);
-    irq_eoi(9);
-}
-
-static void handler_irq10(isr_data * data)
-{
-    kprintf("Entered ISR %u\n", data->int_no);
-    irq_eoi(10);
-}
-
-static void handler_irq11(isr_data * data)
-{
-    kprintf("Entered ISR %u\n", data->int_no);
-    irq_eoi(11);
-}
-
-static void handler_irq12(isr_data * data)
-{
-    kprintf("Entered ISR %u\n", data->int_no);
-    irq_eoi(12);
-}
-
-static void handler_irq13(isr_data * data)
-{
-    kprintf("Entered ISR %u\n", data->int_no);
-    irq_eoi(13);
-}
-
-static void handler_irq14(isr_data * data)
-{
-    kprintf("Entered ISR %u\n", data->int_no);
-    irq_eoi(14);
-}
-
-static void handler_irq15(isr_data * data)
-{
-    kprintf("Entered ISR %u\n", data->int_no);
-    irq_eoi(15);
+    irq_eoi(data->int_no);
 }
 
 
@@ -139,7 +50,7 @@ void init_irq()
     outport8(PIC_MASTER_DATA_PORT, ICW4_8086);
     outport8(PIC_SLAVE_DATA_PORT, ICW4_8086);
 
-    // Enable all IRQs
+    // Disable all IRQs (high bit means disabled)
     outport8(PIC_MASTER_DATA_PORT, 0xFF);
     outport8(PIC_SLAVE_DATA_PORT, 0xFF);
     kprintf("PIC re-mapped\n");
@@ -150,22 +61,22 @@ void init_irq()
     //  Install IRQ handlers into IDT
     // Entries [32-47] are the IRQs we just re-mapped
     uint8_t idt_index = PIC_MASTER_VECTOR_OFFSET;
-    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq0, handler_irq0);
-    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq1, handler_irq1);
-    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq2, handler_irq2);
-    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq3, handler_irq3);
-    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq4, handler_irq4);
-    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq5, handler_irq5);
-    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq6, handler_irq6);
-    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq7, handler_irq7);
-    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq8, handler_irq8);
-    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq9, handler_irq9);
-    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq10, handler_irq10);
-    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq11, handler_irq11);
-    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq12, handler_irq12);
-    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq13, handler_irq13);
-    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq14, handler_irq14);
-    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq15, handler_irq15);
+    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq0, default_irq_handler);
+    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq1, keyboard_handler);
+    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq2, default_irq_handler);
+    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq3, default_irq_handler);
+    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq4, default_irq_handler);
+    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq5, default_irq_handler);
+    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq6, default_irq_handler);
+    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq7, default_irq_handler);
+    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq8, default_irq_handler);
+    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq9, default_irq_handler);
+    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq10, default_irq_handler);
+    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq11, default_irq_handler);
+    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq12, default_irq_handler);
+    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq13, default_irq_handler);
+    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq14, default_irq_handler);
+    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq15, default_irq_handler);
 }
 
 
@@ -209,9 +120,10 @@ void irq_set_mask(uint8_t irq_number)
     outport8(port, data);
 }
 
-void irq_eoi(uint8_t irq_number)
-{
-    if (irq_number > 7)
+void irq_eoi(uint8_t interrupt_no)
+{   
+    uint8_t irq_no = interrupt_no - PIC_MASTER_VECTOR_OFFSET;
+    if (irq_no > 7)
         outport8(PIC_SLAVE_CMD_PORT, PIC_EOI);
     outport8(PIC_MASTER_CMD_PORT, PIC_EOI);
 }

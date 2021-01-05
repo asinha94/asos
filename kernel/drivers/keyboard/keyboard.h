@@ -4,10 +4,25 @@
 #include <stdint.h>
 #include <cpu/interrupts/idt.h>
 
-#define KBD_SCAN_CODES      0x100
-#define KBD_SCAN_CODE_PORT  0x60
+
+/* Ports */
+#define KBD_CMD_PORT        0x60
+#define KBD_DATA_PORT       0x64
+#define KBD_STATUS_PORT     0x64
+
+/* Status Codes */
 #define KBD_SCAN_MORE_DATA  0xE0
 #define KBD_ACK_BYTE        0xFA
+
+/* Keyboard Status Register Masks */
+#define KBD_STATUS_OUT_BUF  0x01
+#define KBD_STATUS_IN_BUF   0x02
+#define KBD_STATUS_SYSTEM   0x04
+#define KBD_STATUS_CMD      0x08
+#define KBD_STATUS_LOCKED   0x10
+#define KBD_STATUS_DTYPE    0x20
+#define KBD_STATUS_TIMEOUT  0x40
+#define KBD_STATUS_PARITY   0x80
 
 /* Modifier Bitmasks */
 #define KBD_MASK_NONE       0x00
@@ -20,8 +35,9 @@
 #define KBD_MASK_NUMLOCK    0x40 // 0x01000000
 #define KBD_MODIFIER        0x80 // 0b10000000
 
-
+#define KBD_SCAN_CODES      256
 #define KBD_INPUT_NONE      0x00
+
 
 struct kbd_event_struct {
     uint8_t data;
@@ -35,5 +51,6 @@ typedef struct kbd_event_struct kbd_event;
 const kbd_event scancode_set1[KBD_SCAN_CODES];
 void keyboard_init();
 void keyboard_handler(isr_data * data);
+
 
 #endif
