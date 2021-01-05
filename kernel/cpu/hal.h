@@ -42,4 +42,10 @@ static inline void enable_interrupts()
     asm volatile("sti");
 }
 
+__attribute__((always_inline))
+static inline void halt()
+{
+    asm volatile("hlt");
+}
+
 #endif

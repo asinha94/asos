@@ -12,10 +12,10 @@ My pet project in bootstrapping a bare-bones OS. The goal is for this to eventua
 - [X] Partial driver support (keyboard)
 - [x] High-half kernel and paging support
 - [x] Kernel Malloc implementation
+- [x] Simple shell for debugging/testing
 
 ## Short-Term Work
 - [ ] Use multiboot2 (Memory Map)
-- [ ] Improve keyboard handler
 - [ ] Create handlers for interrupt 0-31
 - [ ] Handle exceptions (beyond just logging)
 - [ ] Create PIT/RTC drivers
