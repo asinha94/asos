@@ -12,7 +12,6 @@
 */
 
 
-static const kbd_event * last_pressed;
 static uint8_t current_modifiers;
 
 void keyboard_init()
@@ -85,7 +84,11 @@ void keyboard_handler(isr_data * data)
     if (is_modifier) {
         if (pressed) current_modifiers |= evt->modifier_mask;
         else current_modifiers &= ~(evt->modifier_mask);
-    }  else if (pressed) {
+        return;
+    } 
+    
+    // If a non-modifier key was pressed
+    if (pressed) {
         uint8_t current_value = evt->data;
         if (evt->modifier_mask & current_modifiers)
             current_value = evt->data_mod;
