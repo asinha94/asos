@@ -28,7 +28,7 @@ extern void asm_handler_irq15();
 static void default_irq_handler(isr_data * data)
 {
     kprintf("Entered ISR %u\n", data->int_no);
-    irq_eoi(data->int_no - PIC_MASTER_VECTOR_OFFSET);
+    irq_eoi(data->int_no);
 }
 
 
@@ -50,7 +50,7 @@ void init_irq()
     outport8(PIC_MASTER_DATA_PORT, ICW4_8086);
     outport8(PIC_SLAVE_DATA_PORT, ICW4_8086);
 
-    // Enable all IRQs
+    // Disable all IRQs (high bit means disabled)
     outport8(PIC_MASTER_DATA_PORT, 0xFF);
     outport8(PIC_SLAVE_DATA_PORT, 0xFF);
     kprintf("PIC re-mapped\n");
@@ -120,9 +120,10 @@ void irq_set_mask(uint8_t irq_number)
     outport8(port, data);
 }
 
-void irq_eoi(uint8_t irq_number)
-{
-    if (irq_number > 7)
+void irq_eoi(uint8_t interrupt_no)
+{   
+    uint8_t irq_no = interrupt_no - PIC_MASTER_VECTOR_OFFSET;
+    if (irq_no > 7)
         outport8(PIC_SLAVE_CMD_PORT, PIC_EOI);
     outport8(PIC_MASTER_CMD_PORT, PIC_EOI);
 }

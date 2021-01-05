@@ -4,6 +4,13 @@
 #include <drivers/keyboard/keyboard.h>
 #include <display/tty.h>
 
+/*
+    Implementation derived from these references
+    - https://wiki.osdev.org/PS2_Keyboard
+    - https://www.win.tue.nl/~aeb/linux/kbd/scancodes.html
+*/
+
+
 static const kbd_event * last_pressed;
 static uint8_t current_modifiers;
 
@@ -11,22 +18,49 @@ void keyboard_init()
 {
     kprintf("Initializing Keyboard\n");
 
-    // get/set scan code set 1 here
-    // disalbe all LED
-    // set type rate
+    // TODO: 
+    // disable all LEDs?
+    // set type rate?
 
     last_pressed = NULL;
     current_modifiers = 0;
     irq_clear_mask(0x1);
 }
 
+
+static uint8_t kbd_get_status()
+{
+    return inport8(KBD_STATUS_PORT);
+}
+
+
+static void kbd_send_data(uint8_t data)
+{
+    while(kbd_get_status() & KBD_STATUS_IN_BUF);
+    outport8(KBD_CMD_PORT, data);
+}
+
+
+static uint8_t kbd_read_data()
+{
+    return inport8(KBD_DATA_PORT);
+}
+
+
 void keyboard_handler(isr_data * data)
 {
-    uint8_t kbd_data = inport8(KBD_SCAN_CODE_PORT);
+    // If we got an interrupt and the data isn't ready it's
+    // already been read and we can just ignore this I guess?
+    if ((kbd_get_status() & KBD_STATUS_OUT_BUF) == 0) {
+        irq_eoi(data->int_no);
+        return;
+    }
+
+    uint8_t kbd_data = kbd_read_data();
     uint8_t is_multiple = 0;
     // Check if we need more bytes to proceed
     if (kbd_data == KBD_SCAN_MORE_DATA) {
-        kbd_data = inport8(KBD_SCAN_CODE_PORT);
+        kbd_data = kbd_read_data();
         is_multiple = 0xFF;
     }
 
