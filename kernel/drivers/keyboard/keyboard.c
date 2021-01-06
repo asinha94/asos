@@ -96,17 +96,12 @@ void keyboard_handler(isr_data * data)
     
     // If a non-modifier key was pressed
     if (pressed) {
-        unsigned char c = evt->data;
-        if (evt->modifier_mask & current_modifiers)
-            c = evt->data_mod;
-
         // TODO: handle capslock/numlock/scrolllock
+        uint8_t c = (evt->modifier_mask & current_modifiers) ? c = evt->data_mod : evt->data;
+        tty_putchar(c);
         
         // In future when we have userspace, this will be replaced
         // with a write/send to character device
-        tty_putchar(c);
-        
-        
         if (__len >= 80)
             __len = 0;
         if (c == '\n') {
