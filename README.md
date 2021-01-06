@@ -12,10 +12,10 @@ My pet project in bootstrapping a bare-bones OS. The goal is for this to eventua
 - [X] Partial driver support (keyboard)
 - [x] High-half kernel and paging support
 - [x] Kernel Malloc implementation
+- [x] Simple shell for debugging/testing
 
 ## Short-Term Work
 - [ ] Use multiboot2 (Memory Map)
-- [ ] Improve keyboard handler
 - [ ] Create handlers for interrupt 0-31
 - [ ] Handle exceptions (beyond just logging)
 - [ ] Create PIT/RTC drivers
@@ -73,6 +73,12 @@ Both Bochs and QEMU can be used to debug. Assuming either tool is installed and 
 ### QEMU
 When using qemu-dbg, the os will be paused waiting for GDB or another interface to continue execution. You can connect to qemu through GDB on port `1234`, then execute as normal. QEMU debugging is useful for stepping through the code to check your application logic while Bochs is useful.
 
+Because I develop on VSCode (inside WSL2), while QEMU is running on Windows (to make use of the graphical environment) we are subject to [this bug](https://github.com/microsoft/WSL/issues/5298) where we cannot access localhost on the Windows side of things through WSL. To fix this you can do any of the below steps
+
+1. Restart wsl with `wsl --shutdown` in powershell
+2. find the Windows IP with `ipconfig` in powershell (search for `Ethernet adapter vEthernet (WSL)`)  and use that instead of localhost
+3. Edit `/etc/hosts` in WSL2 by removing the IPv4 entry for `localhost` and add `localhost` to the IPv6 entry.
+4. Run qemu inside WSL with `make qemu-termdbg`. This limits you to the console though
 
 ### Bochs
 Bochs debugging is useful when debugging hardware i.e making sure your CPU is in the correct state, exceptions are being handled, investigate triple-faults etc... It has it's own built in debugger which is similar to GDB, but not 100% compatible.

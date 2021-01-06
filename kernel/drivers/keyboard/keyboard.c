@@ -14,6 +14,11 @@
 
 static uint8_t current_modifiers;
 
+// TODO: Remove once done with temp shell
+int __len = 0;
+int __newline = 0;
+char __kbd_buffer[80];
+
 void keyboard_init()
 {
     kprintf("Initializing Keyboard\n");
@@ -91,12 +96,19 @@ void keyboard_handler(isr_data * data)
     
     // If a non-modifier key was pressed
     if (pressed) {
-        uint8_t current_value = evt->data;
-        if (evt->modifier_mask & current_modifiers)
-            current_value = evt->data_mod;
         // TODO: handle capslock/numlock/scrolllock
+        uint8_t c = (evt->modifier_mask & current_modifiers) ? c = evt->data_mod : evt->data;
+        tty_putchar(c);
+        
         // In future when we have userspace, this will be replaced
         // with a write/send to character device
-        tty_putchar(current_value);  
+        if (__len >= 80)
+            __len = 0;
+        if (c == '\n') {
+            c = 0;
+            __newline = 1;
+        }
+        __kbd_buffer[__len++] = c;
+
     }
 }
