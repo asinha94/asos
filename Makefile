@@ -45,7 +45,7 @@ CPPFLAGS =
 asos.bin: $(KERNOBJS) $(LINKSCRIPT)
 	@mkdir -p $(BUILD_DIR)
 	@$(CC) -T $(LINKSCRIPT) -o $(BUILD_DIR)/$@ $(CFLAGS) $(KERNOBJS)
-	@grub-file --is-x86-multiboot $(BUILD_DIR)/$@
+	@grub-file --is-x86-multiboot2 $(BUILD_DIR)/$@
 
 %.o : %.c
 	@$(CC) -c $< -o $@ $(CFLAGS)
@@ -68,19 +68,21 @@ iso9660: iso-dir
 			 -boot-load-size 4 -boot-info-table \
 			 -o $(BUILD_DIR)/asos9960.iso $(ISODIR) 
 
-qemu-termdbg: asos.bin
-	@$(QEMU_TERM) -s -S -kernel $(BUILD_DIR)/asos.bin -no-reboot -curses
+qemu-termdbg: iso
+	@$(QEMU_TERM) -s -S -cdrom $(BUILD_DIR)/asos.iso -no-reboot -curses
 
-qemu-dbg: asos.bin
-	@$(QEMU) -s -S -kernel $(BUILD_DIR)/asos.bin -no-reboot -monitor stdio
+qemu-dbg: iso
+	@$(QEMU) -s -S -cdrom $(BUILD_DIR)/asos.iso -no-reboot -monitor stdio
 
-qemu-run: asos.bin
-	@$(QEMU) -kernel $(BUILD_DIR)/asos.bin -no-reboot -monitor stdio
+qemu-run: iso
+	@$(QEMU) -cdrom $(BUILD_DIR)/asos.iso -no-reboot -monitor stdio
 
 bochs-run: iso
 	@$(BOCHS) -f bochsrc.cd -q
 
 bochs-dbg: iso
+	@objcopy --only-keep-debug $(BUILD_DIR)/asos.bin $(BUILD_DIR)/asos.iso
+	@nm asos.sym | grep " T " | awk '{ print $1 " " $3 }' > asos_stripped.sym
 	@$(BOCHSDBG) -f bochsrc.cd -q
 
 gdb: asos.bin

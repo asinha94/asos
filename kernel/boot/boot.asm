@@ -1,19 +1,27 @@
-; Source: https://wiki.osdev.org/Bare_Bones_with_NASM
-; The Global Constants used to signal to Multiboot to load this file
-; This basically does all the hard bootloading for us
-MBALIGN  equ  1 << 0            ; Align modules at page boundaries
-MEMINFO  equ  1 << 1            ; Provide us with a memory map
-FLAGS    equ  MBALIGN | MEMINFO ; The Fields flag for multiboot
-MAGIC    equ  0x1BADB002        ; The Bootloader magic number which lefts the bootloader find the header
-CHECKSUM equ -(MAGIC + FLAGS)   ; Checksum of above to prove to multiboot that this is actually a header
+; Multiboot 2 version of https://wiki.osdev.org/Bare_Bones_with_NASM
+; https://www.gnu.org/software/grub/manual/multiboot2/multiboot.html#Example-boot-loader-code used for multiboot2
 
-; Declare the Header for the multiboot standard
+
+; Multiboot2 Header values
+MBOOT2_MAGIC    equ 0xE85250D6
+MBOOT2_ARCH     equ 0
+MBOOT2_LEN      equ (multiboot_header_end-multiboot_header_start)
+MBOOT2_CHECKSUM equ -(MBOOT2_MAGIC + MBOOT2_ARCH + MBOOT2_LEN)
+
+
+; Declare the Header for the multiboot standard: https://www.gnu.org/software/grub/manual/multiboot2/multiboot.html#Header-layout
 section .multiboot
-align 4
-multiboot_header:
-        dd MAGIC
-        dd FLAGS
-        dd CHECKSUM
+align 8
+multiboot_header_start:
+        dd MBOOT2_MAGIC
+        dd MBOOT2_ARCH
+        dd MBOOT2_LEN
+        dd MBOOT2_CHECKSUM
+multiboot_final_tag:
+        dw 0
+        dw 0
+        dd 8
+multiboot_header_end:
 
 
 ; Create Paging structures for loading kernel at higher-half
@@ -34,31 +42,30 @@ _start:
         ; disable interrupts
         cli
 
-        ; Enable A20 line. Unnecessary in Bochs, maybe QEMU
-        ;in al, 0x92
-        ;or al, 0x02
-        ;out 0x92, al
+        ; https://www.gnu.org/software/grub/manual/multiboot2/multiboot.html#I386-machine-state
+        ; eax contains the multiboot magic number and ebx holds the addr. of multiboot structure
+        ; which is passed to the kernel, so we can't use those values. Using ecx instead
 
         ; Load page-dir. The PIC addresses are used because
         ; the BIOS has loaded us in at 1MB, but we told the linker
         ; to use our VA offsets so the C code works with virtual addresses
-        mov eax, (identity_page_directory - KERNEL_PG_VA_OFFSET)
-        mov cr3, eax
-
+        mov ecx, (identity_page_directory - KERNEL_PG_VA_OFFSET)
+        mov cr3, ecx
+        
         ; Enable 4MB pages
-        mov eax, cr4
-        or eax, 0x00000010
-        mov cr4, eax
-
+        mov ecx, cr4
+        or ecx, 0x00000010
+        mov cr4, ecx
+        
         ; Enable Paging and Protected mode
-        mov eax, cr0
-        or eax, 0x80000001
-        mov cr0, eax
-
+        mov ecx, cr0
+        or ecx, 0x80000001
+        mov cr0, ecx
+        
         ; Paging is enabled but the CPU still has physical addresses
         ; in its instruction cache, we need to long jump (similar to GDT jump)
-        lea eax, [_kernel_start]
-        jmp eax ; Need a virtual address to cement it
+        lea ecx, [_kernel_start]
+        jmp ecx ; Need a virtual address to cement it
 
 
 extern kernel_main
@@ -70,6 +77,14 @@ _kernel_start:
 
         ; setup stack
         mov esp, stack_start
+
+        ; Multiboot2 magic value: 
+        push eax
+        ; Multiboot2 structure physical address, but we want virtual
+        ; According to the docs, this can be anywhere, but we only map the first 4MB for the kernel
+        ; I guess we just cross our fingers that its in the paged section?
+        add ebx, KERNEL_PG_VA_OFFSET
+        push ebx
 
         ; Startup the C kernel
         call kernel_main

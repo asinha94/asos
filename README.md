@@ -36,7 +36,7 @@ My pet project in bootstrapping a bare-bones OS. The goal is for this to eventua
 - [ ] 64-bit
 - [ ] UEFI
 
---- 
+
 ## Development
 
 Development takes place on a *nix environment, preferably linux. WSL works too.
@@ -83,7 +83,7 @@ Because I develop on VSCode (inside WSL2), while QEMU is running on Windows (to 
 ### Bochs
 Bochs debugging is useful when debugging hardware i.e making sure your CPU is in the correct state, exceptions are being handled, investigate triple-faults etc... It has it's own built in debugger which is similar to GDB, but not 100% compatible.
 
----
+
 
 ## Resources/References
 

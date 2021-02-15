@@ -9,7 +9,8 @@
         "string": "c",
         "string_view": "c",
         "stdint.h": "c",
-        "keyboard.h": "c"
+        "keyboard.h": "c",
+        "multiboot2.h": "c"
     },
     "files.exclude": {
         "**/bin": true
