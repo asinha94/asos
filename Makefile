@@ -58,6 +58,8 @@ iso-dir: asos.bin
 	@cp $(BUILD_DIR)/asos.bin $(ISODIR)/boot
 	@cp utils/grub.cfg $(ISODIR)/boot/grub
 	@cp utils/stage2_eltorito $(ISODIR)/boot/grub
+	@objcopy --only-keep-debug $(BUILD_DIR)/asos.bin $(BUILD_DIR)/asos.sym
+	@nm $(BUILD_DIR)/asos.sym | grep " T " | awk '{ print $$1 " " $$3 }' > $(BUILD_DIR)/bochs.sym
 
 iso: iso-dir
 	@grub-mkrescue -o $(BUILD_DIR)/asos.iso $(ISODIR)
@@ -81,8 +83,6 @@ bochs-run: iso
 	@$(BOCHS) -f bochsrc.cd -q
 
 bochs-dbg: iso
-	@objcopy --only-keep-debug $(BUILD_DIR)/asos.bin $(BUILD_DIR)/asos.iso
-	@nm asos.sym | grep " T " | awk '{ print $1 " " $3 }' > asos_stripped.sym
 	@$(BOCHSDBG) -f bochsrc.cd -q
 
 gdb: asos.bin

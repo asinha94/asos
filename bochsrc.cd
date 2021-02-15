@@ -1,3 +1,4 @@
 memory: guest=128, host=128
 ata0-master: type=cdrom, path="build/asos.iso", status=inserted
+debug_symbols: file="build/bochs.sym"
 boot: cdrom
