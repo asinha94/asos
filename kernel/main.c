@@ -28,20 +28,16 @@ void temp_shell_execute()
         }
     __newline = 0;
     __len = 0;
-    kprintf("shell$> ");
+    kprintf("$> ");
     }
 }
 
 void kernel_main(uint32_t multiboot2_addr, uint32_t multiboot2_bootloader_magic)
 {   
     if (MULTIBOOT2_BOOTLOADER_MAGIC != multiboot2_bootloader_magic) {
-        kprintf("Bootloader couldn\'t load the kernel properly, Exiting");
-        kprintf("Expected: %x != %x Actual\n", MULTIBOOT2_BOOTLOADER_MAGIC, multiboot2_bootloader_magic);
         return;
     }
-
-    kprintf("Multiboot2 Magic addr: %x\n", multiboot2_addr);
-    halt();
+    
     // Init a TTY for us to log to
     init_tty();
     kprintf("Initializing Kernel\n");
