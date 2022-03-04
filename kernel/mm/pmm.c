@@ -15,7 +15,7 @@ static uint32_t pmm_mmap[PMM_BITMAP_LEN];
 static size_t used_pages = 0;
 
 
-void init_pmm()
+void init_pmm(struct multiboot_tag_basic_meminfo *meminfo, struct multiboot_tag_mmap * mmap)
 {
     // TODO: add utility function to mark large sections at the same time
 

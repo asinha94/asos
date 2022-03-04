@@ -19,8 +19,6 @@
  *  IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// Taken from https://www.gnu.org/software/grub/manual/multiboot2/multiboot.html#multiboot2_002eh
-
 #ifndef MULTIBOOT_HEADER
 #define MULTIBOOT_HEADER 1
 

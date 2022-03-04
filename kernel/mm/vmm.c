@@ -29,7 +29,7 @@ void init_vmm()
     __kernel_pdir = PG_P2V(pd_paddr);
 
     // Map kernel to higher half i.e from 3GB onwards
-    // and next 4MB for paging structures at the end of virtual memory
+    // and next 4MB og physical memory to the last 4MB of virtual memory (used for paging structures)
     uint32_t flags = PDE_PRESENT | PDE_RW_ACCESS | PDE_4MB_PAGE_SZ;
     insert_kernel_pde(VMM_KERN_ADDR_START, 0x0, flags);
     insert_kernel_pde(VMM_PAGING_ADDR_START, PMM_PAGING_ADDR_START, flags);

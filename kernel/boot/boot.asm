@@ -82,7 +82,7 @@ _kernel_start:
         push eax
         ; Multiboot2 structure physical address, but we want virtual
         ; According to the docs, this can be anywhere, but we only map the first 4MB for the kernel
-        ; I guess we just cross our fingers that its in the paged section?
+        ; Inside the kernel we have to figure out what page to map to access this
         add ebx, KERNEL_PG_VA_OFFSET
         push ebx
 
