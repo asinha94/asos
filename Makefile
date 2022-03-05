@@ -57,16 +57,12 @@ iso-dir: asos.bin
 	@mkdir -p $(ISODIR)/boot/grub
 	@cp $(BUILD_DIR)/asos.bin $(ISODIR)/boot
 	@cp utils/grub.cfg $(ISODIR)/boot/grub
-	@cp utils/stage2_eltorito $(ISODIR)/boot/grub
 
 iso: iso-dir
 	@grub-mkrescue -o $(BUILD_DIR)/asos.iso $(ISODIR)
 
-# This shouldn't be necessary anymore
 iso9660: iso-dir
-	@mkisofs -R -b boot/grub/stage2_eltorito -no-emul-boot \
-			 -boot-load-size 4 -boot-info-table \
-			 -o $(BUILD_DIR)/asos9960.iso $(ISODIR) 
+	@grub-mkrescue --xorriso=./utils/xorriso-1.5.4/xorriso/xorriso -o $(BUILD_DIR)/asos9660.iso $(ISODIR)
 
 qemu-termdbg: asos.bin
 	@$(QEMU_TERM) -s -S -kernel $(BUILD_DIR)/asos.bin -no-reboot -curses

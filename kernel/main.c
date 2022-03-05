@@ -31,10 +31,11 @@ void temp_shell_execute()
     }
 }
 
-void kernel_main(void)
+void kernel_main(unsigned long magic, unsigned long mb_addr)
 {    
     // Init a TTY for us to log to
     init_tty();
+    kprintf("Magic Header %u\n", magic);
     kprintf("Initializing Kernel\n");
     // descriptor tables and exception handlers
     init_gdt();
