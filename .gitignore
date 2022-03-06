@@ -5,4 +5,3 @@
 .vscode/ipch
 **/isodir
 **/*.out
-utils/xorriso-1.5.4

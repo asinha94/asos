@@ -16,7 +16,6 @@ CC = $(CROSS_CC_DIR)/i686-elf-gcc
 ASM = nasm
 
 # Emulators
-QEMU_TERM = /usr/bin/qemu-system-i386
 QEMU = /mnt/c/Program\ Files/qemu/qemu-system-i386.exe
 QEMU_WIN = 'C:\Program Files\qemu\qemu-system-i386.exe'
 BOCHS = /mnt/c/Program\ Files/Bochs-2.6.11/bochs.exe
@@ -43,7 +42,7 @@ CPPFLAGS =
 # Make Targets              #
 #############################
 
-.PHONY: clean qemu-run
+.PHONY: clean
 .SUFFIXES: .o .c .asm
 
 asos.bin: $(KERNOBJS) $(LINKSCRIPT)
@@ -65,8 +64,8 @@ iso-dir: asos.bin
 iso: iso-dir
 	@grub-mkrescue -o $(BUILD_DIR)/asos.iso $(ISODIR)
 
-qemu-dbg: asos.bin
-	@$(QEMU) -s -S -kernel $(BUILD_DIR)/asos.bin -no-reboot -monitor stdio
+qemu-dbg: iso
+	@cp $(BUILD_DIR)/asos.iso $(WIN_ISO_DIR)
 	@$(POWERSHELL) "& $(QEMU_WIN) -s -S -no-reboot -monitor stdio -cdrom $(WIN_ISO_PATH)/asos.iso"
 
 qemu: iso
