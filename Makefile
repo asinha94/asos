@@ -7,6 +7,9 @@ SRC_DIR = $(PREFIX)/kernel
 CC_VERSION = gcc-7.5.0
 CROSS_CC_DIR = $(BIN_DIR)/$(CC_VERSION)/bin
 ISODIR = $(BUILD_DIR)/isodir
+WIN_ISO_DIR = /mnt/c/Users/Anura/Downloads
+WIN_ISO_PATH = C:\Users\Anura\Downloads
+POWERSHELL = powershell.exe -Command
 
 # Compiler & Build
 CC = $(CROSS_CC_DIR)/i686-elf-gcc
@@ -15,6 +18,7 @@ ASM = nasm
 # Emulators
 QEMU_TERM = /usr/bin/qemu-system-i386
 QEMU = /mnt/c/Program\ Files/qemu/qemu-system-i386.exe
+QEMU_WIN = 'C:\Program Files\qemu\qemu-system-i386.exe'
 BOCHS = /mnt/c/Program\ Files/Bochs-2.6.11/bochs.exe
 BOCHSDBG = /mnt/c/Program\ Files/Bochs-2.6.11/bochsdbg.exe
 
@@ -61,19 +65,15 @@ iso-dir: asos.bin
 iso: iso-dir
 	@grub-mkrescue -o $(BUILD_DIR)/asos.iso $(ISODIR)
 
-iso9660: iso-dir
-	@grub-mkrescue --xorriso=./utils/xorriso-1.5.4/xorriso/xorriso -o $(BUILD_DIR)/asos9660.iso $(ISODIR)
-
-qemu-termdbg: asos.bin
-	@$(QEMU_TERM) -s -S -kernel $(BUILD_DIR)/asos.bin -no-reboot -curses
-
 qemu-dbg: asos.bin
 	@$(QEMU) -s -S -kernel $(BUILD_DIR)/asos.bin -no-reboot -monitor stdio
+	@$(POWERSHELL) "& $(QEMU_WIN) -s -S -no-reboot -monitor stdio -cdrom $(WIN_ISO_PATH)/asos.iso"
 
-qemu-run: asos.bin
-	@$(QEMU) -kernel $(BUILD_DIR)/asos.bin -no-reboot -monitor stdio
+qemu: iso
+	@cp $(BUILD_DIR)/asos.iso $(WIN_ISO_DIR)
+	@$(POWERSHELL) "& $(QEMU_WIN) -no-reboot -monitor stdio -cdrom $(WIN_ISO_PATH)/asos.iso"
 
-bochs-run: iso
+bochs: iso
 	@$(BOCHS) -f bochsrc.cd -q
 
 bochs-dbg: iso
@@ -83,7 +83,7 @@ gdb: asos.bin
 	@gdb -x ./debug/debug.gdbinit
 
 clean:
-	@rm -rf $(BUILD_DIR) $(KERNOBJS)
+	@rm -rf $(BUILD_DIR) $(KERNOBJS) $(WIN_ISO_DIR)/asos.iso
 
 print-%:
 	@echo $* = $($*)
