@@ -1,5 +1,5 @@
-#ifndef ASOS_TTY_H
-#define ASOS_TTY_H
+#ifndef ASOS_TEXTMODE_H
+#define ASOS_TEXTMODE_H
 
 #include <stddef.h>
 #include <stdint.h>
@@ -34,12 +34,9 @@ static inline uint16_t vga_entry(unsigned char uc, uint8_t color)
     return (((uint16_t) color) << 8) | ((uint16_t) uc);
 }
 
-const size_t VGA_WIDTH;
-const size_t VGA_HEIGHT;
-
 void tty_puts(const char* data);
 void tty_putchar(unsigned char c);
-void kprintf(const char * format, ...);
+
 void init_tty();
 
 #endif

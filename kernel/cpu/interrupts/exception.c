@@ -1,6 +1,6 @@
 #include <cpu/interrupts/exception.h>
 #include <cpu/interrupts/idt.h>
-#include <display/tty.h>
+#include <display/textmode.h>
 
 // CPU Exception handlers
 extern void asm_handler_isr0();
@@ -40,7 +40,7 @@ extern void asm_handler_isr31();
 
 static void default_isr_handler(isr_data * data)
 {
-    kprintf("Unhandled Exception: %d\n", data->int_no);
+    klogf("Unhandled Exception: %d\n", data->int_no);
     for(;;);
 }
 
@@ -48,7 +48,7 @@ static void default_isr_handler(isr_data * data)
 
 void init_cpu_exceptions()
 {
-    kprintf("Creating CPU Exception IDT entries\n");
+    klogf("Creating CPU Exception IDT entries\n");
     // Install first 32 handlers for CPU Exceptions
     insert_idt_entry(0, (uint32_t) asm_handler_isr0, default_isr_handler);
     insert_idt_entry(1, (uint32_t) asm_handler_isr1, default_isr_handler);

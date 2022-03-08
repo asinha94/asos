@@ -1,6 +1,6 @@
 #include <stdint.h>
 #include <stddef.h>
-#include <display/tty.h>
+#include <display/textmode.h>
 #include <mm/gdt.h>
 
 #define GDT_SIZE 5
@@ -49,5 +49,5 @@ void init_gdt()
     gdt.length = sizeof(segments) - 1;
     gdt.segments = (uint32_t) &segments;
     asm_init_gdt((uint32_t) &gdt);
-    kprintf("GDT initialized\n");
+    klogf("GDT initialized\n");
 }

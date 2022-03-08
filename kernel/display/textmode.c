@@ -1,6 +1,5 @@
-#include <stdarg.h>
 #include <stdint.h>
-#include <display/tty.h>
+#include <display/textmode.h>
 
 const size_t VGA_WIDTH = 80;
 const size_t VGA_HEIGHT = 25;
@@ -10,18 +9,9 @@ static size_t tty_column;
 static uint8_t tty_color;
 static uint16_t* tty_buffer;
 
-size_t strlen(const char* str);
 static void tty_clear_from(uint8_t linum);
 static void tty_scroll_up_lines(uint8_t num_lines);
 
-
-// move to libk string.h
-size_t strlen(const char* str) {
-    size_t len = 0;
-    while (*str++)
-        len++;
-    return len;
-}
 
 
 static void tty_clear_from(uint8_t linum)
@@ -103,82 +93,6 @@ void tty_puts(const char* data)
     // This can't go wrong
     while (*s) tty_putchar(*s++);
 
-}
-
-
-static char * itoa(char * s, uint32_t x, uint32_t base)
-{
-    // s is a pointer to the end of a buffer
-    // 2**32 is the max representable value
-    // and fits in 10 chars (negative sign inserted beforehand)
-    // Buffer is larger than 10 so dont worry about space
-    const char * digits = "0123456789ABCDEF";
-    uint16_t i;
-
-    // Its itoa's job to insert the null terminator
-    *s = 0;
-    do {
-        i = x % base;
-        *(--s) = digits[i];
-        x /= base;
-    } while (x);
-    return s;
-}
-
-void kprintf(const char * format, ...)
-{
-    // temp for conversions
-    static char temp[12];
-    // Only %d, %s, %u, %x supported
-    uint32_t u;
-    int32_t i;
-    char *s;
-
-    // variadic argument macro
-    va_list arg; 
-    va_start(arg, format); 
-
-    const char * iter;
-    for (iter = format; *iter != 0; ++iter) {
-        if (*iter != '%') {
-            tty_putchar(*iter);
-            continue;
-        }
-
-        iter++;
-        switch(*iter) {
-            case 'c':
-                i = va_arg(arg, int);
-                tty_putchar((char) i);
-                break;
-            case 'd':
-                i = va_arg(arg, int);
-                if (i < 0) {
-                    i = -i;
-                    tty_putchar('-');
-                }
-                s = itoa(&temp[11], i, 10);
-                tty_puts(s);
-                break;
-            case 'u':
-                u = va_arg(arg, unsigned int);
-                s = itoa(&temp[11], u, 10);
-                tty_puts(s);
-                break;
-            case 's':
-                s = va_arg(arg, char *);
-                tty_puts(s);
-                break;
-            case 'x':
-                u = va_arg(arg, unsigned int);
-                s = itoa(&temp[11], u, 16);
-                tty_puts("0x");
-                tty_puts(s);
-                break; 
-        }
-
-    }
-    va_end(arg);
 }
 
 

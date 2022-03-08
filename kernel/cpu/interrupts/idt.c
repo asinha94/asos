@@ -1,6 +1,6 @@
 #include <stddef.h>
 #include <cpu/interrupts/idt.h>
-#include <display/tty.h>
+#include <display/textmode.h>
 
 #define IDT_LEN 256
 
@@ -46,14 +46,14 @@ void init_idt()
     idt.entries = (uint32_t) &entries;
     // load the IDT same way as the GDT
     asm_init_idt((uint32_t) &idt);
-    kprintf("IDT loaded\n");
+    klogf("IDT loaded\n");
 }
 
 void isr_dispatcher(isr_data * regs)
 {
     ivect handler = ivt[regs->int_no];
     if (handler == NULL) {
-        kprintf("No handler found for: int %u\n", regs->int_no);
+        klogf("No handler found for: int %u\n", regs->int_no);
         return;
     }
     handler(regs);
