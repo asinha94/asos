@@ -43,7 +43,7 @@ void kernel_main(unsigned long magic, unsigned long mb_addr)
     init_serial();
     init_klog(serial_putchar, serial_puts);
 
-    klogf("Multiboot Magic Header %u\n", magic);
+    klogf("Multiboot Magic Header 0x%x\n", magic);
     if (magic != MULTIBOOT_BOOTLOADER_MAGIC) {
         klogf("Invalid Multiboot Magic Number: 0x%x. Expected 0x%x\n", MULTIBOOT_BOOTLOADER_MAGIC);
         return;
@@ -69,7 +69,6 @@ void kernel_main(unsigned long magic, unsigned long mb_addr)
     init_vmm();
 
     // Let loose the dogs of war
-    klogf("shell$> ");
     enable_interrupts();
 
     while (1) {
