@@ -4,6 +4,7 @@
 #include <cpu/hal.h>
 #include <display/textmode.h>
 #include <drivers/keyboard/keyboard.h>
+#include <drivers/serial/serial.h>
 #include <mm/gdt.h>
 #include <mm/pmm.h>
 #include <libk/string.h>
@@ -38,7 +39,9 @@ void kernel_main(unsigned long magic, unsigned long mb_addr)
 
     // Init a serial/tty connections for us to log to
     //init_tty(); -- Uncomment to clear textmode screen, should do it when we check the graphics mode
-    //init_klog(tty_putchar, tty_puts); 
+    //init_klog(tty_putchar, tty_puts);
+    init_serial();
+    init_klog(serial_putchar, serial_puts);
 
     klogf("Multiboot Magic Header %u\n", magic);
     if (magic != MULTIBOOT_BOOTLOADER_MAGIC) {

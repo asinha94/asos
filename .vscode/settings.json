@@ -10,7 +10,8 @@
         "string_view": "c",
         "stdint.h": "c",
         "keyboard.h": "c",
-        "textmode.h": "c"
+        "textmode.h": "c",
+        "hal.h": "c"
     },
     "files.exclude": {
         "**/bin": true

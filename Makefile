@@ -70,7 +70,7 @@ qemu-dbg: iso
 
 qemu: iso
 	@cp $(BUILD_DIR)/asos.iso $(WIN_ISO_DIR)
-	@$(POWERSHELL) "& $(QEMU_WIN) -no-reboot -monitor stdio -cdrom $(WIN_ISO_PATH)/asos.iso"
+	@$(POWERSHELL) "& $(QEMU_WIN) -no-reboot -monitor stdio -serial stdio -cdrom $(WIN_ISO_PATH)/asos.iso"
 
 bochs: iso
 	@$(BOCHS) -f bochsrc.cd -q
