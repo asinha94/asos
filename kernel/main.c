@@ -1,7 +1,9 @@
+#include <boot/multiboot.h>
+
+#include <cpu/hal.h>
 #include <cpu/interrupts/pic.h>
 #include <cpu/interrupts/exception.h>
 #include <cpu/interrupts/idt.h>
-#include <cpu/hal.h>
 #include <display/textmode.h>
 #include <drivers/keyboard/keyboard.h>
 #include <drivers/serial/serial.h>
@@ -9,7 +11,8 @@
 #include <mm/pmm.h>
 #include <libk/string.h>
 #include <libk/klog.h>
-#include <boot/multiboot.h>
+#include <libk/kmalloc.h>
+
 
 extern char __kbd_buffer[80];
 extern int __len;

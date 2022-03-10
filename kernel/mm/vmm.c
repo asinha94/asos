@@ -66,7 +66,7 @@ void insert_kernel_pte(uint32_t vaddr, uint32_t paddr, uint32_t flags)
     return;
 
     uint32_t idx = vaddr >> 22; // Divide by 4MB
-    uint32_t pd_addr =  __kernel_pdir_vaddr->entries[idx] & VMM_4KB_ALIGN_MASK;
+    uint32_t pd_addr = __kernel_pdir_vaddr->entries[idx] & VMM_4KB_ALIGN_MASK;
 
     // No page present, need to allocate one
     if (!pd_addr) {
