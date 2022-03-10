@@ -7,8 +7,6 @@
 
 static void pmm_set_page(size_t pg_num);
 static void pmm_unset_page(size_t pg_num);
-static void pmm_set_range(uint32_t addr, uint32_t len);
-static void pmm_unset_range(uint32_t addr, uint32_t len);
 
 
 static uint32_t pmm_mmap[PMM_BITMAP_LEN];
@@ -25,11 +23,6 @@ void init_pmm()
         pmm_mmap[i] = 0x0; 
     }
 
-    // Mark first PDE as used i.e loaded Kernel + addresses < 1MB
-    // TODO: Use memory map to see how much is actually used
-    // Once we get a memory map, it will make sense to allocate the array
-    // dynamically again, instead of a 128KB array which might be overkill
-    pmm_set_range(0x0, VMM_PG_SZ_LARGE);
 }
 
 
@@ -49,7 +42,7 @@ static void pmm_unset_page(size_t pg_num)
     used_pages--;
 }
 
-static void pmm_set_range(uint32_t addr, uint32_t len)
+void pmm_set_range(uint32_t addr, uint32_t len)
 {
     uint32_t pg_num = addr / VMM_PG_SZ_SMALL;
     // If len isn't multiple of 4K, clear next page
@@ -60,7 +53,7 @@ static void pmm_set_range(uint32_t addr, uint32_t len)
     }
 }
 
-static void pmm_unset_range(uint32_t addr, uint32_t len)
+void pmm_unset_range(uint32_t addr, uint32_t len)
 {
     uint32_t pg_num = addr / VMM_PG_SZ_SMALL;
     uint32_t pages = div_ceil(len, VMM_PG_SZ_SMALL);
@@ -70,7 +63,7 @@ static void pmm_unset_range(uint32_t addr, uint32_t len)
     }
 }
 
-static void * get_page_in_range(uint32_t start_addr, uint32_t end_addr)
+static uint32_t get_page_in_range(uint32_t start_addr, uint32_t end_addr)
 {
     if (used_pages >= PMM_BITMAP_VALUES) {
         return NULL;
@@ -97,7 +90,7 @@ static void * get_page_in_range(uint32_t start_addr, uint32_t end_addr)
             // Found the bit, set it and return the paddr
             uint32_t pg_num = i * 32 + j;
             pmm_set_page(pg_num);
-            return (void *) (pg_num * VMM_PG_SZ_SMALL);
+            return pg_num * VMM_PG_SZ_SMALL;
         }
     }
 
@@ -107,18 +100,20 @@ static void * get_page_in_range(uint32_t start_addr, uint32_t end_addr)
 uint32_t pmm_get_page_addr()
 {
     // TODO: replace VMM_KERN_ADDR_END with the actual end of memory
-    return (uint32_t) get_page_in_range(PMM_PAGING_ADDR_END+1, VMM_KERN_ADDR_END);
+    // when we get a memory map
+    return get_page_in_range(PMM_PAGING_ADDR_END+1, VMM_KERN_ADDR_END);
 }
 
-void * pmm_page_alloc()
+uint32_t pmm_page_alloc()
 {
-    uint32_t * paddr = get_page_in_range(PMM_PAGING_ADDR_START, PMM_PAGING_ADDR_END);
+    uint32_t paddr = get_page_in_range(PMM_PAGING_ADDR_START, PMM_PAGING_ADDR_END);
     if(!paddr)
         return paddr;
 
     // Need to convert the physical address to virtual to memset it
-    uint32_t * vaddr = PG_P2V(paddr);
-    memset(vaddr, 0, VMM_PG_SZ_SMALL);
+    // Maybe the VMM module should memset things?
+    //void * vaddr = PG_P2V(paddr);
+    // memset(vaddr, 0, VMM_PG_SZ_SMALL);
     return paddr;
 }
 

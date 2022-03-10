@@ -3,8 +3,7 @@
 #include <mm/vmm.h>
 #include <mm/pmm.h>
 
-static uint32_t __kernel_heap_start;
-static uint32_t __kernel_heap_end;
+static uint32_t __kernel_heap_vaddr;
 static size_t __heap_size;
 static size_t __used_size;
 static block_header __base;
@@ -14,21 +13,27 @@ static void * __increase_heap_size_for_block(size_t block_size);
 static void * __split_block(block_header * block, size_t block_size);
 
 
-void init_kmalloc()
+void init_kmalloc(uint32_t init_heap_vaddr, size_t init_heap_len)
 {
     __used_size = 0;
-    __heap_size = 0;
+    __heap_size = init_heap_len;
+    __kernel_heap_vaddr = init_heap_vaddr;
+
+    // sentinel value in list
     __last_used_block = &__base;
-    __base.next_block = &__base;
-    __base.block_size = 0;
-    __kernel_heap_start = 0xC8000000;
-    __kernel_heap_end = __kernel_heap_start;
+    __last_used_block->block_size = 0;
+
+    // Insert the initial seed block into the list
+    block_header * init_block = (block_header *) init_heap_vaddr;
+    init_block->block_size = init_heap_len;
+    init_block->next_block = __last_used_block;
+    __last_used_block->next_block = init_block;
 }
 
 
 void * kmalloc(size_t size)
 {    
-    // block_size includes header as well
+    // p->block_size includes header size
     size_t block_size = size + sizeof(block_header);
 
     // Iterate through the freelist till we get a suitable size block
@@ -66,15 +71,14 @@ void * kmalloc(size_t size)
     __last_used_block = prev;
     __used_size += p->block_size;
 
-    // could also return p + 1 due to pointer arithmetic
-    void * block_addr = (char *) p + sizeof(block_header);
-    return block_addr;
+    // pointer arithmetic means p+1 is addr + sizeof(header)
+    return (void *)(p+1);
 }
 
 
 void kfree(void * addr)
 {
-    // addr is address memory, not block (header).
+    // addr is the usable memory in front of the header.
     // -1 to move back by 1*sizeof(block_header) to start of header
     block_header * blk_addr = (block_header *) addr - 1;
     __used_size -= blk_addr->block_size;
@@ -131,12 +135,10 @@ void kfree(void * addr)
 */
 void * __split_block(block_header * block, size_t block_size)
 {
+    // split a block if its ~double the size required and return the tail end of the split
     // TODO: Maybe use an actual size instead of an estimate?
     block_header * split_ptr = block;
-    size_t thresh = 2 * sizeof(block_header);
-    // Found a block that slightly larger than required
-    // split and return the tail end of the split
-    if (block->block_size - block_size >= thresh) {
+    if (block->block_size >= block_size * 2) {
         block->block_size -= block_size;
         split_ptr = (block_header *)((char *)block + block->block_size);
         split_ptr->block_size = block_size;
@@ -147,23 +149,22 @@ void * __split_block(block_header * block, size_t block_size)
 
 void * __increase_heap_size_for_block(size_t block_size)
 {
-    // Increase kernel heap 1 page at a time, probably extrememly inefficient
-    // TODO: I guess change this in future if we're allocating lots of large
+    return NULL;
+    // TODO: Allocate 1 whole page table at a time instead
     // objects. Will also need to update pmm to give us a range of pages instead
     uint32_t phys_page_addr = pmm_get_page_addr();
     if (!phys_page_addr)
         return (void *) phys_page_addr;
 
-    // Map new page for kernel heap at __kernel_heap_end
-    uint32_t flags = PTE_PRESENT | PTE_RW_ACCESS;
-    insert_kernel_pte(__kernel_heap_end, phys_page_addr, flags);
+    // Map the new page table just below the start of the current heap
+    uint32_t flags = PTE_PRESENT | PTE_RW_ACCESS | PDE_4MB_PAGE_SZ;
+    __kernel_heap_vaddr -= VMM_PG_SZ_LARGE;
+    insert_kernel_pde(__kernel_heap_vaddr, phys_page_addr, flags);
 
-    block_header * new_block = (block_header *)__kernel_heap_end;
-    __kernel_heap_end += VMM_PG_SZ_SMALL;
-    __heap_size += VMM_PG_SZ_SMALL;
-
-    // Split into 2 chunks, the chunk + remaining fragment
-    new_block->block_size = VMM_PG_SZ_SMALL;
+    __heap_size += VMM_PG_SZ_LARGE;
+    block_header * new_block = (block_header *)__kernel_heap_vaddr;
+    new_block->block_size = VMM_PG_SZ_LARGE;   
+        
     block_header * p = __split_block(new_block, block_size);
     if (p != new_block) {
         // split occurred, need to 'free' the other block

@@ -16,21 +16,8 @@
 
 
 void init_pmm();
+void pmm_set_range(uint32_t addr, uint32_t len); // TODO: Make a more user-friendly version of this
 uint32_t pmm_get_page_addr();
-void * pmm_page_alloc();
-
-// Convert physical address to virtual for paging structures
-static inline void * PG_P2V(void * paddr)
-{
-    uint32_t offset = (uint32_t) paddr - VMM_PG_SZ_LARGE;
-    return (void *) (VMM_PAGING_ADDR_START + offset);
-}
-
-// convert virtual address to physical for paging structures
-static inline void * PG_V2P(void * vaddr)
-{
-    uint32_t offset = (uint32_t) vaddr - VMM_PAGING_ADDR_START;
-    return (void *) (VMM_PG_SZ_LARGE + offset);
-}
+uint32_t pmm_page_alloc();
 
 #endif

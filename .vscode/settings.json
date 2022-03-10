@@ -11,7 +11,9 @@
         "stdint.h": "c",
         "keyboard.h": "c",
         "textmode.h": "c",
-        "hal.h": "c"
+        "hal.h": "c",
+        "pmm.h": "c",
+        "kmalloc.h": "c"
     },
     "files.exclude": {
         "**/bin": true

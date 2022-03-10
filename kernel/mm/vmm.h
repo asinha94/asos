@@ -3,7 +3,8 @@
 
 #define VMM_KERN_ADDR_START      0xC0000000
 #define VMM_KERN_ADDR_END        0xFFFFFFFF
-#define VMM_PAGING_ADDR_START    0xFFC00000 // 4GB-4MB
+#define VMM_PGDIR_ADDR           0xFFFFF000 // 4GB-4KB
+#define VMM_HEAP_START           0xFFC00000 // 4GB-4MB
 #define VMM_PG_SZ_SMALL          (4 * 1024)
 #define VMM_PG_SZ_LARGE          (4 * 1024 * 1024)
 #define VMM_PDIR_LEN             1024

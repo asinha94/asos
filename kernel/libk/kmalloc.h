@@ -6,7 +6,7 @@
 #include <mm/vmm.h>
 #include <mm/pmm.h>
 
-void init_kmalloc();
+void init_kmalloc(uint32_t, size_t);
 void * kmalloc(size_t size);
 void * kcalloc(size_t num, size_t size);
 void * krealloc(size_t size);

@@ -17,6 +17,7 @@ ASM = nasm
 
 # Emulators
 QEMU = /mnt/c/Program\ Files/qemu/qemu-system-i386.exe
+QEMU_TERM = /usr/bin/qemu-system-i386
 QEMU_WIN = 'C:\Program Files\qemu\qemu-system-i386.exe'
 BOCHS = /mnt/c/Program\ Files/Bochs-2.6.11/bochs.exe
 BOCHSDBG = /mnt/c/Program\ Files/Bochs-2.6.11/bochsdbg.exe
@@ -67,6 +68,9 @@ iso: iso-dir
 qemu-dbg: iso
 	@cp $(BUILD_DIR)/asos.iso $(WIN_ISO_DIR)
 	@$(POWERSHELL) "& $(QEMU_WIN) -s -S -no-reboot -monitor stdio -cdrom $(WIN_ISO_PATH)/asos.iso"
+
+qemu-term: asos.bin
+	@$(QEMU_TERM) -s -S -no-reboot -monitor stdio -curses -kernel $(BUILD_DIR)/asos.bin
 
 qemu: iso
 	@cp $(BUILD_DIR)/asos.iso $(WIN_ISO_DIR)
