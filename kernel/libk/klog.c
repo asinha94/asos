@@ -22,7 +22,7 @@ static void default_puts(unsigned char c)
     return;
 }
 
-void klogf(const char * format, ...)
+void kprintf(const char * format, ...)
 {
     // temp for conversions
     static char temp[12];

@@ -27,13 +27,13 @@ void temp_shell_execute()
 {
     if (__newline) {
         if (is_match("help")) {
-            klogf("This is the help!\n");
+            kprintf("This is the help!\n");
         } else {
-            klogf("%s: command not found\n", __kbd_buffer);
+            kprintf("%s: command not found\n", __kbd_buffer);
         }
     __newline = 0;
     __len = 0;
-    klogf("shell$> ");
+    kprintf("shell$> ");
     }
 }
 
@@ -46,9 +46,9 @@ void kernel_main(unsigned long magic, unsigned long mb_addr)
     init_serial();
     init_klog(serial_putchar, serial_puts);
 
-    klogf("Multiboot Magic Header 0x%x\n", magic);
+    kprintf("Multiboot Magic Header 0x%x\n", magic);
     if (magic != MULTIBOOT_BOOTLOADER_MAGIC) {
-        klogf("Invalid Multiboot Magic Number: 0x%x. Expected 0x%x\n", MULTIBOOT_BOOTLOADER_MAGIC);
+        kprintf("Invalid Multiboot Magic Number: 0x%x. Expected 0x%x\n", MULTIBOOT_BOOTLOADER_MAGIC);
         return;
     }
 
@@ -61,7 +61,7 @@ void kernel_main(unsigned long magic, unsigned long mb_addr)
     //multiboot_uint8_t fb_bpp = mbi->framebuffer_bpp;
     //multiboot_uint8_t fb_type = mbi->framebuffer_type;
     
-    klogf("Initializing Kernel\n");
+    kprintf("Initializing Kernel\n");
     // descriptor tables and exception handlers
     init_gdt();
     init_irq();

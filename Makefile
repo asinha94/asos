@@ -65,12 +65,15 @@ iso-dir: asos.bin
 iso: iso-dir
 	@grub-mkrescue -o $(BUILD_DIR)/asos.iso $(ISODIR)
 
+qemu-term: asos.bin
+	@$(QEMU_TERM) -no-reboot -curses -kernel $(BUILD_DIR)/asos.bin
+
+qemu-termdbg: asos.bin
+	@$(QEMU_TERM) -s -S -no-reboot -monitor stdio -curses -kernel $(BUILD_DIR)/asos.bin
+
 qemu-dbg: iso
 	@cp $(BUILD_DIR)/asos.iso $(WIN_ISO_DIR)
 	@$(POWERSHELL) "& $(QEMU_WIN) -s -S -no-reboot -monitor stdio -cdrom $(WIN_ISO_PATH)/asos.iso"
-
-qemu-term: asos.bin
-	@$(QEMU_TERM) -s -S -no-reboot -monitor stdio -curses -kernel $(BUILD_DIR)/asos.bin
 
 qemu: iso
 	@cp $(BUILD_DIR)/asos.iso $(WIN_ISO_DIR)

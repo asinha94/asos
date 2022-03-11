@@ -46,14 +46,14 @@ void init_idt()
     idt.entries = (uint32_t) &entries;
     // load the IDT same way as the GDT
     asm_init_idt((uint32_t) &idt);
-    klogf("IDT loaded\n");
+    kprintf("IDT loaded\n");
 }
 
 void isr_dispatcher(isr_data * regs)
 {
     ivect handler = ivt[regs->int_no];
     if (handler == NULL) {
-        klogf("No handler found for: int %u\n", regs->int_no);
+        kprintf("No handler found for: int %u\n", regs->int_no);
         return;
     }
     handler(regs);

@@ -53,5 +53,6 @@ void init_vmm();
 // Kernel specific
 void insert_kernel_pde(uint32_t vaddr, uint32_t paddr, uint32_t flags);
 void insert_kernel_pte(uint32_t vaddr, uint32_t paddr, uint32_t flags);
+int page_table_present(uint32_t paddr);
 
 #endif

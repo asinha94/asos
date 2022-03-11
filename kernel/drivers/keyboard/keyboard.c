@@ -21,7 +21,7 @@ char __kbd_buffer[80];
 
 void keyboard_init()
 {
-    klogf("Initializing Keyboard\n");
+    kprintf("Initializing Keyboard\n");
 
     // TODO: 
     // disable all LEDs?

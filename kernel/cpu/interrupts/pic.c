@@ -27,7 +27,7 @@ extern void asm_handler_irq15();
 // Handlers in C
 static void default_irq_handler(isr_data * data)
 {
-    klogf("Entered ISR %u\n", data->int_no);
+    kprintf("Entered ISR %u\n", data->int_no);
     irq_eoi(data->int_no);
 }
 
@@ -53,7 +53,7 @@ void init_irq()
     // Disable all IRQs (high bit means disabled)
     outport8(PIC_MASTER_DATA_PORT, 0xFF);
     outport8(PIC_SLAVE_DATA_PORT, 0xFF);
-    klogf("PIC re-mapped\n");
+    kprintf("PIC re-mapped\n");
 
     // Init all the PIC connected devices
     keyboard_init();

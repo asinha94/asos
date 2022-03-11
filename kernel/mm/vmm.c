@@ -80,3 +80,8 @@ void insert_kernel_pte(uint32_t vaddr, uint32_t paddr, uint32_t flags)
     //page_table * pt = PG_P2V((void *)pd_addr);
     //pt->entries[idx] = paddr | flags;
 }
+
+int is_page_table_present(uint32_t paddr)
+{
+    __kernel_pdir_vaddr->entries[0];
+}
