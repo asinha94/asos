@@ -21,9 +21,9 @@ My pet project in bootstrapping a bare-bones OS. The goal is for this to eventua
 - [ ] Handle exceptions (beyond just logging)
 - [ ] Create PIT/RTC drivers
 - [ ] Move the blinking cursor
+- [ ] Migrate to C++
 
 ## Long-Term Work
-- [ ] Add Graphics 
 - [ ] Use APIC instead of PIC
 - [ ] Improve malloc to use slab allocation
 - [ ] Use buddy allocator for PMM
