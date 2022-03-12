@@ -152,20 +152,13 @@ void * __increase_heap_size_for_block(size_t block_size)
     // TODO: Allocate more than 1 page at a time. Will also need to update the
     // pmm to give us multiple pages or they have to be contiguous. That probably means I need to
     // switch to a stack allocator.
-    uint32_t phys_page_addr = pmm_get_page_addr();
-    if (!phys_page_addr)
-        return (void *) phys_page_addr;
+    uint32_t virtual_page_addr = get_virtual_page();
+    if (!virtual_page_addr)
+        return (void *) virtual_page_addr;
 
-    // Check if Page table is present here
-    
-    // Map the new page table just below the start of the current heap
-    uint32_t flags = PTE_PRESENT | PTE_RW_ACCESS | PDE_4MB_PAGE_SZ;
-    __kernel_heap_vaddr -= VMM_PG_SZ_LARGE;
-    insert_kernel_pde(__kernel_heap_vaddr, phys_page_addr, flags);
-
-    __heap_size += VMM_PG_SZ_LARGE;
-    block_header * new_block = (block_header *)__kernel_heap_vaddr;
-    new_block->block_size = VMM_PG_SZ_LARGE;   
+    __heap_size += VMM_PG_SZ_SMALL;
+    block_header * new_block = (block_header *) virtual_page_addr;
+    new_block->block_size = VMM_PG_SZ_SMALL;   
         
     block_header * p = __split_block(new_block, block_size);
     if (p != new_block) {

@@ -10,9 +10,10 @@
 #define VMM_PDIR_LEN             1024
 #define VMM_PTABLE_LEN           1024
 
-// Alignment Masks
+// Masks
 #define VMM_4KB_ALIGN_MASK      0xFFFFF000 // Top 20 bits
 #define VMM_4MB_ALIGN_MASK      0xFFC00000 // Top 10 Bits
+#define VMM_ACCESS_MASK         0x00000FFF
 
 enum VMM_PDE_FLAG
 {
@@ -53,6 +54,6 @@ void init_vmm();
 // Kernel specific
 void insert_kernel_pde(uint32_t vaddr, uint32_t paddr, uint32_t flags);
 void insert_kernel_pte(uint32_t vaddr, uint32_t paddr, uint32_t flags);
-int page_table_present(uint32_t paddr);
+uint32_t get_virtual_page();
 
 #endif

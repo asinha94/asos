@@ -81,7 +81,8 @@ void insert_kernel_pte(uint32_t vaddr, uint32_t paddr, uint32_t flags)
     //pt->entries[idx] = paddr | flags;
 }
 
-int is_page_table_present(uint32_t paddr)
+
+uint32_t get_virtual_page()
 {
-    __kernel_pdir_vaddr->entries[0];
+    return 0;
 }
