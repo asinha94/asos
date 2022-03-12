@@ -15,16 +15,18 @@ My pet project in bootstrapping a bare-bones OS. The goal is for this to eventua
 - [x] Simple shell for debugging/testing
 
 ## Short-Term Work
+- [ ] Basic Paging Implementation
 - [ ] Use multiboot2 (Memory Map)
 - [ ] Create handlers for interrupt 0-31
 - [ ] Handle exceptions (beyond just logging)
 - [ ] Create PIT/RTC drivers
-- [ ] Improve malloc to use slab allocation
-- [ ] Use buddy allocator for PMM
 - [ ] Move the blinking cursor
-- [ ] Use APIC instead of PIC
 
 ## Long-Term Work
+- [ ] Add Graphics 
+- [ ] Use APIC instead of PIC
+- [ ] Improve malloc to use slab allocation
+- [ ] Use buddy allocator for PMM
 - [ ] bash (or variant) shell
 - [ ] Process Scheduling
 - [ ] File-system support (FAT/ext2/ntfs?)  
