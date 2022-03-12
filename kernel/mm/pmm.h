@@ -18,7 +18,6 @@
 void init_pmm();
 void pmm_unset_range(uint32_t addr, uint32_t len);
 void pmm_set_range(uint32_t addr, uint32_t len); // TODO: Make a more user-friendly version of this
-uint32_t pmm_get_page_addr();
 uint32_t pmm_page_alloc();
 
 #endif

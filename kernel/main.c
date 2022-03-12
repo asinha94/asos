@@ -10,7 +10,7 @@
 #include <mm/gdt.h>
 #include <mm/pmm.h>
 #include <libk/string.h>
-#include <libk/klog.h>
+#include <libk/kprintf.h>
 #include <libk/kmalloc.h>
 
 
@@ -42,9 +42,9 @@ void kernel_main(unsigned long magic, unsigned long mb_addr)
 
     // Init a serial/tty connections for us to log to
     //init_tty(); -- Uncomment to clear textmode screen, should do it when we check the graphics mode
-    //init_klog(tty_putchar, tty_puts);
+    //init_kprintf(tty_putchar, tty_puts);
     init_serial();
-    init_klog(serial_putchar, serial_puts);
+    init_kprintf(serial_putchar, serial_puts);
 
     kprintf("Multiboot Magic Header 0x%x\n", magic);
     if (magic != MULTIBOOT_BOOTLOADER_MAGIC) {

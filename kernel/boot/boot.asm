@@ -11,7 +11,7 @@ MB_MEMINFO equ 0x2
 ; Provide us with Graphics capabilites
 MB_VGA     equ 0x4
 ; The Fields flag for multiboot
-FLAGS      equ MB_ALIGN | MB_MEMINFO | MB_VGA
+FLAGS      equ MB_ALIGN | MB_MEMINFO; | MB_VGA
 
 ; Checksum of above to prove to multiboot that this is actually a header
 CHECKSUM   equ -(MAGIC + FLAGS)  

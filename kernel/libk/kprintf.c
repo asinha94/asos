@@ -1,6 +1,6 @@
 #include <stdint.h>
 #include <stdarg.h>
-#include <libk/klog.h>
+#include <libk/kprintf.h>
 #include <libk/string.h>
 
 static void default_putchar(unsigned char c);
@@ -79,7 +79,7 @@ void kprintf(const char * format, ...)
 }
 
 
-void init_klog(void (*putchar_fp)(unsigned char), void (*puts_fp)(const char*) )
+void init_kprintf(void (*putchar_fp)(unsigned char), void (*puts_fp)(const char*) )
 {
     putchar = putchar_fp;
     puts = puts_fp;

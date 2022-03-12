@@ -50,10 +50,8 @@ typedef struct
 
 
 void init_vmm();
-
-// Kernel specific
+void memset_page(uint32_t table);
 void insert_kernel_pde(uint32_t vaddr, uint32_t paddr, uint32_t flags);
-void insert_kernel_pte(uint32_t vaddr, uint32_t paddr, uint32_t flags);
 uint32_t get_virtual_page();
 
 #endif

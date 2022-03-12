@@ -4,6 +4,7 @@
 #include <mm/vmm.h>
 #include <libk/string.h>
 #include <libk/math.h>
+#include <libk/kprintf.h>
 
 static void pmm_set_page(size_t pg_num);
 static void pmm_unset_page(size_t pg_num);
@@ -15,14 +16,11 @@ static size_t used_pages = 0;
 
 void init_pmm()
 {
-    // TODO: add utility function to mark large sections at the same time
-
-    // TODO: replace with memset once optimized?
     for (int i = 0; i < PMM_BITMAP_LEN; ++i)
     {
         pmm_mmap[i] = 0x0; 
     }
-
+    kprintf("Initialized PMM\n");
 }
 
 
@@ -97,23 +95,11 @@ static uint32_t get_page_in_range(uint32_t start_addr, uint32_t end_addr)
     return NULL;
 } 
 
-uint32_t pmm_get_page_addr()
+uint32_t pmm_page_alloc()
 {
     // TODO: replace VMM_KERN_ADDR_END with the actual end of memory
     // when we get a memory map
     return get_page_in_range(PMM_PAGING_ADDR_END+1, VMM_KERN_ADDR_END);
 }
 
-uint32_t pmm_page_alloc()
-{
-    uint32_t paddr = get_page_in_range(PMM_PAGING_ADDR_START, PMM_PAGING_ADDR_END);
-    if(!paddr)
-        return paddr;
-
-    // Need to convert the physical address to virtual to memset it
-    // Maybe the VMM module should memset things?
-    //void * vaddr = PG_P2V(paddr);
-    // memset(vaddr, 0, VMM_PG_SZ_SMALL);
-    return paddr;
-}
 

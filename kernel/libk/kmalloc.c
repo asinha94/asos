@@ -3,7 +3,6 @@
 #include <mm/vmm.h>
 #include <mm/pmm.h>
 
-static uint32_t __kernel_heap_vaddr;
 static size_t __heap_size;
 static size_t __used_size;
 static block_header __base;
@@ -17,7 +16,6 @@ void init_kmalloc(uint32_t init_heap_vaddr, size_t init_heap_len)
 {
     __used_size = 0;
     __heap_size = init_heap_len;
-    __kernel_heap_vaddr = init_heap_vaddr;
 
     // sentinel value in list
     __last_used_block = &__base;
@@ -55,8 +53,9 @@ void * kmalloc(size_t size)
             // Split if necessary, p points to new block if split
             block_header * orig_block = p;
             p = __split_block(p, block_size);
-            // no split, remove whole block from free_list
+
             if (p == orig_block)
+                // no split, remove whole block from free_list
                 prev->next_block = p->next_block;
             break;
         }
@@ -80,7 +79,7 @@ void kfree(void * addr)
 {
     // addr is the usable memory in front of the header.
     // -1 to move back by 1*sizeof(block_header) to start of header
-    block_header * blk_addr = (block_header *) addr - 1;
+    block_header * blk_addr = ((block_header *) addr) - 1;
     __used_size -= blk_addr->block_size;
 
     // We store block in freelist by address in ascending order
@@ -149,9 +148,6 @@ void * __split_block(block_header * block, size_t block_size)
 
 void * __increase_heap_size_for_block(size_t block_size)
 {
-    // TODO: Allocate more than 1 page at a time. Will also need to update the
-    // pmm to give us multiple pages or they have to be contiguous. That probably means I need to
-    // switch to a stack allocator.
     uint32_t virtual_page_addr = get_virtual_page();
     if (!virtual_page_addr)
         return (void *) virtual_page_addr;
