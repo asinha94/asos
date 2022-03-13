@@ -53,12 +53,13 @@ void init_kernel(unsigned long mb_addr)
 
         void * fb_addr = (void *) mbi->framebuffer_addr;
         multiboot_uint8_t fb_type = mbi->framebuffer_type;
-        kprintf("Type: %u\n", fb_type);
+        kprintf("Framebuffer:  addr=%x, Type=%u\n", fb_addr, fb_type);
         
         //multiboot_uint32_t fb_pitch = mbi->framebuffer_pitch;
-        //multiboot_uint32_t fb_width = mbi->framebuffer_width;
-        //multiboot_uint32_t fb_height = mbi->framebuffer_height;
-        //multiboot_uint8_t fb_bpp = mbi->framebuffer_bpp;   
+        multiboot_uint32_t width = mbi->framebuffer_width;
+        multiboot_uint32_t height = mbi->framebuffer_height;
+        multiboot_uint8_t bpp = mbi->framebuffer_bpp;
+        kprintf("VideoMode: %ux%u (%u bitdepth)\n", width, height, bpp);
     }
     
 }
@@ -79,15 +80,18 @@ void kernel_main(unsigned long magic, unsigned long mb_addr)
     }
 
     kprintf("Initializing Kernel\n");
-    init_kernel(mb_addr);
     // descriptor tables and exception handlers
     init_gdt();
     init_irq();
     init_cpu_exceptions();
     init_idt();
+
     // Memory Management
     init_pmm();
     init_vmm();
+
+    // Configure kernel based on "hardware"
+    init_kernel(mb_addr);
 
     // Let loose the dogs of war
     enable_interrupts();
