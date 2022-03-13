@@ -93,14 +93,14 @@ _kernel_start:
         ; setup stack
         mov esp, stack_start
 
-        ; Startup the C kernel
+        ; Pass ptr (paddr) to Multiboot structure
+        push ebx
         ; Multiboot Magic Number
         push eax
 
-        ; Convert ptr to Multiboot structure to virtual address 
-        add ebx, KERNEL_PG_VA_OFFSET 
-
+        ; Startup the C kernel
         call kernel_main
+
         ; If somehow our kernel has exited then do nothing
         cli
         hlt

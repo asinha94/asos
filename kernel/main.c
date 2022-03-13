@@ -1,5 +1,4 @@
 #include <boot/multiboot.h>
-
 #include <cpu/hal.h>
 #include <cpu/interrupts/pic.h>
 #include <cpu/interrupts/exception.h>
@@ -37,11 +36,38 @@ void temp_shell_execute()
     }
 }
 
+void init_kernel(unsigned long mb_addr)
+{
+    // Identity page has been removed, Only the higher-half page is installed right now
+    multiboot_info_t *mbi = (multiboot_info_t *) (mb_addr + VMM_KERN_ADDR_START);
+
+    // TODO: Configure the PMM Memory Map
+    if (mbi->flags & MULTIBOOT_INFO_MEMORY) {
+        kprintf("Mem lower: %x\nMem Upper: %x\n", mbi->mem_lower, mbi->mem_upper);
+         // Not sure if this is the last byte or the upper bounds of memory
+        uint32_t phys_memory_end = 0x100000 + mbi->mem_upper;
+    }
+
+    // Setup graphics
+    if (mbi->flags & MULTIBOOT_INFO_FRAMEBUFFER_INFO) {
+
+        void * fb_addr = (void *) mbi->framebuffer_addr;
+        multiboot_uint8_t fb_type = mbi->framebuffer_type;
+        kprintf("Type: %u\n", fb_type);
+        
+        //multiboot_uint32_t fb_pitch = mbi->framebuffer_pitch;
+        //multiboot_uint32_t fb_width = mbi->framebuffer_width;
+        //multiboot_uint32_t fb_height = mbi->framebuffer_height;
+        //multiboot_uint8_t fb_bpp = mbi->framebuffer_bpp;   
+    }
+    
+}
+
 void kernel_main(unsigned long magic, unsigned long mb_addr)
 {
-
-    // Init a serial/tty connections for us to log to
-    //init_tty(); -- Uncomment to clear textmode screen, should do it when we check the graphics mode
+    // Setup printf/serial output for debugging
+    // Setup Text Mode
+    //init_tty();
     //init_kprintf(tty_putchar, tty_puts);
     init_serial();
     init_kprintf(serial_putchar, serial_puts);
@@ -52,16 +78,8 @@ void kernel_main(unsigned long magic, unsigned long mb_addr)
         return;
     }
 
-    //multiboot_info_t *mbi = (multiboot_info_t *) mb_addr;
-    // TODO: check flags
-    //void * fb_addr = (void *) mbi->framebuffer_addr; 
-    //multiboot_uint32_t fb_pitch = mbi->framebuffer_pitch;
-    //multiboot_uint32_t fb_width = mbi->framebuffer_width;
-    //multiboot_uint32_t fb_height = mbi->framebuffer_height;
-    //multiboot_uint8_t fb_bpp = mbi->framebuffer_bpp;
-    //multiboot_uint8_t fb_type = mbi->framebuffer_type;
-    
     kprintf("Initializing Kernel\n");
+    init_kernel(mb_addr);
     // descriptor tables and exception handlers
     init_gdt();
     init_irq();

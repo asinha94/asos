@@ -66,7 +66,7 @@ iso: iso-dir
 	@grub-mkrescue -o $(BUILD_DIR)/asos.iso $(ISODIR)
 
 qemu-term: iso
-	@$(QEMU_TERM) -no-reboot -curses -cdrom $(BUILD_DIR)/asos.iso
+	@$(QEMU_TERM) -no-reboot -curses -chardev id=char0,logfile=serial.log -serial chardev:char0 -cdrom $(BUILD_DIR)/asos.iso
 
 qemu-termdbg: iso
 	@$(QEMU_TERM) -s -S -no-reboot -monitor stdio -curses -cdrom $(BUILD_DIR)/asos.iso
@@ -89,7 +89,7 @@ gdb: asos.bin
 	@gdb -x ./debug/debug.gdbinit
 
 clean:
-	@rm -rf $(BUILD_DIR) $(KERNOBJS) $(WIN_ISO_DIR)/asos.iso
+	@rm -rf $(BUILD_DIR) $(KERNOBJS) $(WIN_ISO_DIR)/asos.iso serial.log
 
 print-%:
 	@echo $* = $($*)

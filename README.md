@@ -16,11 +16,11 @@ My pet project in bootstrapping a bare-bones OS. The goal is for this to eventua
 
 ## Short-Term Work
 - [ ] Basic Paging Implementation
-- [ ] Use multiboot2 (Memory Map)
+- [ ] Enter userspace with a CLI input
+- [ ] Use multiboot (Memory Map and Graphics)
 - [ ] Create handlers for interrupt 0-31
 - [ ] Handle exceptions (beyond just logging)
 - [ ] Create PIT/RTC drivers
-- [ ] Move the blinking cursor
 - [ ] Migrate to C++
 
 ## Long-Term Work

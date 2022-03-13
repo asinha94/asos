@@ -13,7 +13,8 @@
         "textmode.h": "c",
         "hal.h": "c",
         "pmm.h": "c",
-        "kmalloc.h": "c"
+        "kmalloc.h": "c",
+        "multiboot.h": "c"
     },
     "files.exclude": {
         "**/bin": true
