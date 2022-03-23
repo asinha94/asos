@@ -1,6 +1,6 @@
 #include <stddef.h>
 #include <cpu/interrupts/idt.h>
-#include <display/textmode.h>
+#include <graphics/textmode.h>
 
 #define IDT_LEN 256
 

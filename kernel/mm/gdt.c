@@ -1,6 +1,6 @@
 #include <stdint.h>
 #include <stddef.h>
-#include <display/textmode.h>
+#include <graphics/textmode.h>
 #include <mm/gdt.h>
 
 #define GDT_SIZE 5

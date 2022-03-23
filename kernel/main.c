@@ -3,19 +3,21 @@
 #include <cpu/interrupts/pic.h>
 #include <cpu/interrupts/exception.h>
 #include <cpu/interrupts/idt.h>
-#include <display/textmode.h>
 #include <drivers/keyboard/keyboard.h>
 #include <drivers/serial/serial.h>
-#include <mm/gdt.h>
-#include <mm/pmm.h>
+#include <graphics/textmode.h>
+#include <graphics/vga.h>
 #include <libk/string.h>
 #include <libk/kprintf.h>
 #include <libk/kmalloc.h>
+#include <mm/gdt.h>
+#include <mm/pmm.h>
 
 
 extern char __kbd_buffer[80];
 extern int __len;
 extern int __newline;
+
 
 int is_match(const char * s)
 {
@@ -36,33 +38,6 @@ void temp_shell_execute()
     }
 }
 
-void init_kernel(unsigned long mb_addr)
-{
-    // Identity page has been removed, Only the higher-half page is installed right now
-    multiboot_info_t *mbi = (multiboot_info_t *) (mb_addr + VMM_KERN_ADDR_START);
-
-    // TODO: Configure the PMM Memory Map
-    if (mbi->flags & MULTIBOOT_INFO_MEMORY) {
-        kprintf("Mem lower: %x\nMem Upper: %x\n", mbi->mem_lower, mbi->mem_upper);
-         // Not sure if this is the last byte or the upper bounds of memory
-        uint32_t phys_memory_end = 0x100000 + mbi->mem_upper;
-    }
-
-    // Setup graphics
-    if (mbi->flags & MULTIBOOT_INFO_FRAMEBUFFER_INFO) {
-
-        void * fb_addr = (void *) mbi->framebuffer_addr;
-        multiboot_uint8_t fb_type = mbi->framebuffer_type;
-        kprintf("Framebuffer:  addr=%x, Type=%u\n", fb_addr, fb_type);
-        
-        //multiboot_uint32_t fb_pitch = mbi->framebuffer_pitch;
-        multiboot_uint32_t width = mbi->framebuffer_width;
-        multiboot_uint32_t height = mbi->framebuffer_height;
-        multiboot_uint8_t bpp = mbi->framebuffer_bpp;
-        kprintf("VideoMode: %ux%u (%u bitdepth)\n", width, height, bpp);
-    }
-    
-}
 
 void kernel_main(unsigned long magic, unsigned long mb_addr)
 {
@@ -86,12 +61,14 @@ void kernel_main(unsigned long magic, unsigned long mb_addr)
     init_cpu_exceptions();
     init_idt();
 
+    multiboot_info_t *mbi = (multiboot_info_t *) (mb_addr + VMM_KERN_ADDR_START);
+
     // Memory Management
-    init_pmm();
+    init_pmm(mbi);
     init_vmm();
 
-    // Configure kernel based on "hardware"
-    init_kernel(mb_addr);
+    // Setup graphics
+    init_graphics(mbi);
 
     // Let loose the dogs of war
     enable_interrupts();

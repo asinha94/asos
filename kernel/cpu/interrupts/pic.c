@@ -2,7 +2,7 @@
 #include <cpu/hal.h>
 #include <cpu/interrupts/idt.h>
 #include <cpu/interrupts/pic.h>
-#include <display/textmode.h>
+#include <graphics/textmode.h>
 #include <drivers/keyboard/keyboard.h>
 
 

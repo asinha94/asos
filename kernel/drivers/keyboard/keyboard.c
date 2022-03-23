@@ -2,7 +2,7 @@
 #include <cpu/interrupts/pic.h>
 #include <cpu/interrupts/idt.h>
 #include <drivers/keyboard/keyboard.h>
-#include <display/textmode.h>
+#include <graphics/textmode.h>
 
 /*
     Implementation derived from these references

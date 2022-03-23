@@ -121,3 +121,8 @@ uint32_t get_virtual_page()
 
     return NULL;
 }
+
+void allocate_page_at_vaddr(uint32_t vaddr)
+{
+    
+}

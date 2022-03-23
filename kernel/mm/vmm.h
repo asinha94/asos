@@ -53,5 +53,6 @@ void init_vmm();
 void memset_page(uint32_t table);
 void insert_kernel_pde(uint32_t vaddr, uint32_t paddr, uint32_t flags);
 uint32_t get_virtual_page();
+void allocate_page_at_vaddr(uint32_t vaddr);
 
 #endif

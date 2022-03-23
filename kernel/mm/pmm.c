@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <stddef.h>
+#include <boot/multiboot.h>
 #include <mm/pmm.h>
 #include <mm/vmm.h>
 #include <libk/string.h>
@@ -14,12 +15,20 @@ static uint32_t pmm_mmap[PMM_BITMAP_LEN];
 static size_t used_pages = 0;
 
 
-void init_pmm()
+void init_pmm(multiboot_info_t * mbi)
 {
     for (int i = 0; i < PMM_BITMAP_LEN; ++i)
     {
         pmm_mmap[i] = 0x0; 
     }
+
+    // TODO: Configure the PMM Memory Map
+    if (mbi->flags & MULTIBOOT_INFO_MEMORY) {
+        kprintf("Mem lower: %x\nMem Upper: %x\n", mbi->mem_lower, mbi->mem_upper);
+         // Not sure if this is the last byte or the upper bounds of memory
+        uint32_t phys_memory_end = 0x100000 + mbi->mem_upper;
+    }
+
     kprintf("Initialized PMM\n");
 }
 
