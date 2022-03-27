@@ -15,7 +15,7 @@ void kfree(void * addr);
 
 typedef struct block_header{
     struct block_header * next_block;
-    uint64_t block_size;
+    uint32_t block_size;
 } block_header;
 
 

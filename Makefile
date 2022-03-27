@@ -73,7 +73,7 @@ qemu-termdbg: iso
 
 qemu-dbg: iso
 	@cp $(BUILD_DIR)/asos.iso $(WIN_ISO_DIR)
-	@$(POWERSHELL) "& $(QEMU_WIN) -s -S -no-reboot -monitor stdio -cdrom $(WIN_ISO_PATH)/asos.iso"
+	@$(POWERSHELL) "& $(QEMU_WIN) -s -S -no-reboot -serial stdio -cdrom $(WIN_ISO_PATH)/asos.iso"
 
 qemu: iso
 	@cp $(BUILD_DIR)/asos.iso $(WIN_ISO_DIR)

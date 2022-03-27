@@ -3,11 +3,8 @@
 
 #define VMM_KERN_ADDR_START      0xC0000000
 #define VMM_KERN_ADDR_END        0xFFFFFFFF
-#define VMM_PGDIR_ADDR           0xFFFFF000 // 4GB-4KB
-#define VMM_HEAP_START           0xFFC00000 // 4GB-4MB
 #define VMM_PG_SZ_SMALL          (4 * 1024)
 #define VMM_PG_SZ_LARGE          (4 * 1024 * 1024)
-#define VMM_PDIR_LEN             1024
 #define VMM_PTABLE_LEN           1024
 
 // Masks
@@ -38,10 +35,6 @@ enum VMM_PTE_FLAG
     PTE_GLOBAL_ENABLE = 0x100
 };
 
-typedef struct
-{
-    uint32_t entries[VMM_PDIR_LEN];
-} page_directory;
 
 typedef struct
 {
@@ -50,9 +43,9 @@ typedef struct
 
 
 void init_vmm();
-void memset_page(uint32_t table);
+void memset_page(page_table * table);
 void insert_kernel_pde(uint32_t vaddr, uint32_t paddr, uint32_t flags);
 uint32_t get_virtual_page();
-void allocate_page_at_vaddr(uint32_t vaddr);
+uint32_t allocate_page_at_vaddr(uint32_t vaddr);
 
 #endif

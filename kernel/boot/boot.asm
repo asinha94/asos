@@ -47,8 +47,9 @@ identity_page_directory:
         dd 0x00000083 ; Identity Map first 4MB. use single RW 4MB PDE
         times (KERNEL_PG_DIR_OFFSET - 1) dd 0 ; Unmap next ~767 PDEs
         dd 0x00000083 ; Map first 4MB to Kernel position i.e 786 * 4KB up
-        times (1024 - KERNEL_PG_DIR_OFFSET - 2) dd 0 ; Unmap all but last entry
+        times (1024 - KERNEL_PG_DIR_OFFSET - 3) dd 0 ; Unmap all but 2nd last entry
         dd 0x00400083 ; Map 2nd physical 4MB page to last PDE i.e 4MB from the end
+        dd 0; Don't map last entry. We want to use this entry as our recursive page
 
 section .text
 global _start
