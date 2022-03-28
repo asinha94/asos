@@ -97,11 +97,9 @@ uint32_t get_virtual_page()
         if (pde & PDE_4MB_PAGE_SZ) {
             continue;
         }
-        
-        // WARNING: vaddr doesn't work. Need a get_phys_addr(...) function
+
         // Last page is recursively mapped, so we use this to access the new page table
         page_table * new_page_table  = VMM_LAST_PDE_PAGE + (i * VMM_4KB_ALIGN_MASK);
-        uint32_t vaddr = i * VMM_PG_SZ_LARGE;
 
         // Page table already present, lets search for an empty page entry
         if (pde & VMM_4KB_ALIGN_MASK) {
@@ -110,7 +108,7 @@ uint32_t get_virtual_page()
                 if (new_page_table->entries[j] == 0) {
                     new_page_table->entries[j] = new_page | PTE_RW_ACCESS | PTE_PRESENT;
                     // Memset the new page?
-                    return vaddr + j * VMM_PG_SZ_SMALL;
+                    return (VMM_PG_SZ_LARGE * i) + (VMM_PG_SZ_SMALL * j);
                 }
             }
 
@@ -128,9 +126,10 @@ uint32_t get_virtual_page()
             return new_page;
         }
 
+        // use last page in the page table
         uint32_t idx = VMM_PTABLE_LEN - 1;
         new_page_table->entries[idx] = new_page | PTE_RW_ACCESS | PTE_PRESENT;
-        return vaddr + idx * VMM_PG_SZ_SMALL;
+        return (VMM_PG_SZ_LARGE * i) + (VMM_PG_SZ_SMALL * idx);
     }
 
     return 0;
