@@ -35,7 +35,7 @@ static inline void __invlpg(uint32_t addr) {
 
 void memset_page(page_table * table)
 {
-    for (int i = 0; i < VMM_PTABLE_LEN; ++i) {
+    for (size_t i = 0; i < VMM_PTABLE_LEN; ++i) {
         table->entries[i] = 0;
     }
 }
@@ -92,7 +92,7 @@ uint32_t get_virtual_page()
     }
 
     // We already know the first and last 2 pages have been allocated so skip
-    for (uint32_t i = VMM_PTABLE_LEN - 3; i > 0; --i) {
+    for (size_t i = VMM_PTABLE_LEN - 3; i > 0; --i) {
         uint32_t pde = __kernel_pdir_vaddr->entries[i];
         if (pde & PDE_4MB_PAGE_SZ) {
             continue;

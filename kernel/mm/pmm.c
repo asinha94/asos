@@ -17,7 +17,7 @@ static size_t used_pages = 0;
 
 void init_pmm(multiboot_info_t * mbi)
 {
-    for (int i = 0; i < PMM_BITMAP_LEN; ++i)
+    for (size_t i = 0; i < PMM_BITMAP_LEN; ++i)
     {
         pmm_mmap[i] = 0x0; 
     }
