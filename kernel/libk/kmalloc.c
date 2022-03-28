@@ -148,7 +148,7 @@ void * __split_block(block_header * block, size_t block_size)
 
 void * __increase_heap_size_for_block(size_t block_size)
 {
-    uint32_t virtual_page_addr = get_virtual_page();
+    uint32_t virtual_page_addr = vmm_get_virtual_page();
     if (!virtual_page_addr)
         return (void *) virtual_page_addr;
 

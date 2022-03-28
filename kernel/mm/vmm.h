@@ -52,7 +52,7 @@ typedef struct
 void init_vmm();
 void memset_page(page_table * table);
 void insert_kernel_pde(uint32_t vaddr, uint32_t paddr, uint32_t flags);
-uint32_t get_virtual_page();
-void map_page_to_vaddr(uint32_t vaddr, uint32_t paddr, uint32_t flags);
+uint32_t vmm_get_virtual_page();
+void vmm_map_page_to_vaddr(uint32_t vaddr, uint32_t paddr, uint32_t flags);
 
 #endif

@@ -84,7 +84,7 @@ void insert_kernel_pde(uint32_t vaddr, uint32_t paddr, uint32_t flags)
 }
 
 
-uint32_t get_virtual_page()
+uint32_t vmm_get_virtual_page()
 {
     uint32_t new_page = pmm_page_alloc();
     if (!new_page) {
@@ -135,7 +135,7 @@ uint32_t get_virtual_page()
     return 0;
 }
 
-void map_page_to_vaddr(uint32_t vaddr, uint32_t paddr, uint32_t flags)
+void vmm_map_page_to_vaddr(uint32_t vaddr, uint32_t paddr, uint32_t flags)
 {
     size_t pdindex = vaddr >> 22;
     size_t ptindex = (vaddr >> 12) & 0x3FF;
@@ -148,6 +148,6 @@ void map_page_to_vaddr(uint32_t vaddr, uint32_t paddr, uint32_t flags)
     }
 
     // Clobber over page if already present
-    page_table * new_page_table = VMM_LAST_PDE_PAGE + (pdindex * VMM_4KB_ALIGN_MASK);
+    page_table * new_page_table = VMM_LAST_PDE_PAGE + (pdindex * VMM_PG_SZ_SMALL);
     new_page_table->entries[ptindex] = (paddr & VMM_4KB_ALIGN_MASK) | flags;
 }

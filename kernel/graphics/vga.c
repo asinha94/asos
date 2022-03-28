@@ -28,15 +28,15 @@ void init_graphics(multiboot_info_t * mbi)
 
         size_t vmem_pages = (fb_height * fb_pitch) / VMM_PG_SZ_SMALL;
         for (size_t i = 0; i < vmem_pages; ++i) {
-            map_page_to_vaddr(
-                (uint32_t) fb_addr + i,
+            vmm_map_page_to_vaddr(
+                (uint32_t) fb_addr + (i * VMM_PG_SZ_SMALL),
                 pmm_page_alloc(),
-                PTE_RW_ACCESS | PTE_USER_ACCESS | PTE_PRESENT
+                PTE_RW_ACCESS | PTE_PRESENT
             );
         }
     }
 
-    uint32_t color = (1 << mbi->framebuffer_blue_mask_size) - 1;
+    uint32_t color = ((1 << mbi->framebuffer_blue_mask_size) - 1) << mbi->framebuffer_blue_field_position;
     for (size_t i = 0; i < fb_height; ++i) {
         for (size_t j = 0; j < fb_width; ++j) {
             uint32_t * pixel = fb_addr + (i * fb_pitch) + (j * fb_bpp);
