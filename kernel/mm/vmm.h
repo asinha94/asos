@@ -1,11 +1,15 @@
 #ifndef ASOS_VMM_H
 #define ASOS_VMM_H
 
-#define VMM_KERN_ADDR_START      0xC0000000
-#define VMM_KERN_ADDR_END        0xFFFFFFFF
 #define VMM_PG_SZ_SMALL          (4 * 1024)
 #define VMM_PG_SZ_LARGE          (4 * 1024 * 1024)
 #define VMM_PTABLE_LEN           1024
+
+// Addresses
+#define VMM_KERN_ADDR_START      0xC0000000
+#define VMM_KERN_ADDR_END        0xFFFFFFFF
+#define VMM_LAST_PDE_PAGE        (VMM_KERN_ADDR_END-VMM_PG_SZ_LARGE+1)
+
 
 // Masks
 #define VMM_4KB_ALIGN_MASK      0xFFFFF000 // Top 20 bits

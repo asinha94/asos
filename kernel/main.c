@@ -77,6 +77,8 @@ void kernel_main(unsigned long magic, unsigned long mb_addr)
     
     a = get_virtual_page();
     kprintf("%x\n", a);
+    a = get_virtual_page();
+    kprintf("%x\n", a);
 
     while (1) {
         halt();

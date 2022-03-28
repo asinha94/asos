@@ -33,6 +33,14 @@ static inline void __invlpg(uint32_t addr) {
 }
 
 
+void memset_page(page_table * table)
+{
+    for (int i = 0; i < VMM_PTABLE_LEN; ++i) {
+        table->entries[i] = 0;
+    }
+}
+
+
 void init_vmm()
 {
     // TODO: Use memory map to see how much is actually used.
@@ -51,13 +59,12 @@ void init_vmm()
 
     // Map the second 4MB of physical memory to the 2nd last PDE in virtual space
     pmm_set_range(VMM_PG_SZ_LARGE, VMM_PG_SZ_LARGE);
-    uint32_t vmm_heap_start = VMM_KERN_ADDR_END - (2*VMM_PG_SZ_LARGE) + 1;
+    uint32_t vmm_heap_start = VMM_LAST_PDE_PAGE - VMM_PG_SZ_LARGE;
     insert_kernel_pde(vmm_heap_start, VMM_PG_SZ_LARGE, PDE_RW_ACCESS | PDE_4MB_PAGE_SZ | PDE_PRESENT);
 
     // The last Page directory entry is used for a recursive page. We can access a mapped page table using
-    // this last entry in virtual space. It does mean we lose 4MB if this is mapped
-    uint32_t last_vaddr_pde = VMM_KERN_ADDR_END - VMM_PG_SZ_LARGE + 1;
-    insert_kernel_pde(last_vaddr_pde, __kernel_pdir_paddr, PDE_RW_ACCESS | PDE_PRESENT);
+    // this last entry in virtual space. It does mean we lose 4MB in all virtual address spaces, but its a small price
+    insert_kernel_pde(VMM_LAST_PDE_PAGE, __kernel_pdir_paddr, PDE_RW_ACCESS | PDE_PRESENT);
 
     // load new page directory
     __update_page_directory(__kernel_pdir_paddr);
@@ -65,14 +72,6 @@ void init_vmm()
     // Seed kmalloc so it can operate. Last 4 KB is used for the page directory so avoid
     init_kmalloc(vmm_heap_start, VMM_PG_SZ_LARGE-VMM_PG_SZ_SMALL);
     kprintf("Initialized VMM\n");
-}
-
-
-void memset_page(page_table * table)
-{
-    for (uint32_t i=0; i<VMM_PTABLE_LEN; ++i) {
-        table->entries[i] = 0;
-    }
 }
 
 
@@ -87,30 +86,31 @@ void insert_kernel_pde(uint32_t vaddr, uint32_t paddr, uint32_t flags)
 
 uint32_t get_virtual_page()
 {
-    uint32_t idx;
     uint32_t new_page = pmm_page_alloc();
     if (!new_page) {
         return new_page;
     }
 
-    // We already know the first and last pages have  been allocated so skip
-    for (uint32_t i = VMM_PTABLE_LEN - 2; i > 0; --i) {
+    // We already know the first and last 2 pages have been allocated so skip
+    for (uint32_t i = VMM_PTABLE_LEN - 3; i > 0; --i) {
         uint32_t pde = __kernel_pdir_vaddr->entries[i];
         if (pde & PDE_4MB_PAGE_SZ) {
             continue;
         }
         
-        page_table * vaddr = (page_table *) (i * VMM_PG_SZ_LARGE);
+        // WARNING: vaddr doesn't work. Need a get_phys_addr(...) function
+        // Last page is recursively mapped, so we use this to access the new page table
+        page_table * new_page_table  = VMM_LAST_PDE_PAGE + (i * VMM_4KB_ALIGN_MASK);
+        uint32_t vaddr = i * VMM_PG_SZ_LARGE;
 
         // Page table already present, lets search for an empty page entry
         if (pde & VMM_4KB_ALIGN_MASK) {
-            for (uint32_t j = 0; j < VMM_PTABLE_LEN; ++j) {
-                idx = VMM_PTABLE_LEN - j - 1;
+            for (size_t j = VMM_PTABLE_LEN-1; j >= 0; --j) {
                 // Found an empty page entry, lets use it
-                if (vaddr->entries[idx] == 0) {
-                    vaddr->entries[idx] = new_page | PTE_RW_ACCESS | PTE_PRESENT;
+                if (new_page_table->entries[j] == 0) {
+                    new_page_table->entries[j] = new_page | PTE_RW_ACCESS | PTE_PRESENT;
                     // Memset the new page?
-                    return ((uint32_t) vaddr) + idx * VMM_PG_SZ_SMALL;
+                    return vaddr + j * VMM_PG_SZ_SMALL;
                 }
             }
 
@@ -120,8 +120,7 @@ uint32_t get_virtual_page()
 
         // Entry in directory is available. Lets use the recently allocated page for this table
         __kernel_pdir_vaddr->entries[i] = new_page | PDE_RW_ACCESS | PDE_PRESENT;
-        __invlpg(vaddr);
-        memset_page(vaddr);
+        memset_page(new_page_table);
 
         // Place a new page at the end of the table
         new_page = pmm_page_alloc();
@@ -129,9 +128,9 @@ uint32_t get_virtual_page()
             return new_page;
         }
 
-        idx = VMM_PTABLE_LEN-1;
-        vaddr->entries[idx] = new_page | PTE_RW_ACCESS | PTE_PRESENT;
-        return ((uint32_t) vaddr) + idx * VMM_PG_SZ_SMALL;
+        uint32_t idx = VMM_PTABLE_LEN - 1;
+        new_page_table->entries[idx] = new_page | PTE_RW_ACCESS | PTE_PRESENT;
+        return vaddr + idx * VMM_PG_SZ_SMALL;
     }
 
     return 0;
