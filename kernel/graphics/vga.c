@@ -27,10 +27,12 @@ void init_graphics(multiboot_info_t * mbi)
         kprintf("VideoMode: %ux%u (BPP: %u bits, Pitch: %u bytes)\n", fb_width, fb_height, fb_bpp, fb_pitch);
 
         size_t vmem_pages = (fb_height * fb_pitch) / VMM_PG_SZ_SMALL;
+        uint32_t base_addr = (uint32_t) fb_addr;
         for (size_t i = 0; i < vmem_pages; ++i) {
+             uint32_t base_addr = (uint32_t) fb_addr + (i * VMM_PG_SZ_SMALL);
             vmm_map_page_to_vaddr(
-                (uint32_t) fb_addr + (i * VMM_PG_SZ_SMALL),
-                pmm_page_alloc(),
+                base_addr,
+                base_addr, //  does a framebuffer actually exist in memory?
                 PTE_RW_ACCESS | PTE_PRESENT
             );
         }
@@ -39,7 +41,7 @@ void init_graphics(multiboot_info_t * mbi)
     uint32_t color = ((1 << mbi->framebuffer_blue_mask_size) - 1) << mbi->framebuffer_blue_field_position;
     for (size_t i = 0; i < fb_height; ++i) {
         for (size_t j = 0; j < fb_width; ++j) {
-            uint32_t * pixel = fb_addr + (i * fb_pitch) + (j * fb_bpp);
+            uint32_t * pixel = fb_addr + (i * fb_pitch) + (j * 4);
             *pixel = color;
         }
     }

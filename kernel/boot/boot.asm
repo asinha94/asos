@@ -33,8 +33,8 @@ multiboot_header:
 
 ; Multiboot Video Mode
         dd 0
-        dd 640
-        dd 480
+        dd 1024
+        dd 768
         dd 32
 
 
