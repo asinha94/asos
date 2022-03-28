@@ -102,7 +102,7 @@ uint32_t get_virtual_page()
         page_table * new_page_table  = VMM_LAST_PDE_PAGE + (i * VMM_4KB_ALIGN_MASK);
 
         // Page table already present, lets search for an empty page entry
-        if (pde & VMM_4KB_ALIGN_MASK) {
+        if (is_pg_enabled(pde)) {
             for (size_t j = VMM_PTABLE_LEN-1; j >= 0; --j) {
                 // Found an empty page entry, lets use it
                 if (new_page_table->entries[j] == 0) {
@@ -135,23 +135,19 @@ uint32_t get_virtual_page()
     return 0;
 }
 
-uint32_t allocate_page_at_vaddr(uint32_t vaddr)
+void map_page_to_vaddr(uint32_t vaddr, uint32_t paddr, uint32_t flags)
 {
-    int offset = (vaddr & VMM_4KB_ALIGN_MASK) / VMM_PG_SZ_LARGE;
-    uint32_t page_entry = __kernel_pdir_vaddr->entries[offset];
+    size_t pdindex = vaddr >> 22;
+    size_t ptindex = (vaddr >> 12) & 0x3FF;
 
-    // Insert page table entry if not present
-    if (!(page_entry & PDE_PRESENT)) {
+    uint32_t pde = __kernel_pdir_vaddr->entries[pdindex];
+    if (!is_pg_enabled(pde)) {
         uint32_t new_page = pmm_page_alloc();
-        if (!new_page) {
-            return new_page;
-        }
+        if (!new_page) return;
+        __kernel_pdir_vaddr->entries[pdindex] = new_page | PDE_PRESENT | PDE_RW_ACCESS;
     }
 
-    uint32_t new_page = pmm_page_alloc();
-    if (!new_page) {
-        return new_page;
-    }
-
-    return 0;
+    // Clobber over page if already present
+    page_table * new_page_table = VMM_LAST_PDE_PAGE + (pdindex * VMM_4KB_ALIGN_MASK);
+    new_page_table->entries[ptindex] = (paddr & VMM_4KB_ALIGN_MASK) | flags;
 }

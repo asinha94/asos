@@ -15,7 +15,8 @@
         "pmm.h": "c",
         "kmalloc.h": "c",
         "multiboot.h": "c",
-        "vmm.h": "c"
+        "vmm.h": "c",
+        "vga.h": "c"
     },
     "files.exclude": {
         "**/bin": true

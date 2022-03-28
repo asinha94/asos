@@ -73,6 +73,7 @@ void pmm_unset_range(uint32_t addr, uint32_t len)
 static uint32_t get_page_in_range(uint32_t start_addr, uint32_t end_addr)
 {
     if (used_pages >= PMM_BITMAP_VALUES) {
+        kprintf("Cannot allocate new physical page, no memory available!");
         return NULL;
     }
 

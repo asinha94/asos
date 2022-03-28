@@ -16,6 +16,9 @@
 #define VMM_4MB_ALIGN_MASK      0xFFC00000 // Top 10 Bits
 #define VMM_ACCESS_MASK         0x00000FFF
 
+
+#define is_pg_enabled(x)        ((x) & 0x1)
+
 enum VMM_PDE_FLAG
 {
     PDE_PRESENT       = 0x001,
@@ -50,6 +53,6 @@ void init_vmm();
 void memset_page(page_table * table);
 void insert_kernel_pde(uint32_t vaddr, uint32_t paddr, uint32_t flags);
 uint32_t get_virtual_page();
-uint32_t allocate_page_at_vaddr(uint32_t vaddr);
+void map_page_to_vaddr(uint32_t vaddr, uint32_t paddr, uint32_t flags);
 
 #endif
