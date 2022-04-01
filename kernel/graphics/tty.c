@@ -1,18 +1,125 @@
 #include <stdint.h>
-#include <graphics/textmode.h>
+#include <graphics/vga.h>
+#include <graphics/tty.h>
+
+// TODO: Remove once we have a FS and we load TTF fonts
+#include <graphics/psf.h>
 
 const size_t EGA_WIDTH = 80;
 const size_t EGA_HEIGHT = 25;
 
 static size_t tty_row;
 static size_t tty_column;
-static uint8_t tty_color;
-static uint16_t* tty_buffer;
 
-static void tty_clear_from(uint8_t linum);
-static void tty_scroll_up_lines(uint8_t num_lines);
+Pixel * base_pixel;
+Pixel * pixel_buffer;
+
+void (*char_func[])(uint8_t *) = {
+    pxl_space,
+    pxl_exclaim,
+    pxl_dquote,
+    pxl_space, // hash?
+    pxl_dollar,
+    pxl_percent,
+    pxl_ampersand,
+    pxl_squote,
+    pxl_openparen,
+    pxl_closeparen,
+    pxl_asterisk,
+    pxl_plus,
+    pxl_comma,
+    pxl_minus,
+    pxl_dot,
+    pxl_fslash,
+    pxl_0,
+    pxl_1,
+    pxl_2,
+    pxl_3,
+    pxl_4,
+    pxl_5,
+    pxl_6,
+    pxl_7,
+    pxl_8,
+    pxl_9,
+    pxl_colon,
+    pxl_semicolon,
+    pxl_lt,
+    pxl_eq,
+    pxl_gt,
+    pxl_qmark,
+    pxl_at,
+    pxl_A,
+    pxl_B,
+    pxl_C,
+    pxl_D,
+    pxl_E,
+    pxl_F,
+    pxl_G,
+    pxl_H,
+    pxl_I,
+    pxl_J,
+    pxl_K,
+    pxl_L,
+    pxl_M,
+    pxl_N,
+    pxl_O,
+    pxl_P,
+    pxl_Q,
+    pxl_R,
+    pxl_S,
+    pxl_T,
+    pxl_U,
+    pxl_V,
+    pxl_W,
+    pxl_X,
+    pxl_Y,
+    pxl_Z,
+    pxl_openbrkt,
+    pxl_bslash,
+    pxl_closebrkt,
+    pxl_caret,
+    pxl_underscore,
+    pxl_backtick,
+    pxl_A,
+    pxl_B,
+    pxl_C,
+    pxl_D,
+    pxl_E,
+    pxl_F,
+    pxl_G,
+    pxl_H,
+    pxl_I,
+    pxl_J,
+    pxl_K,
+    pxl_L,
+    pxl_M,
+    pxl_N,
+    pxl_O,
+    pxl_P,
+    pxl_Q,
+    pxl_R,
+    pxl_S,
+    pxl_T,
+    pxl_U,
+    pxl_V,
+    pxl_W,
+    pxl_X,
+    pxl_Y,
+    pxl_Z,
+    pxl_opencurly,
+    pxl_pipe,
+    pxl_closecurly,
+    pxl_tilde,
+    pxl_box
+};
 
 
+static void draw_character(char c)
+{
+    void (*fp)(uint8_t*) = char_func[c-32];
+    fp(pixel_buffer);
+    draw_character_bmp(&base_pixel, pixel_buffer);
+}
 
 static void tty_clear_from(uint8_t linum)
 {
@@ -21,10 +128,9 @@ static void tty_clear_from(uint8_t linum)
         const size_t line = y * EGA_WIDTH;
         for (size_t x = 0; x < EGA_WIDTH; x++) {
             const size_t index = line + x;
-            tty_buffer[index] = ega_entry(' ', tty_color);
+            draw_character(' ');
         }
     }
-    
 }
 
 
@@ -41,7 +147,7 @@ static void tty_scroll_up_lines(uint8_t num_lines)
         for (size_t x = 0; x < EGA_WIDTH; x++) {
             size_t old_index = old_line + x;
             size_t new_index = new_line + x;
-            tty_buffer[old_index] = tty_buffer[new_index];
+            //tty_buffer[old_index] = tty_buffer[new_index];
         }
     }
 
@@ -66,7 +172,7 @@ void tty_putchar(unsigned char c)
         tty_puts("    ");
         return;
     default:
-        tty_buffer[index] = ega_entry(c, tty_color);
+        draw_character(c);
         tty_column++;
         break;
     }
@@ -98,11 +204,10 @@ void tty_puts(const char* data)
 
 void init_tty()
 {
-    tty_row = 0;
-    tty_column = 0;
-    tty_buffer = (uint16_t*) 0xC00B8000; // 0xB8000 + Kernel Offset
-    tty_color = ega_entry_colour(EGA_COLOUR_LIGHT_GREY, EGA_COLOUR_BLACK);
-    tty_clear_from(0);
+    tty_column = tty_row = 0;
+    base_pixel = fb->addr;
+    pixel_buffer = kmalloc(16);
+    tty_puts("Hello World");
 }
 
 

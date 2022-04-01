@@ -5,7 +5,6 @@
 #include <cpu/interrupts/idt.h>
 #include <drivers/keyboard/keyboard.h>
 #include <drivers/serial/serial.h>
-#include <graphics/textmode.h>
 #include <graphics/vga.h>
 #include <libk/string.h>
 #include <libk/kprintf.h>

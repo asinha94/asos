@@ -18,7 +18,8 @@
         "vmm.h": "c",
         "vga.h": "c",
         "psf.h": "c",
-        "kprintf.h": "c"
+        "kprintf.h": "c",
+        "tty.h": "c"
     },
     "files.exclude": {
         "**/bin": true
