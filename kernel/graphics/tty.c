@@ -5,9 +5,6 @@
 // TODO: Remove once we have a FS and we load TTF fonts
 #include <graphics/psf.h>
 
-const size_t EGA_WIDTH = 80;
-const size_t EGA_HEIGHT = 25;
-
 static size_t tty_row;
 static size_t tty_column;
 
@@ -124,9 +121,9 @@ static void draw_character(char c)
 static void tty_clear_from(uint8_t linum)
 {
     /* clear all lines from linum onwards */
-    for (size_t y = linum; y < EGA_HEIGHT; y++) {
-        const size_t line = y * EGA_WIDTH;
-        for (size_t x = 0; x < EGA_WIDTH; x++) {
+    for (size_t y = linum; y < fb->height; y++) {
+        const size_t line = y * fb->width;
+        for (size_t x = 0; x < fb->width; x++) {
             const size_t index = line + x;
             draw_character(' ');
         }
@@ -136,15 +133,15 @@ static void tty_clear_from(uint8_t linum)
 
 static void tty_scroll_up_lines(uint8_t num_lines)
 {
-    if (num_lines > EGA_HEIGHT)
-        num_lines = EGA_HEIGHT;
+    if (num_lines > fb->height)
+        num_lines = fb->height;
 
     // we want to overrite the first num_lines number of rows
     // so start copying from num_lines till the total_height
-    for (size_t y = num_lines; y < EGA_HEIGHT; y++) {
-        size_t old_line = (y - num_lines) * EGA_WIDTH;
-        size_t new_line = y * EGA_WIDTH;
-        for (size_t x = 0; x < EGA_WIDTH; x++) {
+    for (size_t y = num_lines; y < fb->height; y++) {
+        size_t old_line = (y - num_lines) * fb->width;
+        size_t new_line = y * fb->width;
+        for (size_t x = 0; x < fb->width; x++) {
             size_t old_index = old_line + x;
             size_t new_index = new_line + x;
             //tty_buffer[old_index] = tty_buffer[new_index];
@@ -152,14 +149,14 @@ static void tty_scroll_up_lines(uint8_t num_lines)
     }
 
     // clear off the remaining lines
-    tty_clear_from(EGA_HEIGHT - num_lines);
+    tty_clear_from(fb->height - num_lines);
 
 }
 
 void tty_putchar(unsigned char c)
 {
     // caclulate index in case we need it
-    const size_t index = tty_row * EGA_WIDTH + tty_column;
+    const size_t index = tty_row * fb->width + tty_column;
 
     switch (c) {
     case '\0':
@@ -178,13 +175,13 @@ void tty_putchar(unsigned char c)
     }
 
     // put on newline if need be
-    if (tty_column == EGA_WIDTH) {
+    if (tty_column == fb->width) {
         tty_column = 0;
         tty_row++;
     }
 
     // strip the first line, print from bottom line
-    if (tty_row == EGA_HEIGHT) {
+    if (tty_row == fb->height) {
         tty_row--;
         tty_scroll_up_lines(1);
     }
@@ -207,7 +204,14 @@ void init_tty()
     tty_column = tty_row = 0;
     base_pixel = fb->addr;
     pixel_buffer = kmalloc(16);
-    tty_puts("Hello World");
+
+    /* TODO:
+        - semicolon too small
+        - fslash random pixel
+        - hash missing
+        - add in lowercase chars
+        - fix scrolling and line handling
+    */
 }
 
 

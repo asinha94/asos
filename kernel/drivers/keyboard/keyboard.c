@@ -3,6 +3,7 @@
 #include <cpu/interrupts/idt.h>
 #include <drivers/keyboard/keyboard.h>
 #include <libk/kprintf.h>
+#include <graphics/tty.h>
 
 /*
     Implementation derived from these references
@@ -98,7 +99,7 @@ void keyboard_handler(isr_data * data)
     if (pressed) {
         // TODO: handle capslock/numlock/scrolllock
         uint8_t c = (evt->modifier_mask & current_modifiers) ? c = evt->data_mod : evt->data;
-        //tty_putchar(c);
+        tty_putchar(c);
         
         // In future when we have userspace, this will be replaced
         // with a write/send to character device
