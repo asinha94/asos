@@ -41,12 +41,8 @@ void temp_shell_execute()
 
 void kernel_main(unsigned long magic, unsigned long mb_addr)
 {
-    // Setup printf/serial output for debugging
-    // Setup Text Mode
-    //init_tty();
-    //init_kprintf(tty_putchar, tty_puts);
+    // Setup serial output for debugging
     init_serial();
-    init_kprintf(serial_putchar, serial_puts);
 
     kprintf("Multiboot Magic Header 0x%x\n", magic);
     if (magic != MULTIBOOT_BOOTLOADER_MAGIC) {

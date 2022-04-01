@@ -1,26 +1,10 @@
 #include <stdint.h>
 #include <stdarg.h>
+#include <drivers/serial/serial.h>
 #include <libk/kprintf.h>
 #include <libk/string.h>
 
-static void default_putchar(unsigned char c);
-static void default_puts(const char * data);
 
-
-static void (*putchar)(unsigned char c) = default_putchar;
-static void (*puts)(const char * data) = default_puts;
-
-
-static void default_putchar(__attribute__((unused)) unsigned char c)
-{
-    return;
-}
-
-
-static void default_puts(__attribute__((unused)) const char * data)
-{
-    return;
-}
 
 void kprintf(const char * format, ...)
 {
@@ -38,7 +22,7 @@ void kprintf(const char * format, ...)
     const char * iter;
     for (iter = format; *iter != 0; ++iter) {
         if (*iter != '%') {
-            putchar(*iter);
+            serial_putchar(*iter);
             continue;
         }
 
@@ -46,41 +30,34 @@ void kprintf(const char * format, ...)
         switch(*iter) {
             case 'c':
                 i = va_arg(arg, int);
-                putchar((char) i);
+                serial_putchar((char) i);
                 break;
             case 'd':
                 i = va_arg(arg, int);
                 if (i < 0) {
                     i = -i;
-                    putchar('-');
+                    serial_putchar('-');
                 }
                 s = itoa(&temp[11], i, 10);
-                puts(s);
+                serial_puts(s);
                 break;
             case 'u':
                 u = va_arg(arg, unsigned int);
                 s = itoa(&temp[11], u, 10);
-                puts(s);
+                serial_puts(s);
                 break;
             case 's':
                 s = va_arg(arg, char *);
-                puts(s);
+                serial_puts(s);
                 break;
             case 'x':
                 u = va_arg(arg, unsigned int);
                 s = itoa(&temp[11], u, 16);
-                puts("0x");
-                puts(s);
+                serial_puts("0x");
+                serial_puts(s);
                 break; 
         }
 
     }
     va_end(arg);
-}
-
-
-void init_kprintf(void (*putchar_fp)(unsigned char), void (*puts_fp)(const char*) )
-{
-    putchar = putchar_fp;
-    puts = puts_fp;
 }

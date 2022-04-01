@@ -99,6 +99,16 @@ void init_graphics(multiboot_info_t * mbi)
 
     uint8_t * chr = kmalloc(16);
     
+    draw_character(pxl_0(chr));
+    draw_character(pxl_1(chr));
+    draw_character(pxl_2(chr));
+    draw_character(pxl_3(chr));
+    draw_character(pxl_4(chr));
+    draw_character(pxl_5(chr));
+    draw_character(pxl_6(chr));
+    draw_character(pxl_7(chr));
+    draw_character(pxl_8(chr));
+    draw_character(pxl_9(chr));
     draw_character(pxl_A(chr));
     draw_character(pxl_B(chr));
     draw_character(pxl_C(chr));
@@ -137,16 +147,24 @@ void init_graphics(multiboot_info_t * mbi)
     draw_character(pxl_plus(chr));
     draw_character(pxl_comma(chr));
     draw_character(pxl_minus(chr));
+    draw_character(pxl_colon(chr));
+    draw_character(pxl_semicolon(chr));
+    draw_character(pxl_lt(chr));
+    draw_character(pxl_gt(chr));
+    draw_character(pxl_eq(chr));
+    draw_character(pxl_qmark(chr));
+    draw_character(pxl_at(chr));
+    draw_character(pxl_openbrkt(chr));
+    draw_character(pxl_closebrkt(chr));
     draw_character(pxl_fslash(chr));
-    draw_character(pxl_0(chr));
-    draw_character(pxl_1(chr));
-    draw_character(pxl_2(chr));
-    draw_character(pxl_3(chr));
-    draw_character(pxl_4(chr));
-    draw_character(pxl_5(chr));
-    draw_character(pxl_6(chr));
-    draw_character(pxl_7(chr));
-    draw_character(pxl_8(chr));
-    draw_character(pxl_9(chr));
+    draw_character(pxl_bslash(chr));
+    draw_character(pxl_caret(chr));
+    draw_character(pxl_underscore(chr));
+    draw_character(pxl_backtick(chr));
+    draw_character(pxl_opencurly(chr));
+    draw_character(pxl_closecurly(chr));
+    draw_character(pxl_pipe(chr));
+    draw_character(pxl_tilde(chr));
+    draw_character(pxl_box(chr));
 
 }

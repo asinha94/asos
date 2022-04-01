@@ -1083,12 +1083,211 @@ uint8_t * pxl_dot(uint8_t * psf)
     return psf;
 }
 
+uint8_t * pxl_colon(uint8_t * psf)
+{
+    // 4 empty lines on top, 3 on the botom
+    psf[0x0] = 0b00000000;
+    psf[0x1] = 0b00000000;
+    psf[0x2] = 0b00000000;
+    psf[0x3] = 0b00000000;
+    psf[0x4] = 0b00000000;
+    psf[0x5] = 0b00000000;
+    psf[0x6] = 0b00000000;
+    psf[0x7] = 0b00000000;
+    psf[0x8] = 0b00010000;
+    psf[0x9] = 0b00000000;
+    psf[0xA] = 0b00010000;
+    psf[0xB] = 0b00000000;
+    psf[0xC] = 0b00000000;
+    psf[0xD] = 0b00000000;
+    psf[0xE] = 0b00000000;
+    psf[0xF] = 0b00000000;
+    return psf;
+}
+
+uint8_t * pxl_semicolon(uint8_t * psf)
+{
+    // 4 empty lines on top, 3 on the botom
+    psf[0x0] = 0b00000000;
+    psf[0x1] = 0b00000000;
+    psf[0x2] = 0b00000000;
+    psf[0x3] = 0b00000000;
+    psf[0x4] = 0b00000000;
+    psf[0x5] = 0b00000000;
+    psf[0x6] = 0b00000000;
+    psf[0x7] = 0b00010000;
+    psf[0x8] = 0b00000000;
+    psf[0x9] = 0b00000000;
+    psf[0xA] = 0b00010000;
+    psf[0xB] = 0b00010000;
+    psf[0xC] = 0b00100000;
+    psf[0xD] = 0b00000000;
+    psf[0xE] = 0b00000000;
+    psf[0xF] = 0b00000000;
+    return psf;
+}
+
+uint8_t * pxl_lt(uint8_t * psf)
+{
+    // 4 empty lines on top, 3 on the botom
+    psf[0x0] = 0b00000000;
+    psf[0x1] = 0b00000000;
+    psf[0x2] = 0b00000000;
+    psf[0x3] = 0b00000000;
+    psf[0x4] = 0b00000100;
+    psf[0x5] = 0b00001000;
+    psf[0x6] = 0b00010000;
+    psf[0x7] = 0b00100000;
+    psf[0x8] = 0b01000000;
+    psf[0x9] = 0b00100000;
+    psf[0xA] = 0b00010000;
+    psf[0xB] = 0b00001000;
+    psf[0xC] = 0b00000100;
+    psf[0xD] = 0b00000000;
+    psf[0xE] = 0b00000000;
+    psf[0xF] = 0b00000000;
+    return psf;
+}
+
+uint8_t * pxl_gt(uint8_t * psf)
+{
+    // 4 empty lines on top, 3 on the botom
+    psf[0x0] = 0b00000000;
+    psf[0x1] = 0b00000000;
+    psf[0x2] = 0b00000000;
+    psf[0x3] = 0b00000000;
+    psf[0x4] = 0b01000000;
+    psf[0x5] = 0b00100000;
+    psf[0x6] = 0b00010000;
+    psf[0x7] = 0b00001000;
+    psf[0x8] = 0b00000100;
+    psf[0x9] = 0b00001000;
+    psf[0xA] = 0b00010000;
+    psf[0xB] = 0b00100000;
+    psf[0xC] = 0b01000000;
+    psf[0xD] = 0b00000000;
+    psf[0xE] = 0b00000000;
+    psf[0xF] = 0b00000000;
+    return psf;
+}
+
+uint8_t * pxl_eq(uint8_t * psf)
+{
+    // 4 empty lines on top, 3 on the botom
+    psf[0x0] = 0b00000000;
+    psf[0x1] = 0b00000000;
+    psf[0x2] = 0b00000000;
+    psf[0x3] = 0b00000000;
+    psf[0x4] = 0b00000000;
+    psf[0x5] = 0b00000000;
+    psf[0x6] = 0b00000000;
+    psf[0x7] = 0b01111100;
+    psf[0x8] = 0b00000000;
+    psf[0x9] = 0b00000000;
+    psf[0xA] = 0b01111100;
+    psf[0xB] = 0b00000000;
+    psf[0xC] = 0b00000000;
+    psf[0xD] = 0b00000000;
+    psf[0xE] = 0b00000000;
+    psf[0xF] = 0b00000000;
+    return psf;
+}
+
+uint8_t * pxl_qmark(uint8_t * psf)
+{
+    // 4 empty lines on top, 3 on the botom
+    psf[0x0] = 0b00000000;
+    psf[0x1] = 0b00000000;
+    psf[0x2] = 0b00000000;
+    psf[0x3] = 0b00000000;
+    psf[0x4] = 0b01110000;
+    psf[0x5] = 0b00001000;
+    psf[0x6] = 0b00000100;
+    psf[0x7] = 0b00001000;
+    psf[0x8] = 0b00010000;
+    psf[0x9] = 0b00100000;
+    psf[0xA] = 0b00000000;
+    psf[0xB] = 0b00000000;
+    psf[0xC] = 0b00100000;
+    psf[0xD] = 0b00000000;
+    psf[0xE] = 0b00000000;
+    psf[0xF] = 0b00000000;
+    return psf;
+}
+
+uint8_t * pxl_at(uint8_t * psf)
+{
+    // 4 empty lines on top, 3 on the botom
+    psf[0x0] = 0b00000000;
+    psf[0x1] = 0b00000000;
+    psf[0x2] = 0b00000000;
+    psf[0x3] = 0b00000000;
+    psf[0x4] = 0b00011100;
+    psf[0x5] = 0b00100010;
+    psf[0x6] = 0b01000110;
+    psf[0x7] = 0b01001010;
+    psf[0x8] = 0b01001010;
+    psf[0x9] = 0b01001010;
+    psf[0xA] = 0b01000110;
+    psf[0xB] = 0b00100000;
+    psf[0xC] = 0b00011000;
+    psf[0xD] = 0b00000000;
+    psf[0xE] = 0b00000000;
+    psf[0xF] = 0b00000000;
+    return psf;
+}
+
+uint8_t * pxl_openbrkt(uint8_t * psf)
+{
+    // 4 empty lines on top, 3 on the botom
+    psf[0x0] = 0b00000000;
+    psf[0x1] = 0b00000000;
+    psf[0x2] = 0b00000000;
+    psf[0x3] = 0b00000000;
+    psf[0x4] = 0b01111000;
+    psf[0x5] = 0b01000000;
+    psf[0x6] = 0b01000000;
+    psf[0x7] = 0b01000000;
+    psf[0x8] = 0b01000000;
+    psf[0x9] = 0b01000000;
+    psf[0xA] = 0b01000000;
+    psf[0xB] = 0b01000000;
+    psf[0xC] = 0b01111000;
+    psf[0xD] = 0b00000000;
+    psf[0xE] = 0b00000000;
+    psf[0xF] = 0b00000000;
+    return psf;
+}
+
+uint8_t * pxl_closebrkt(uint8_t * psf)
+{
+    // 4 empty lines on top, 3 on the botom
+    psf[0x0] = 0b00000000;
+    psf[0x1] = 0b00000000;
+    psf[0x2] = 0b00000000;
+    psf[0x3] = 0b00000000;
+    psf[0x4] = 0b01111000;
+    psf[0x5] = 0b00001000;
+    psf[0x6] = 0b00001000;
+    psf[0x7] = 0b00001000;
+    psf[0x8] = 0b00001000;
+    psf[0x9] = 0b00001000;
+    psf[0xA] = 0b00001000;
+    psf[0xB] = 0b00001000;
+    psf[0xC] = 0b01111000;
+    psf[0xD] = 0b00000000;
+    psf[0xE] = 0b00000000;
+    psf[0xF] = 0b00000000;
+    return psf;
+}
+
 uint8_t * pxl_fslash(uint8_t * psf)
 {
     // 4 empty lines on top, 3 on the botom
     psf[0x0] = 0b00000000;
     psf[0x1] = 0b00000000;
     psf[0x2] = 0b00000000;
+    psf[0x3] = 0b00000000;
     psf[0x3] = 0b00000100;
     psf[0x4] = 0b00001000;
     psf[0x5] = 0b00001000;
@@ -1098,7 +1297,204 @@ uint8_t * pxl_fslash(uint8_t * psf)
     psf[0x9] = 0b00100000;
     psf[0xA] = 0b01000000;
     psf[0xB] = 0b01000000;
+    psf[0xD] = 0b00000000;
+    psf[0xE] = 0b00000000;
+    psf[0xF] = 0b00000000;
+    return psf;
+}
+
+uint8_t * pxl_bslash(uint8_t * psf)
+{
+    // 4 empty lines on top, 3 on the botom
+    psf[0x0] = 0b00000000;
+    psf[0x1] = 0b00000000;
+    psf[0x2] = 0b00000000;
+    psf[0x3] = 0b00000000;
+    psf[0x4] = 0b01000000;
+    psf[0x5] = 0b00100000;
+    psf[0x6] = 0b00100000;
+    psf[0x7] = 0b00010000;
+    psf[0x8] = 0b00010000;
+    psf[0x9] = 0b00001000;
+    psf[0xA] = 0b00001000;
+    psf[0xB] = 0b00000100;
+    psf[0xC] = 0b00000100;
+    psf[0xD] = 0b00000000;
+    psf[0xE] = 0b00000000;
+    psf[0xF] = 0b00000000;
+    return psf;
+}
+
+uint8_t * pxl_caret(uint8_t * psf)
+{
+    // 4 empty lines on top, 3 on the botom
+    psf[0x0] = 0b00000000;
+    psf[0x1] = 0b00000000;
+    psf[0x2] = 0b00000000;
+    psf[0x3] = 0b00000000;
+    psf[0x4] = 0b00010000;
+    psf[0x5] = 0b00101000;
+    psf[0x6] = 0b00101000;
+    psf[0x7] = 0b01000100;
+    psf[0x8] = 0b00000000;
+    psf[0x9] = 0b00000000;
+    psf[0xA] = 0b00000000;
+    psf[0xB] = 0b00000000;
     psf[0xC] = 0b00000000;
+    psf[0xD] = 0b00000000;
+    psf[0xE] = 0b00000000;
+    psf[0xF] = 0b00000000;
+    return psf;
+}
+
+uint8_t * pxl_underscore(uint8_t * psf)
+{
+    // 4 empty lines on top, 3 on the botom
+    psf[0x0] = 0b00000000;
+    psf[0x1] = 0b00000000;
+    psf[0x2] = 0b00000000;
+    psf[0x3] = 0b00000000;
+    psf[0x4] = 0b00000000;
+    psf[0x5] = 0b00000000;
+    psf[0x6] = 0b00000000;
+    psf[0x7] = 0b00000000;
+    psf[0x8] = 0b00000000;
+    psf[0x9] = 0b00000000;
+    psf[0xA] = 0b00000000;
+    psf[0xB] = 0b00000000;
+    psf[0xC] = 0b01111110;
+    psf[0xD] = 0b00000000;
+    psf[0xE] = 0b00000000;
+    psf[0xF] = 0b00000000;
+    return psf;
+}
+
+uint8_t * pxl_backtick(uint8_t * psf)
+{
+    // 4 empty lines on top, 3 on the botom
+    psf[0x0] = 0b00000000;
+    psf[0x1] = 0b00000000;
+    psf[0x2] = 0b00000000;
+    psf[0x3] = 0b00000000;
+    psf[0x4] = 0b01000000;
+    psf[0x5] = 0b00100000;
+    psf[0x6] = 0b00000000;
+    psf[0x7] = 0b00000000;
+    psf[0x8] = 0b00000000;
+    psf[0x9] = 0b00000000;
+    psf[0xA] = 0b00000000;
+    psf[0xB] = 0b00000000;
+    psf[0xC] = 0b00000000;
+    psf[0xD] = 0b00000000;
+    psf[0xE] = 0b00000000;
+    psf[0xF] = 0b00000000;
+    return psf;
+}
+
+uint8_t * pxl_opencurly(uint8_t * psf)
+{
+    // 4 empty lines on top, 3 on the botom
+    psf[0x0] = 0b00000000;
+    psf[0x1] = 0b00000000;
+    psf[0x2] = 0b00000000;
+    psf[0x3] = 0b00000000;
+    psf[0x4] = 0b00011000;
+    psf[0x5] = 0b00100000;
+    psf[0x6] = 0b00100000;
+    psf[0x7] = 0b00100000;
+    psf[0x8] = 0b01000000;
+    psf[0x9] = 0b00100000;
+    psf[0xA] = 0b00100000;
+    psf[0xB] = 0b00100000;
+    psf[0xC] = 0b00011000;
+    psf[0xD] = 0b00000000;
+    psf[0xE] = 0b00000000;
+    psf[0xF] = 0b00000000;
+    return psf;
+}
+
+uint8_t * pxl_closecurly(uint8_t * psf)
+{
+    // 4 empty lines on top, 3 on the botom
+    psf[0x0] = 0b00000000;
+    psf[0x1] = 0b00000000;
+    psf[0x2] = 0b00000000;
+    psf[0x3] = 0b00000000;
+    psf[0x4] = 0b01100000;
+    psf[0x5] = 0b00010000;
+    psf[0x6] = 0b00010000;
+    psf[0x7] = 0b00010000;
+    psf[0x8] = 0b00001000;
+    psf[0x9] = 0b00010000;
+    psf[0xA] = 0b00010000;
+    psf[0xB] = 0b00010000;
+    psf[0xC] = 0b01100000;
+    psf[0xD] = 0b00000000;
+    psf[0xE] = 0b00000000;
+    psf[0xF] = 0b00000000;
+    return psf;
+}
+
+uint8_t * pxl_pipe(uint8_t * psf)
+{
+    // 4 empty lines on top, 3 on the botom
+    psf[0x0] = 0b00000000;
+    psf[0x1] = 0b00000000;
+    psf[0x2] = 0b00000000;
+    psf[0x3] = 0b00000000;
+    psf[0x4] = 0b00010000;
+    psf[0x5] = 0b00010000;
+    psf[0x6] = 0b00010000;
+    psf[0x7] = 0b00010000;
+    psf[0x8] = 0b00010000;
+    psf[0x9] = 0b00010000;
+    psf[0xA] = 0b00010000;
+    psf[0xB] = 0b00010000;
+    psf[0xC] = 0b00010000;
+    psf[0xD] = 0b00000000;
+    psf[0xE] = 0b00000000;
+    psf[0xF] = 0b00000000;
+    return psf;
+}
+
+uint8_t * pxl_tilde(uint8_t * psf)
+{
+    // 4 empty lines on top, 3 on the botom
+    psf[0x0] = 0b00000000;
+    psf[0x1] = 0b00000000;
+    psf[0x2] = 0b00000000;
+    psf[0x3] = 0b00000000;
+    psf[0x4] = 0b00000000;
+    psf[0x5] = 0b00000000;
+    psf[0x6] = 0b00000000;
+    psf[0x7] = 0b00000000;
+    psf[0x8] = 0b00110010;
+    psf[0x9] = 0b01001100;
+    psf[0xA] = 0b00000000;
+    psf[0xB] = 0b00000000;
+    psf[0xC] = 0b00000000;
+    psf[0xD] = 0b00000000;
+    psf[0xE] = 0b00000000;
+    psf[0xF] = 0b00000000;
+    return psf;
+}
+
+uint8_t * pxl_box(uint8_t * psf)
+{
+    // 4 empty lines on top, 3 on the botom
+    psf[0x0] = 0b00000000;
+    psf[0x1] = 0b00000000;
+    psf[0x2] = 0b00000000;
+    psf[0x3] = 0b00000000;
+    psf[0x4] = 0b00111100;
+    psf[0x5] = 0b00100100;
+    psf[0x6] = 0b00100100;
+    psf[0x7] = 0b00100100;
+    psf[0x8] = 0b00100100;
+    psf[0x9] = 0b00100100;
+    psf[0xA] = 0b00100100;
+    psf[0xB] = 0b00100100;
+    psf[0xC] = 0b00111100;
     psf[0xD] = 0b00000000;
     psf[0xE] = 0b00000000;
     psf[0xF] = 0b00000000;
