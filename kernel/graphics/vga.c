@@ -32,7 +32,6 @@ void draw_character(uint8_t * c)
 {
     size_t l_scale = 1;
     size_t w_scale = 1;
-    size_t pixel_size = 4;
     Pixel color = create_pixel(COLOR_MAX, COLOR_MAX, COLOR_MAX);
     
     for (size_t k = 0; k < 16; ++k) {
@@ -85,12 +84,12 @@ void init_graphics(multiboot_info_t * mbi)
         pmm_set_range(base_addr, vmem_pages);
 
         for (size_t i = 0; i < vmem_pages; ++i) {
-             uint32_t base_addr = (uint32_t) fb->addr + (i * VMM_PG_SZ_SMALL);
             vmm_map_page_to_vaddr(
                 base_addr,
                 base_addr, //  does a framebuffer actually exist in memory?
                 PTE_RW_ACCESS | PTE_PRESENT
             );
+            base_addr += VMM_PG_SZ_SMALL;
         }
     }
 
@@ -99,10 +98,55 @@ void init_graphics(multiboot_info_t * mbi)
     base_pixel = fb->addr + (5 * fb->width) + 5;
 
     uint8_t * chr = kmalloc(16);
-    get_a2(chr);
-    draw_character(chr);
-    get_a(chr);
-    draw_character(chr);
     
+    draw_character(pxl_A(chr));
+    draw_character(pxl_B(chr));
+    draw_character(pxl_C(chr));
+    draw_character(pxl_D(chr));
+    draw_character(pxl_E(chr));
+    draw_character(pxl_F(chr));
+    draw_character(pxl_G(chr));
+    draw_character(pxl_H(chr));
+    draw_character(pxl_I(chr));
+    draw_character(pxl_J(chr));
+    draw_character(pxl_K(chr));
+    draw_character(pxl_L(chr));
+    draw_character(pxl_M(chr));
+    draw_character(pxl_N(chr));
+    draw_character(pxl_O(chr));
+    draw_character(pxl_P(chr));
+    draw_character(pxl_Q(chr));
+    draw_character(pxl_R(chr));
+    draw_character(pxl_S(chr));
+    draw_character(pxl_T(chr));
+    draw_character(pxl_U(chr));
+    draw_character(pxl_V(chr));
+    draw_character(pxl_W(chr));
+    draw_character(pxl_X(chr));
+    draw_character(pxl_Y(chr));
+    draw_character(pxl_Z(chr));
+    draw_character(pxl_exclaim(chr));
+    draw_character(pxl_dquote(chr));
+    draw_character(pxl_dollar(chr));
+    draw_character(pxl_percent(chr));
+    draw_character(pxl_ampersand(chr));
+    draw_character(pxl_squote(chr));
+    draw_character(pxl_openparen(chr));
+    draw_character(pxl_closeparen(chr));
+    draw_character(pxl_asterisk(chr));
+    draw_character(pxl_plus(chr));
+    draw_character(pxl_comma(chr));
+    draw_character(pxl_minus(chr));
+    draw_character(pxl_fslash(chr));
+    draw_character(pxl_0(chr));
+    draw_character(pxl_1(chr));
+    draw_character(pxl_2(chr));
+    draw_character(pxl_3(chr));
+    draw_character(pxl_4(chr));
+    draw_character(pxl_5(chr));
+    draw_character(pxl_6(chr));
+    draw_character(pxl_7(chr));
+    draw_character(pxl_8(chr));
+    draw_character(pxl_9(chr));
 
 }

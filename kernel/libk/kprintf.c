@@ -4,20 +4,20 @@
 #include <libk/string.h>
 
 static void default_putchar(unsigned char c);
-static void default_puts(unsigned char c);
+static void default_puts(const char * data);
 
 
 static void (*putchar)(unsigned char c) = default_putchar;
 static void (*puts)(const char * data) = default_puts;
 
 
-static void default_putchar(unsigned char c)
+static void default_putchar(__attribute__((unused)) unsigned char c)
 {
     return;
 }
 
 
-static void default_puts(unsigned char c)
+static void default_puts(__attribute__((unused)) const char * data)
 {
     return;
 }

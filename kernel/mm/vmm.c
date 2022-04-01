@@ -99,16 +99,17 @@ uint32_t vmm_get_virtual_page()
         }
 
         // Last page is recursively mapped, so we use this to access the new page table
-        page_table * new_page_table  = VMM_LAST_PDE_PAGE + (i * VMM_4KB_ALIGN_MASK);
+        page_table * new_page_table  = (page_table *) (VMM_LAST_PDE_PAGE + (i * VMM_4KB_ALIGN_MASK));
 
         // Page table already present, lets search for an empty page entry
         if (is_pg_enabled(pde)) {
-            for (size_t j = VMM_PTABLE_LEN-1; j >= 0; --j) {
+            for (size_t j = VMM_PTABLE_LEN; j > 0; --j) {
+                size_t idx = j - 1;
                 // Found an empty page entry, lets use it
-                if (new_page_table->entries[j] == 0) {
-                    new_page_table->entries[j] = new_page | PTE_RW_ACCESS | PTE_PRESENT;
+                if (new_page_table->entries[idx] == 0) {
+                    new_page_table->entries[idx] = new_page | PTE_RW_ACCESS | PTE_PRESENT;
                     // Memset the new page?
-                    return (VMM_PG_SZ_LARGE * i) + (VMM_PG_SZ_SMALL * j);
+                    return (VMM_PG_SZ_LARGE * i) + (VMM_PG_SZ_SMALL * idx);
                 }
             }
 
@@ -148,6 +149,6 @@ void vmm_map_page_to_vaddr(uint32_t vaddr, uint32_t paddr, uint32_t flags)
     }
 
     // Clobber over page if already present
-    page_table * new_page_table = VMM_LAST_PDE_PAGE + (pdindex * VMM_PG_SZ_SMALL);
+    page_table * new_page_table = (page_table *) (VMM_LAST_PDE_PAGE + (pdindex * VMM_PG_SZ_SMALL));
     new_page_table->entries[ptindex] = (paddr & VMM_4KB_ALIGN_MASK) | flags;
 }

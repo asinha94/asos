@@ -2,8 +2,8 @@
 #include <cpu/hal.h>
 #include <cpu/interrupts/idt.h>
 #include <cpu/interrupts/pic.h>
-#include <graphics/textmode.h>
 #include <drivers/keyboard/keyboard.h>
+#include <libk/kprintf.h>
 
 
 // IRQ handlers in assembly

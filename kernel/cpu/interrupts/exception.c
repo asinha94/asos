@@ -1,6 +1,6 @@
 #include <cpu/interrupts/exception.h>
 #include <cpu/interrupts/idt.h>
-#include <graphics/textmode.h>
+#include <libk/kprintf.h>
 
 // CPU Exception handlers
 extern void asm_handler_isr0();

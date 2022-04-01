@@ -10,29 +10,28 @@ My pet project in bootstrapping a bare-bones OS. The goal is for this to eventua
 - [X] Boot intp Protected Mode C Kernel
 - [X] Interrupt driven kernel architecture
 - [X] Partial driver support (keyboard)
-- [x] High-half kernel and paging support
+- [x] High-half kernel with paging enabled
 - [x] Kernel Malloc implementation
-- [x] Simple shell for debugging/testing
 
 ## Short-Term Work
-- [ ] Basic Paging Implementation
-- [ ] Enter userspace with a CLI input
-- [ ] Use multiboot (Memory Map and Graphics)
+- [ ] Address warnings from compiler
 - [ ] Create handlers for interrupt 0-31
 - [ ] Handle exceptions (beyond just logging)
 - [ ] Create PIT/RTC drivers
 - [ ] Migrate to C++
+- [ ] Process Scheduling/Multitasking
+- [ ] Jump to userspace
+- [ ] Basic syscalls (read/write/fork/exec/mmap)
+- [ ] Create char devices (i.e kbm for UI)
 
 ## Long-Term Work
 - [ ] Use APIC instead of PIC
 - [ ] Improve malloc to use slab allocation
-- [ ] Use buddy allocator for PMM
-- [ ] bash (or variant) shell
-- [ ] Process Scheduling
+- [ ] Use buddy allocator for PMMv (use stack instead of Bitmap)
+- [ ] Bash shell
+- [ ] Basic Windowing Graphics 
 - [ ] File-system support (FAT/ext2/ntfs?)  
-- [ ] Basic syscalls (read/write/fork/exec/mmap)
 - [ ] TCP/IP networking stack
-- [ ] Minimal Windowing/Graphics
 
 ## Optional
 - [ ] 64-bit

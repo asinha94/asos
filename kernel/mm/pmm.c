@@ -24,9 +24,10 @@ void init_pmm(multiboot_info_t * mbi)
 
     // TODO: Configure the PMM Memory Map
     if (mbi->flags & MULTIBOOT_INFO_MEMORY) {
+        // TODO: Use mmap structs
         kprintf("Mem lower: %x\nMem Upper: %x\n", mbi->mem_lower, mbi->mem_upper);
          // Not sure if this is the last byte or the upper bounds of memory
-        uint32_t phys_memory_end = 0x100000 + mbi->mem_upper;
+        // uint32_t phys_memory_end = 0x100000 + mbi->mem_upper;
     }
 
     kprintf("Initialized PMM\n");
@@ -74,7 +75,7 @@ static uint32_t get_page_in_range(uint32_t start_addr, uint32_t end_addr)
 {
     if (used_pages >= PMM_BITMAP_VALUES) {
         kprintf("Cannot allocate new physical page, no memory available!");
-        return NULL;
+        return 0;
     }
 
     // Assume all addresses are 4K aligned
@@ -102,7 +103,7 @@ static uint32_t get_page_in_range(uint32_t start_addr, uint32_t end_addr)
         }
     }
 
-    return NULL;
+    return 0;
 } 
 
 uint32_t pmm_page_alloc()
