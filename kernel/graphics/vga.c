@@ -23,28 +23,21 @@ Pixel create_pixel(uint8_t r, uint8_t g, uint8_t b)
     return red | green | blue;
 }
 
-void draw_character_bmp(Pixel ** point, uint8_t * c)
+void draw_character_bmp(Pixel * point, uint8_t * c)
 {
-    size_t l_scale = 1;
-    size_t w_scale = 1;
-    Pixel color = create_pixel(COLOR_MAX, COLOR_MAX, COLOR_MAX);
+    Pixel color;
     
     for (size_t k = 0; k < 16; ++k) {
-        Pixel * pixel = *point + (fb->width * l_scale * k);
         for (size_t l = 0; l < 8; ++l) {
-            Pixel * newpixel = pixel + w_scale*l;
-
             if ((c[k] >> (8 - l - 1)) & 0x1) {
-                for (size_t m = 0; m < l_scale; ++m) {
-                    for (size_t n = 0; n < w_scale; ++n) {
-                        Pixel * p = newpixel + (m*fb->width) + n;
-                        *p = color;
-                    }
-                }
+                color = create_pixel(COLOR_MAX, COLOR_MAX, COLOR_MAX);
+            } else {
+                color = create_pixel(COLOR_MIN, COLOR_MIN, COLOR_MIN);
             }
+            *point++ = color;
         }
+        point += (fb->width - 8);
     }
-    *point += 8 * w_scale;
 }
 
 void init_graphics(multiboot_info_t * mbi)

@@ -5,17 +5,14 @@
 // TODO: Remove once we have a FS and we load TTF fonts
 #include <graphics/psf.h>
 
-static size_t tty_row;
-static size_t tty_column;
-
-Pixel * base_pixel;
+static TTYWidget * widget;
 Pixel * pixel_buffer;
 
 void (*char_func[])(uint8_t *) = {
     pxl_space,
     pxl_exclaim,
     pxl_dquote,
-    pxl_space, // hash?
+    pxl_hash,
     pxl_dollar,
     pxl_percent,
     pxl_ampersand,
@@ -111,11 +108,37 @@ void (*char_func[])(uint8_t *) = {
 };
 
 
+static void increment_cursor()
+{
+    
+    // Are we on the same row?
+    uint16_t col = widget->current_col + 1;
+    if (col != widget->cols) {
+        widget->current_col = col;
+        widget->curr += PXL_WIDTH;
+        return;
+    }
+
+    widget->current_col = 0;
+    uint16_t row = widget->current_row + 1;
+
+    // Are we above the bottom row?
+    if (row != widget->rows) {
+        widget->current_row = row;
+        widget->curr += PXL_WIDTH + (PXL_HEIGHT - 1) * (PXL_WIDTH * widget->cols);
+        return;
+    }
+
+    // We need to scroll up
+}
+
+
 static void draw_character(char c)
 {
     void (*fp)(uint8_t*) = char_func[c-32];
     fp(pixel_buffer);
-    draw_character_bmp(&base_pixel, pixel_buffer);
+    draw_character_bmp(widget->curr, pixel_buffer);
+    increment_cursor();
 }
 
 static void tty_clear_from(uint8_t linum)
@@ -155,38 +178,20 @@ static void tty_scroll_up_lines(uint8_t num_lines)
 
 void tty_putchar(unsigned char c)
 {
-    // caclulate index in case we need it
-    const size_t index = tty_row * fb->width + tty_column;
-
     switch (c) {
     case '\0':
         return;
     case '\n':
-        tty_column = 0;
-        tty_row++;
+        widget->current_col = widget->cols - 1;
+        increment_cursor();
         break;;
     case '\t':
         tty_puts("    ");
         return;
     default:
         draw_character(c);
-        tty_column++;
         break;
     }
-
-    // put on newline if need be
-    if (tty_column == fb->width) {
-        tty_column = 0;
-        tty_row++;
-    }
-
-    // strip the first line, print from bottom line
-    if (tty_row == fb->height) {
-        tty_row--;
-        tty_scroll_up_lines(1);
-    }
-    
-
 }
 
 
@@ -201,16 +206,19 @@ void tty_puts(const char* data)
 
 void init_tty()
 {
-    tty_column = tty_row = 0;
-    base_pixel = fb->addr;
     pixel_buffer = kmalloc(16);
 
+    // Init TTY Window
+    widget = kmalloc(sizeof(TTYWidget));
+    widget->curr = fb->addr;
+    widget->rows = fb->height / PXL_HEIGHT;
+    widget->current_row = 0;
+    widget->cols = fb->width / PXL_WIDTH;
+    widget->current_row = 0;
+
     /* TODO:
-        - semicolon too small
-        - fslash random pixel
-        - hash missing
         - add in lowercase chars
-        - fix scrolling and line handling
+        - fix scrolling on end of buffer
     */
 }
 

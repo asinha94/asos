@@ -4,6 +4,9 @@
 #include <libk/kmalloc.h>
 #include <stdint.h>
 
+#define PXL_WIDTH  8
+#define PXL_HEIGHT 16
+
 void pxl_space(uint8_t * psf)
 {
     // 4 empty lines on top, 3 on the botom
@@ -841,6 +844,28 @@ void pxl_exclaim(uint8_t * psf)
     return psf;
 }
 
+void pxl_hash(uint8_t * psf)
+{
+    // 4 empty lines on top, 3 on the botom
+    psf[0x0] = 0b00000000;
+    psf[0x1] = 0b00000000;
+    psf[0x2] = 0b00000000;
+    psf[0x3] = 0b00000000;
+    psf[0x4] = 0b00001010;
+    psf[0x5] = 0b00010100;
+    psf[0x6] = 0b01111110;
+    psf[0x7] = 0b00010100;
+    psf[0x8] = 0b00101000;
+    psf[0x9] = 0b01111110;
+    psf[0xA] = 0b00101000;
+    psf[0xB] = 0b01010000;
+    psf[0xC] = 0b00000000;
+    psf[0xD] = 0b00000000;
+    psf[0xE] = 0b00000000;
+    psf[0xF] = 0b00000000;
+    return psf;
+}
+
 void pxl_dquote(uint8_t * psf)
 {
     // 4 empty lines on top, 3 on the botom
@@ -1115,8 +1140,8 @@ void pxl_colon(uint8_t * psf)
     psf[0x4] = 0b00000000;
     psf[0x5] = 0b00000000;
     psf[0x6] = 0b00000000;
-    psf[0x7] = 0b00000000;
-    psf[0x8] = 0b00010000;
+    psf[0x7] = 0b00010000;
+    psf[0x8] = 0b00000000;
     psf[0x9] = 0b00000000;
     psf[0xA] = 0b00010000;
     psf[0xB] = 0b00000000;
@@ -1310,15 +1335,15 @@ void pxl_fslash(uint8_t * psf)
     psf[0x1] = 0b00000000;
     psf[0x2] = 0b00000000;
     psf[0x3] = 0b00000000;
-    psf[0x3] = 0b00000100;
-    psf[0x4] = 0b00001000;
+    psf[0x4] = 0b00000100;
     psf[0x5] = 0b00001000;
-    psf[0x6] = 0b00010000;
+    psf[0x6] = 0b00001000;
     psf[0x7] = 0b00010000;
-    psf[0x8] = 0b00100000;
+    psf[0x8] = 0b00010000;
     psf[0x9] = 0b00100000;
-    psf[0xA] = 0b01000000;
+    psf[0xA] = 0b00100000;
     psf[0xB] = 0b01000000;
+    psf[0xC] = 0b01000000;
     psf[0xD] = 0b00000000;
     psf[0xE] = 0b00000000;
     psf[0xF] = 0b00000000;
