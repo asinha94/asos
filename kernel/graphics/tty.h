@@ -17,6 +17,7 @@ typedef struct TTYWidget {
 } TTYWidget;
 
 void init_tty();
-
+void tty_putchar(unsigned char c);
+void tty_puts(const char* data);
 
 #endif

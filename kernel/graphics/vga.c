@@ -1,10 +1,14 @@
 #include <stddef.h>
+#include <graphics/psf.h>
 #include <graphics/vga.h>
 #include <graphics/tty.h>
 #include <libk/kmalloc.h>
 #include <libk/kprintf.h>
 #include <mm/pmm.h>
 #include <mm/vmm.h>
+
+Pixel White;
+Pixel Black;
 
 
 void set_background_color(Pixel color)
@@ -25,18 +29,17 @@ Pixel create_pixel(uint8_t r, uint8_t g, uint8_t b)
 
 void draw_character_bmp(Pixel * point, uint8_t * c)
 {
-    Pixel color;
     
-    for (size_t k = 0; k < 16; ++k) {
-        for (size_t l = 0; l < 8; ++l) {
-            if ((c[k] >> (8 - l - 1)) & 0x1) {
-                color = create_pixel(COLOR_MAX, COLOR_MAX, COLOR_MAX);
-            } else {
-                color = create_pixel(COLOR_MIN, COLOR_MIN, COLOR_MIN);
+    
+    for (size_t k = 0; k < PXL_HEIGHT; ++k) {
+        for (size_t l = 0; l < PXL_WIDTH; ++l) {
+            Pixel color = White;
+            if ((c[k] >> (PXL_WIDTH - l - 1)) & 0x1) {
+                color = Black;
             }
             *point++ = color;
         }
-        point += (fb->width - 8);
+        point += (fb->width - PXL_WIDTH);
     }
 }
 
@@ -81,6 +84,8 @@ void init_graphics(multiboot_info_t * mbi)
         }
     }
 
+    Black = create_pixel(COLOR_MAX, COLOR_MAX, COLOR_MAX);
+    White = create_pixel(COLOR_MIN, COLOR_MIN, COLOR_MIN);
     //set_background_color(create_pixel(COLOR_MIN, COLOR_MIN, COLOR_MAX));
     init_tty();
 }

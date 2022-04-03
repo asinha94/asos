@@ -8,6 +8,12 @@
 static TTYWidget * widget;
 Pixel * pixel_buffer;
 
+static void draw_character(char c);
+static void tty_clear_from(uint8_t linum);
+static void tty_scroll_up_lines(uint8_t num_lines);
+static void increment_cursor();
+
+
 void (*char_func[])(uint8_t *) = {
     pxl_space,
     pxl_exclaim,
@@ -108,39 +114,6 @@ void (*char_func[])(uint8_t *) = {
 };
 
 
-static void increment_cursor()
-{
-    
-    // Are we on the same row?
-    uint16_t col = widget->current_col + 1;
-    if (col != widget->cols) {
-        widget->current_col = col;
-        widget->curr += PXL_WIDTH;
-        return;
-    }
-
-    widget->current_col = 0;
-    uint16_t row = widget->current_row + 1;
-
-    // Are we above the bottom row?
-    if (row != widget->rows) {
-        widget->current_row = row;
-        widget->curr += PXL_WIDTH + (PXL_HEIGHT - 1) * (PXL_WIDTH * widget->cols);
-        return;
-    }
-
-    // We need to scroll up
-}
-
-
-static void draw_character(char c)
-{
-    void (*fp)(uint8_t*) = char_func[c-32];
-    fp(pixel_buffer);
-    draw_character_bmp(widget->curr, pixel_buffer);
-    increment_cursor();
-}
-
 static void tty_clear_from(uint8_t linum)
 {
     /* clear all lines from linum onwards */
@@ -175,6 +148,42 @@ static void tty_scroll_up_lines(uint8_t num_lines)
     tty_clear_from(fb->height - num_lines);
 
 }
+
+
+static void increment_cursor()
+{
+    
+    // Are we on the same row?
+    uint16_t col = widget->current_col + 1;
+    if (col != widget->cols) {
+        widget->current_col = col;
+        widget->curr += PXL_WIDTH;
+        return;
+    }
+
+    widget->current_col = 0;
+    uint16_t row = widget->current_row + 1;
+
+    // Are we above the bottom row?
+    if (row != widget->rows) {
+        widget->current_row = row;
+        widget->curr += PXL_WIDTH + (PXL_HEIGHT - 1) * (PXL_WIDTH * widget->cols);
+        return;
+    }
+
+    // We need to scroll up
+}
+
+
+static void draw_character(char c)
+{
+    void (*fp)(uint8_t*) = char_func[c-32];
+    fp(pixel_buffer);
+    draw_character_bmp(widget->curr, pixel_buffer);
+    increment_cursor();
+}
+
+
 
 void tty_putchar(unsigned char c)
 {
