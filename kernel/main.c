@@ -62,8 +62,6 @@ void kernel_main(unsigned long magic, unsigned long mb_addr)
     init_pmm(mbi);
     init_vmm();
 
-    uint32_t a = vmm_get_virtual_page();
-
     // Setup graphics
     init_graphics(mbi);
 

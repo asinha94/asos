@@ -6,7 +6,7 @@
 #include <graphics/psf.h>
 
 static TTYWidget * widget;
-Pixel * pixel_buffer;
+uint8_t * pixel_buffer;
 
 static void draw_character(char c);
 static void tty_clear_from(size_t linum);
@@ -80,7 +80,7 @@ void (*char_func[])(uint8_t *) = {
     pxl_caret,
     pxl_underscore,
     pxl_backtick,
-    pxl_A,
+    pxl_A, // underscore character
     pxl_B,
     pxl_C,
     pxl_D,
@@ -114,17 +114,28 @@ void (*char_func[])(uint8_t *) = {
 };
 
 
+void tty_draw_character_bmp(Pixel * point, uint8_t * c)
+{
+    for (size_t k = 0; k < PXL_HEIGHT; ++k) {
+        Pixel * p = point + (k * PXL_WIDTH * widget->cols);
+        for (size_t l = 0; l < PXL_WIDTH; ++l) {
+            Pixel color = ((c[k] >> (PXL_WIDTH - l - 1)) & 0x1) ? Black : White;
+            *(p+l) = color;
+        }
+    }
+}
+
+
 static void tty_clear_from(size_t linum)
 {
-    void (*fp)(uint8_t*) = char_func[' '-32];
-    fp(pixel_buffer);
-    draw_character_bmp(widget->curr, pixel_buffer);
-
+    pxl_space(pixel_buffer);
     /* clear all lines from linum onwards */
     
-    for (size_t y = linum; y < widget->rows; y++) {
-        Pixel * dst = fb->addr + linum * (PXL_HEIGHT * (PXL_WIDTH * widget->cols));
-        draw_character_bmp(dst, pixel_buffer);
+    for (size_t i = linum; i < widget->rows; ++i) {
+        Pixel * dst = fb->addr + i * (PXL_HEIGHT * (PXL_WIDTH * widget->cols));
+        for (size_t j = 0; j < widget->cols; ++j) {
+            tty_draw_character_bmp(dst+(j*PXL_WIDTH), pixel_buffer);
+        } 
     }
 }
 
@@ -141,18 +152,17 @@ static void tty_scroll_up_num_rows(size_t num_rows)
     // we want to scroll up num_rows. This means everything below #num_rows needs to be copied up
     // so start copying from num_lines till the total_height
     size_t pitch = PXL_WIDTH * widget->cols;
-    size_t bytes_per_pixelrow = PXL_HEIGHT * pitch;
-    Pixel * dst = fb->addr;
+    size_t character_pitch = PXL_HEIGHT * pitch;
 
     for (size_t i = num_rows; i < widget->rows; ++i) {
         for (size_t j = 0; j < PXL_HEIGHT; ++j) {
-            Pixel * src = dst + (i * bytes_per_pixelrow) + (j * pitch);
-            for (size_t k = 0; k < widget->cols; ++k) {
+            
+            Pixel * dst = fb->addr + ((i-num_rows) * character_pitch) + (j * pitch);
+            Pixel * src = dst + (num_rows * character_pitch);
+            for (size_t k = 0; k < pitch; ++k) {
                 dst[k] = src[k];
             }
         }
-
-        dst += bytes_per_pixelrow;
     }
 
     // clear off the remaining lines
@@ -183,7 +193,7 @@ static void increment_cursor()
 
     // We need to scroll up
     tty_scroll_up_num_rows(widget->rows - 1);
-    widget->curr = fb->addr + (widget->rows - 1) * (PXL_WIDTH * widget->cols);
+    widget->curr = fb->addr + (widget->rows - 1) * (PXL_HEIGHT * PXL_WIDTH * widget->cols);
 }
 
 
@@ -191,7 +201,7 @@ static void draw_character(char c)
 {
     void (*fp)(uint8_t*) = char_func[c-32];
     fp(pixel_buffer);
-    draw_character_bmp(widget->curr, pixel_buffer);
+    tty_draw_character_bmp(widget->curr, pixel_buffer);
     increment_cursor();
 }
 
@@ -205,7 +215,7 @@ void tty_putchar(unsigned char c)
     case '\n':
         widget->current_col = widget->cols - 1;
         increment_cursor();
-        break;;
+        break;
     case '\t':
         tty_puts("    ");
         return;
@@ -239,7 +249,7 @@ void init_tty()
 
     /* TODO:
         - add in lowercase chars
-        - fix scrolling. ptr should stay on same line. Characters should line up still
+        - abstract away pitch vs character calculation because its leading to lots of errors
     */
 }
 

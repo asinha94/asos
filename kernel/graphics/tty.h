@@ -19,5 +19,6 @@ typedef struct TTYWidget {
 void init_tty();
 void tty_putchar(unsigned char c);
 void tty_puts(const char* data);
+void tty_draw_character_bmp(Pixel * point, uint8_t * c);
 
 #endif

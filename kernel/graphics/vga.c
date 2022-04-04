@@ -7,9 +7,6 @@
 #include <mm/pmm.h>
 #include <mm/vmm.h>
 
-Pixel White;
-Pixel Black;
-
 
 void set_background_color(Pixel color)
 {   
@@ -25,22 +22,6 @@ Pixel create_pixel(uint8_t r, uint8_t g, uint8_t b)
     uint32_t green = g << fb->green_field_pos;
     uint32_t blue = b << fb->blue_field_pos;
     return red | green | blue;
-}
-
-void draw_character_bmp(Pixel * point, uint8_t * c)
-{
-    
-    
-    for (size_t k = 0; k < PXL_HEIGHT; ++k) {
-        for (size_t l = 0; l < PXL_WIDTH; ++l) {
-            Pixel color = White;
-            if ((c[k] >> (PXL_WIDTH - l - 1)) & 0x1) {
-                color = Black;
-            }
-            *point++ = color;
-        }
-        point += (fb->width - PXL_WIDTH);
-    }
 }
 
 void init_graphics(multiboot_info_t * mbi)
