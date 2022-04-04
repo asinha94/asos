@@ -9,8 +9,8 @@ static TTYWidget * widget;
 Pixel * pixel_buffer;
 
 static void draw_character(char c);
-static void tty_clear_from(uint8_t linum);
-static void tty_scroll_up_lines(uint8_t num_lines);
+static void tty_clear_from(size_t linum);
+static void tty_scroll_up_lines(size_t num_lines);
 static void increment_cursor();
 
 
@@ -114,45 +114,55 @@ void (*char_func[])(uint8_t *) = {
 };
 
 
-static void tty_clear_from(uint8_t linum)
+static void tty_clear_from(size_t linum)
 {
+    void (*fp)(uint8_t*) = char_func[' '-32];
+    fp(pixel_buffer);
+    draw_character_bmp(widget->curr, pixel_buffer);
+
     /* clear all lines from linum onwards */
-    for (size_t y = linum; y < fb->height; y++) {
-        const size_t line = y * fb->width;
-        for (size_t x = 0; x < fb->width; x++) {
-            const size_t index = line + x;
-            draw_character(' ');
-        }
+    
+    for (size_t y = linum; y < widget->rows; y++) {
+        Pixel * dst = fb->addr + linum * (PXL_HEIGHT * (PXL_WIDTH * widget->cols));
+        draw_character_bmp(dst, pixel_buffer);
     }
 }
 
 
-static void tty_scroll_up_lines(uint8_t num_lines)
+static void tty_scroll_up_num_rows(size_t num_rows)
 {
-    if (num_lines > fb->height)
-        num_lines = fb->height;
+    if (num_rows == 0)
+        return;
 
-    // we want to overrite the first num_lines number of rows
+    if (num_rows >= widget->rows) {
+        num_rows = widget->rows - 1;
+    }
+
+    // we want to scroll up num_rows. This means everything below #num_rows needs to be copied up
     // so start copying from num_lines till the total_height
-    for (size_t y = num_lines; y < fb->height; y++) {
-        size_t old_line = (y - num_lines) * fb->width;
-        size_t new_line = y * fb->width;
-        for (size_t x = 0; x < fb->width; x++) {
-            size_t old_index = old_line + x;
-            size_t new_index = new_line + x;
-            //tty_buffer[old_index] = tty_buffer[new_index];
+    size_t pitch = PXL_WIDTH * widget->cols;
+    size_t bytes_per_pixelrow = PXL_HEIGHT * pitch;
+    Pixel * dst = fb->addr;
+
+    for (size_t i = num_rows; i < widget->rows; ++i) {
+        for (size_t j = 0; j < PXL_HEIGHT; ++j) {
+            Pixel * src = dst + (i * bytes_per_pixelrow) + (j * pitch);
+            for (size_t k = 0; k < widget->cols; ++k) {
+                dst[k] = src[k];
+            }
         }
+
+        dst += bytes_per_pixelrow;
     }
 
     // clear off the remaining lines
-    tty_clear_from(fb->height - num_lines);
+    tty_clear_from(widget->rows - num_rows);
 
 }
 
 
 static void increment_cursor()
 {
-    
     // Are we on the same row?
     uint16_t col = widget->current_col + 1;
     if (col != widget->cols) {
@@ -172,6 +182,8 @@ static void increment_cursor()
     }
 
     // We need to scroll up
+    tty_scroll_up_num_rows(widget->rows - 1);
+    widget->curr = fb->addr + (widget->rows - 1) * (PXL_WIDTH * widget->cols);
 }
 
 
@@ -220,14 +232,14 @@ void init_tty()
     // Init TTY Window
     widget = kmalloc(sizeof(TTYWidget));
     widget->curr = fb->addr;
-    widget->rows = fb->height / PXL_HEIGHT;
+    widget->rows = 32 / PXL_HEIGHT;
     widget->current_row = 0;
     widget->cols = fb->width / PXL_WIDTH;
     widget->current_row = 0;
 
     /* TODO:
         - add in lowercase chars
-        - fix scrolling on end of buffer
+        - fix scrolling. ptr should stay on same line. Characters should line up still
     */
 }
 
