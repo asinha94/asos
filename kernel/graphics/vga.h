@@ -25,10 +25,6 @@ typedef struct FrameBuffer {
 } FrameBuffer;
 
 
-FrameBuffer * fb;
-Pixel White;
-Pixel Black;
-
 void set_background_color(Pixel color);
 Pixel create_pixel(uint8_t r, uint8_t g, uint8_t b);
 void init_graphics(multiboot_info_t *);

@@ -2,6 +2,7 @@
 #define ASOS_PMM_H
 
 #include <stdint.h>
+#include <boot/multiboot.h>
 #include <mm/vmm.h>
 
 // TODO: Figure out actual memory size, don't assume 4GB Get memory map from multiboot2 maybe?
@@ -15,7 +16,7 @@
 #define PMM_PAGING_ADDR_END   (PMM_PAGING_ADDR_START + VMM_PG_SZ_LARGE - 1)
 
 
-void init_pmm();
+void init_pmm(multiboot_info_t * mbi);
 void pmm_unset_range(uint32_t addr, uint32_t len);
 void pmm_set_range(uint32_t addr, uint32_t len); // TODO: Make a more user-friendly version of this
 uint32_t pmm_page_alloc();

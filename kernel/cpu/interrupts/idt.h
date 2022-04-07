@@ -31,6 +31,6 @@ typedef void (*ivect)(isr_data * );
 
 extern void insert_idt_entry(uint8_t index, uint32_t handler, ivect c_handler);
 extern void init_idt();
-extern void isr_dispatcher(isr_data * regs);
+
 
 #endif

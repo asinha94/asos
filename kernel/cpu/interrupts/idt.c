@@ -12,9 +12,10 @@ static idt_entry entries[IDT_LEN];
 static ivect ivt[IDT_LEN];
 
 // LIDT init function
-extern void asm_init_idt(uint32_t idt_address);
+extern "C" void asm_init_idt(uint32_t idt_address);
+extern "C" void isr_dispatcher(isr_data * regs);
 // Software Interrupt
-extern void asm_handler_isr48();
+//extern void asm_handler_isr48(); // TODO: figure out what this is for?
 
 void insert_idt_entry(
     uint8_t index,

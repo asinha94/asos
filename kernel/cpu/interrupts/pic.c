@@ -7,22 +7,22 @@
 
 
 // IRQ handlers in assembly
-extern void asm_handler_irq0();
-extern void asm_handler_irq1();
-extern void asm_handler_irq2();
-extern void asm_handler_irq3();
-extern void asm_handler_irq4();
-extern void asm_handler_irq5();
-extern void asm_handler_irq6();
-extern void asm_handler_irq7();
-extern void asm_handler_irq8();
-extern void asm_handler_irq9();
-extern void asm_handler_irq10();
-extern void asm_handler_irq11();
-extern void asm_handler_irq12();
-extern void asm_handler_irq13();
-extern void asm_handler_irq14();
-extern void asm_handler_irq15();
+extern "C" void asm_handler_irq0();
+extern "C" void asm_handler_irq1();
+extern "C" void asm_handler_irq2();
+extern "C" void asm_handler_irq3();
+extern "C" void asm_handler_irq4();
+extern "C" void asm_handler_irq5();
+extern "C" void asm_handler_irq6();
+extern "C" void asm_handler_irq7();
+extern "C" void asm_handler_irq8();
+extern "C" void asm_handler_irq9();
+extern "C" void asm_handler_irq10();
+extern "C" void asm_handler_irq11();
+extern "C" void asm_handler_irq12();
+extern "C" void asm_handler_irq13();
+extern "C" void asm_handler_irq14();
+extern "C" void asm_handler_irq15();
 
 // Handlers in C
 static void default_irq_handler(isr_data * data)

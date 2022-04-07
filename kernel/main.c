@@ -37,6 +37,7 @@ void temp_shell_execute()
     }
 }
 
+extern "C" void kernel_main(unsigned long magic, unsigned long mb_addr);
 
 void kernel_main(unsigned long magic, unsigned long mb_addr)
 {

@@ -8,6 +8,9 @@
 #include <mm/vmm.h>
 
 
+FrameBuffer * fb;
+
+
 void set_background_color(Pixel color)
 {   
     Pixel * p = fb->addr;
@@ -27,10 +30,10 @@ Pixel create_pixel(uint8_t r, uint8_t g, uint8_t b)
 void init_graphics(multiboot_info_t * mbi)
 {
     // Allocate memory for framebuffer
-    fb = kmalloc(sizeof(FrameBuffer));
+    fb = (FrameBuffer *) kmalloc(sizeof(FrameBuffer));
 
     if (mbi->flags & MULTIBOOT_INFO_FRAMEBUFFER_INFO) {
-        fb->addr = (void *) mbi->framebuffer_addr;
+        fb->addr = (Pixel *) mbi->framebuffer_addr;
         fb->width = mbi->framebuffer_width;
         fb->height = mbi->framebuffer_height;
         fb->pitch = mbi->framebuffer_pitch;
@@ -65,8 +68,6 @@ void init_graphics(multiboot_info_t * mbi)
         }
     }
 
-    Black = create_pixel(COLOR_MAX, COLOR_MAX, COLOR_MAX);
-    White = create_pixel(COLOR_MIN, COLOR_MIN, COLOR_MIN);
     //set_background_color(create_pixel(COLOR_MIN, COLOR_MIN, COLOR_MAX));
     init_tty();
 }

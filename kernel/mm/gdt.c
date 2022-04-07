@@ -9,7 +9,7 @@ static gdt_segment segments[GDT_SIZE];
 static gdt_table gdt;
 
 /* ASM function which loads the GDT for us */
-extern int asm_init_gdt(uint32_t gdt_address);
+extern "C" int asm_init_gdt(uint32_t gdt_address);
 
 static void insert_gdt_entry(
     uint8_t index,

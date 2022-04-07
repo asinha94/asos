@@ -13,7 +13,8 @@ POWERSHELL = powershell.exe -Command
 
 # Compiler & Build
 CC = $(CROSS_CC_DIR)/i686-elf-gcc
-ASM = nasm
+CPP = $(CROSS_CC_DIR)/i686-elf-g++
+NASM = nasm
 
 # Emulators
 QEMU = /mnt/c/Program\ Files/qemu/qemu-system-i386.exe
@@ -31,13 +32,17 @@ KERNOBJS := $(KERNSOURCES_C:%.c=%.o)  $(KERNSOURCES_ASM:%.asm=%.o)
 
 WARNINGS := -Wall -Wextra -pedantic -Wshadow -Wpointer-arith -Wcast-align \
 	        -Wwrite-strings -Wcast-qual -Wconversion -Wno-long-long \
-	        -Wredundant-decls -Wnested-externs -Winline  -Wno-sign-conversion -Wno-conversion\
+	        -Wredundant-decls -Winline  -Wno-sign-conversion -Wno-conversion\
 	     
 LIBS = -lgcc
 INCLUDES := -Ikernel
-CFLAGS := -g $(WARNINGS) -std=gnu99 -ffreestanding -nostdlib -masm=intel $(INCLUDES) $(LIBS)
 ASFLAGS := -f elf32 -g
-CPPFLAGS =
+CFLAGS   := -g $(WARNINGS) -std=gnu99 -ffreestanding -nostdlib -masm=intel $(INCLUDES) $(LIBS)
+CPPFLAGS := -g $(WARNINGS) -std=c++17 -ffreestanding -nostdlib -masm=intel -fno-exceptions -fno-rtti  $(INCLUDES) $(LIBS)
+
+CRTBEGIN_OBJ:=$(shell $(CPP) $(CPPFLAGS) -print-file-name=crtbegin.o)
+CRTEND_OBJ  :=$(shell $(CPP) $(CPPFLAGS) -print-file-name=crtend.o)
+
 
 #############################
 # Make Targets              #
@@ -48,14 +53,14 @@ CPPFLAGS =
 
 asos.bin: $(KERNOBJS) $(LINKSCRIPT)
 	@mkdir -p $(BUILD_DIR)
-	@$(CC) -T $(LINKSCRIPT) -o $(BUILD_DIR)/$@ $(CFLAGS) $(KERNOBJS)
+	@$(CPP) -T $(LINKSCRIPT) -o $(BUILD_DIR)/$@ $(CPPFLAGS) $(KERNOBJS) $(CRTBEGIN_OBJ) $(CRTEND_OBJ)
 	@grub-file --is-x86-multiboot $(BUILD_DIR)/$@
 
 %.o : %.c
-	@$(CC) -c $< -o $@ $(CFLAGS)
+	@$(CPP) -c $< -o $@ $(CPPFLAGS)
 
 %.o : %.asm
-	@$(ASM) $(ASFLAGS) $< -o $@
+	@$(NASM) $(ASFLAGS) $< -o $@
 
 iso-dir: asos.bin
 	@mkdir -p $(ISODIR)/boot/grub

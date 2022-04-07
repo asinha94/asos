@@ -3,38 +3,38 @@
 #include <libk/kprintf.h>
 
 // CPU Exception handlers
-extern void asm_handler_isr0();
-extern void asm_handler_isr1();
-extern void asm_handler_isr2();
-extern void asm_handler_isr3();
-extern void asm_handler_isr4();
-extern void asm_handler_isr5();
-extern void asm_handler_isr6();
-extern void asm_handler_isr7();
-extern void asm_handler_isr8();
-extern void asm_handler_isr9();
-extern void asm_handler_isr10();
-extern void asm_handler_isr11();
-extern void asm_handler_isr12();
-extern void asm_handler_isr13();
-extern void asm_handler_isr14();
-extern void asm_handler_isr15();
-extern void asm_handler_isr16();
-extern void asm_handler_isr17();
-extern void asm_handler_isr18();
-extern void asm_handler_isr19();
-extern void asm_handler_isr20();
-extern void asm_handler_isr21();
-extern void asm_handler_isr22();
-extern void asm_handler_isr23();
-extern void asm_handler_isr24();
-extern void asm_handler_isr25();
-extern void asm_handler_isr26();
-extern void asm_handler_isr27();
-extern void asm_handler_isr28();
-extern void asm_handler_isr29();
-extern void asm_handler_isr30();
-extern void asm_handler_isr31();
+extern "C" void asm_handler_isr0();
+extern "C" void asm_handler_isr1();
+extern "C" void asm_handler_isr2();
+extern "C" void asm_handler_isr3();
+extern "C" void asm_handler_isr4();
+extern "C" void asm_handler_isr5();
+extern "C" void asm_handler_isr6();
+extern "C" void asm_handler_isr7();
+extern "C" void asm_handler_isr8();
+extern "C" void asm_handler_isr9();
+extern "C" void asm_handler_isr10();
+extern "C" void asm_handler_isr11();
+extern "C" void asm_handler_isr12();
+extern "C" void asm_handler_isr13();
+extern "C" void asm_handler_isr14();
+extern "C" void asm_handler_isr15();
+extern "C" void asm_handler_isr16();
+extern "C" void asm_handler_isr17();
+extern "C" void asm_handler_isr18();
+extern "C" void asm_handler_isr19();
+extern "C" void asm_handler_isr20();
+extern "C" void asm_handler_isr21();
+extern "C" void asm_handler_isr22();
+extern "C" void asm_handler_isr23();
+extern "C" void asm_handler_isr24();
+extern "C" void asm_handler_isr25();
+extern "C" void asm_handler_isr26();
+extern "C" void asm_handler_isr27();
+extern "C" void asm_handler_isr28();
+extern "C" void asm_handler_isr29();
+extern "C" void asm_handler_isr30();
+extern "C" void asm_handler_isr31();
 
 
 

@@ -7,6 +7,7 @@
 
 static TTYWidget * widget;
 uint8_t * pixel_buffer;
+extern FrameBuffer * fb;
 
 static void draw_character(char c);
 static void tty_clear_from(size_t linum);
@@ -116,6 +117,9 @@ void (*char_func[])(uint8_t *) = {
 
 void tty_draw_character_bmp(Pixel * point, uint8_t * c)
 {
+    Pixel Black = create_pixel(COLOR_MAX, COLOR_MAX, COLOR_MAX);
+    Pixel White = create_pixel(COLOR_MIN, COLOR_MIN, COLOR_MIN);
+    
     for (size_t k = 0; k < PXL_HEIGHT; ++k) {
         Pixel * p = point + (k * PXL_WIDTH * widget->cols);
         for (size_t l = 0; l < PXL_WIDTH; ++l) {
@@ -237,10 +241,10 @@ void tty_puts(const char* data)
 
 void init_tty()
 {
-    pixel_buffer = kmalloc(16);
+    pixel_buffer = (uint8_t *) kmalloc(16);
 
     // Init TTY Window
-    widget = kmalloc(sizeof(TTYWidget));
+    widget = (TTYWidget *) kmalloc(sizeof(TTYWidget));
     widget->curr = fb->addr;
     widget->rows = 32 / PXL_HEIGHT;
     widget->current_row = 0;
