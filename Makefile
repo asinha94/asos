@@ -1,50 +1,52 @@
 
 # Directories
-PREFIX = $(shell pwd)
-BUILD_DIR = $(PREFIX)/build
-BIN_DIR = $(PREFIX)/bin
-SRC_DIR = $(PREFIX)/kernel
-CC_VERSION = gcc-7.5.0
+PREFIX       = $(shell pwd)
+BUILD_DIR    = $(PREFIX)/build
+BIN_DIR      = $(PREFIX)/bin
+SRC_DIR      = $(PREFIX)/kernel
+CC_VERSION   = gcc-7.5.0
 CROSS_CC_DIR = $(BIN_DIR)/$(CC_VERSION)/bin
-ISODIR = $(BUILD_DIR)/isodir
-WIN_ISO_DIR = /mnt/c/Users/Anura/Downloads
+ISODIR       = $(BUILD_DIR)/isodir
+WIN_ISO_DIR  = /mnt/c/Users/Anura/Downloads
 WIN_ISO_PATH = C:\Users\Anura\Downloads
-POWERSHELL = powershell.exe -Command
+POWERSHELL   = powershell.exe -Command
 
 # Compiler & Build
-CC = $(CROSS_CC_DIR)/i686-elf-gcc
-CPP = $(CROSS_CC_DIR)/i686-elf-g++
-GAS = $(CROSS_CC_DIR)/i686-elf-as
+CC   = $(CROSS_CC_DIR)/i686-elf-gcc
+CPP  = $(CROSS_CC_DIR)/i686-elf-g++
+GAS  = $(CROSS_CC_DIR)/i686-elf-as
 NASM = nasm
 
 
 # Emulators
-QEMU = /mnt/c/Program\ Files/qemu/qemu-system-i386.exe
+QEMU      = /mnt/c/Program\ Files/qemu/qemu-system-i386.exe
 QEMU_TERM = /usr/bin/qemu-system-i386
-QEMU_WIN = 'C:\Program Files\qemu\qemu-system-i386.exe'
-BOCHS = /mnt/c/Program\ Files/Bochs-2.6.11/bochs.exe
-BOCHSDBG = /mnt/c/Program\ Files/Bochs-2.6.11/bochsdbg.exe
+QEMU_WIN  = 'C:\Program Files\qemu\qemu-system-i386.exe'
+BOCHS     = /mnt/c/Program\ Files/Bochs-2.6.11/bochs.exe
+BOCHSDBG  = /mnt/c/Program\ Files/Bochs-2.6.11/bochsdbg.exe
 
 
 # Files
-LINKSCRIPT = $(SRC_DIR)/boot/linker.ld
-KERNSOURCES_C := $(shell find $(SRC_DIR)/ -name *.c)
-KERNSOURCES_ASM_INTEL := $(shell find $(SRC_DIR)/ -name *.asm)
-KERNSOURCES_ASM_ATT := $(shell find $(SRC_DIR)/ -name *.S)
-KERNOBJS := $(KERNSOURCES_C:%.c=%.o)  $(KERNSOURCES_ASM_INTEL:%.asm=%.o) $(KERNSOURCES_ASM_ATT:%.S=%.o)
+LINKSCRIPT          = $(SRC_DIR)/boot/linker.ld
+KERNSRCS_C         := $(shell find $(SRC_DIR)/ -name *.c)
+KERNSRCS_ASM_INTEL := $(shell find $(SRC_DIR)/ -name *.asm)
+KERNSRCS_ASM_ATT   := $(shell find $(SRC_DIR)/ -name *.S)
+CRTBEGIN_OBJ       := $(shell $(CPP) $(CPPFLAGS) -print-file-name=crtbegin.o)
+CRTEND_OBJ         := $(shell $(CPP) $(CPPFLAGS) -print-file-name=crtend.o)
+KERNOBJS           := $(KERNSRCS_C:%.c=%.o)  $(KERNSRCS_ASM_INTEL:%.asm=%.o) $(KERNSRCS_ASM_ATT:%.S=%.o)
+
 
 WARNINGS := -Wall -Wextra -pedantic -Wshadow -Wpointer-arith -Wcast-align \
 	        -Wwrite-strings -Wcast-qual -Wconversion -Wno-long-long \
 	        -Wredundant-decls -Winline  -Wno-sign-conversion -Wno-conversion\
 	     
-LIBS = -lgcc
+LIBS      = -lgcc
 INCLUDES := -Ikernel
-ASFLAGS := -f elf32 -g
+ASFLAGS  := -f elf32 -g
 CFLAGS   := -g $(WARNINGS) -std=gnu99 -ffreestanding -nostdlib -masm=intel $(INCLUDES) $(LIBS)
 CPPFLAGS := -g $(WARNINGS) -std=c++17 -ffreestanding -nostdlib -masm=intel -fno-exceptions -fno-rtti  $(INCLUDES) $(LIBS)
 
-CRTBEGIN_OBJ:=$(shell $(CPP) $(CPPFLAGS) -print-file-name=crtbegin.o)
-CRTEND_OBJ  :=$(shell $(CPP) $(CPPFLAGS) -print-file-name=crtend.o)
+
 
 
 #############################
