@@ -1,4 +1,7 @@
+
 #include <boot/multiboot.h>
+
+
 #include <cpu/hal.h>
 #include <cpu/interrupts/pic.h>
 #include <cpu/interrupts/exception.h>
@@ -13,29 +16,11 @@
 #include <mm/pmm.h>
 
 
-extern char __kbd_buffer[80];
+//extern char __kbd_buffer[80];
 extern int __len;
 extern int __newline;
 
 
-int is_match(const char * s)
-{
-    return strncmp(__kbd_buffer, s, __len) == 0;
-}
-
-void temp_shell_execute()
-{
-    if (__newline) {
-        if (is_match("help")) {
-            kprintf("This is the help!\n");
-        } else {
-            kprintf("%s: command not found\n", __kbd_buffer);
-        }
-    __newline = 0;
-    __len = 0;
-    kprintf("shell$> ");
-    }
-}
 
 extern "C" void kernel_main(unsigned long magic, unsigned long mb_addr);
 
@@ -72,7 +57,6 @@ void kernel_main(unsigned long magic, unsigned long mb_addr)
     while (1) {
         halt();
         disable_interrupts();
-        temp_shell_execute();
         enable_interrupts();
     }
     

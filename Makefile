@@ -14,7 +14,9 @@ POWERSHELL = powershell.exe -Command
 # Compiler & Build
 CC = $(CROSS_CC_DIR)/i686-elf-gcc
 CPP = $(CROSS_CC_DIR)/i686-elf-g++
+GAS = $(CROSS_CC_DIR)/i686-elf-as
 NASM = nasm
+
 
 # Emulators
 QEMU = /mnt/c/Program\ Files/qemu/qemu-system-i386.exe
@@ -27,8 +29,9 @@ BOCHSDBG = /mnt/c/Program\ Files/Bochs-2.6.11/bochsdbg.exe
 # Files
 LINKSCRIPT = $(SRC_DIR)/boot/linker.ld
 KERNSOURCES_C := $(shell find $(SRC_DIR)/ -name *.c)
-KERNSOURCES_ASM := $(shell find $(SRC_DIR)/ -name *.asm)
-KERNOBJS := $(KERNSOURCES_C:%.c=%.o)  $(KERNSOURCES_ASM:%.asm=%.o)
+KERNSOURCES_ASM_INTEL := $(shell find $(SRC_DIR)/ -name *.asm)
+KERNSOURCES_ASM_ATT := $(shell find $(SRC_DIR)/ -name *.S)
+KERNOBJS := $(KERNSOURCES_C:%.c=%.o)  $(KERNSOURCES_ASM_INTEL:%.asm=%.o) $(KERNSOURCES_ASM_ATT:%.S=%.o)
 
 WARNINGS := -Wall -Wextra -pedantic -Wshadow -Wpointer-arith -Wcast-align \
 	        -Wwrite-strings -Wcast-qual -Wconversion -Wno-long-long \
@@ -61,6 +64,9 @@ asos.bin: $(KERNOBJS) $(LINKSCRIPT)
 
 %.o : %.asm
 	@$(NASM) $(ASFLAGS) $< -o $@
+
+%.o : %.S
+	@$(GAS) $< -o $@
 
 iso-dir: asos.bin
 	@mkdir -p $(ISODIR)/boot/grub

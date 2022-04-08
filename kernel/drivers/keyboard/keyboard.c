@@ -19,7 +19,7 @@ static uint8_t current_modifiers;
 // TODO: Remove once done with temp shell
 int __len = 0;
 int __newline = 0;
-char __kbd_buffer[80];
+//char __kbd_buffer[80];
 
 
 kbd_event scancode_set1[KBD_SCAN_CODES];
@@ -225,7 +225,7 @@ void keyboard_handler(isr_data * data)
             c = 0;
             __newline = 1;
         }
-        __kbd_buffer[__len++] = c;
+        //__kbd_buffer[__len++] = c;
 
     }
 }
