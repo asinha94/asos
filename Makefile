@@ -33,7 +33,7 @@ KERNSRCS_ASM_INTEL := $(shell find $(SRC_DIR)/ -name *.asm)
 KERNSRCS_ASM_ATT   := $(shell find $(SRC_DIR)/ -name *.S)
 CRTBEGIN_OBJ       := $(shell $(CPP) $(CPPFLAGS) -print-file-name=crtbegin.o)
 CRTEND_OBJ         := $(shell $(CPP) $(CPPFLAGS) -print-file-name=crtend.o)
-KERNOBJS           := $(KERNSRCS_CPP:%.c=%.o)  $(KERNSRCS_ASM_INTEL:%.asm=%.o) $(KERNSRCS_ASM_ATT:%.S=%.o)
+KERNOBJS           := $(KERNSRCS_CPP:%.cpp=%.o)  $(KERNSRCS_ASM_INTEL:%.asm=%.o) $(KERNSRCS_ASM_ATT:%.S=%.o)
 
 
 WARNINGS := -Wall -Wextra -pedantic -Wshadow -Wpointer-arith -Wcast-align \
@@ -54,14 +54,14 @@ CPPFLAGS := -g $(WARNINGS) -std=c++17 -ffreestanding -nostdlib -masm=intel -fno-
 #############################
 
 .PHONY: clean
-.SUFFIXES: .o .c .asm
+.SUFFIXES: .o .cpp .asm .S
 
 asos.bin: $(KERNOBJS) $(LINKSCRIPT)
 	@mkdir -p $(BUILD_DIR)
 	@$(CPP) -T $(LINKSCRIPT) -o $(BUILD_DIR)/$@ $(CPPFLAGS) $(KERNOBJS) $(CRTBEGIN_OBJ) $(CRTEND_OBJ)
 	@grub-file --is-x86-multiboot $(BUILD_DIR)/$@
 
-%.o : %.c
+%.o : %.cpp
 	@$(CPP) -c $< -o $@ $(CPPFLAGS)
 
 %.o : %.asm
