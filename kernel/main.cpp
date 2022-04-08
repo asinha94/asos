@@ -1,7 +1,5 @@
 
 #include <boot/multiboot.h>
-
-
 #include <cpu/hal.h>
 #include <cpu/interrupts/pic.h>
 #include <cpu/interrupts/exception.h>

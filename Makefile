@@ -28,12 +28,12 @@ BOCHSDBG  = /mnt/c/Program\ Files/Bochs-2.6.11/bochsdbg.exe
 
 # Files
 LINKSCRIPT          = $(SRC_DIR)/boot/linker.ld
-KERNSRCS_C         := $(shell find $(SRC_DIR)/ -name *.c)
+KERNSRCS_CPP       := $(shell find $(SRC_DIR)/ -name *.cpp)
 KERNSRCS_ASM_INTEL := $(shell find $(SRC_DIR)/ -name *.asm)
 KERNSRCS_ASM_ATT   := $(shell find $(SRC_DIR)/ -name *.S)
 CRTBEGIN_OBJ       := $(shell $(CPP) $(CPPFLAGS) -print-file-name=crtbegin.o)
 CRTEND_OBJ         := $(shell $(CPP) $(CPPFLAGS) -print-file-name=crtend.o)
-KERNOBJS           := $(KERNSRCS_C:%.c=%.o)  $(KERNSRCS_ASM_INTEL:%.asm=%.o) $(KERNSRCS_ASM_ATT:%.S=%.o)
+KERNOBJS           := $(KERNSRCS_CPP:%.c=%.o)  $(KERNSRCS_ASM_INTEL:%.asm=%.o) $(KERNSRCS_ASM_ATT:%.S=%.o)
 
 
 WARNINGS := -Wall -Wextra -pedantic -Wshadow -Wpointer-arith -Wcast-align \
