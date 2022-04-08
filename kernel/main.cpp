@@ -26,7 +26,6 @@ void kernel_main(unsigned long magic, unsigned long mb_addr)
 {
     // Setup serial output for debugging
     init_serial();
-
     kprintf("Multiboot Magic Header 0x%x\n", magic);
     if (magic != MULTIBOOT_BOOTLOADER_MAGIC) {
         kprintf("Invalid Multiboot Magic Number: 0x%x. Expected 0x%x\n", MULTIBOOT_BOOTLOADER_MAGIC);

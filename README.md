@@ -14,11 +14,12 @@ My pet project in bootstrapping a bare-bones OS. The goal is for this to eventua
 - [x] Kernel Malloc implementation
 
 ## Short-Term Work
-- [ ] Address warnings from compiler
+- [ ] Suppress warnings for multiboot.h
+- [ ] Finish C++ migration. Remove static arrays. Use classes
 - [ ] Create handlers for interrupt 0-31
 - [ ] Handle exceptions (beyond just logging)
 - [ ] Create PIT/RTC drivers
-- [ ] Migrate to C++
+
 - [ ] Process Scheduling/Multitasking
 - [ ] Jump to userspace
 - [ ] Basic syscalls (read/write/fork/exec/mmap)
