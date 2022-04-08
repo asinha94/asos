@@ -1,5 +1,3 @@
-
-
 #ifndef ASOS_EXCEPTION_H
 #define ASOS_EXCEPTION_H
 

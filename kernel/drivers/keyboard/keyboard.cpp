@@ -4,6 +4,7 @@
 #include <drivers/keyboard/keyboard.h>
 #include <libk/ascii.h>
 #include <libk/kprintf.h>
+#include <libk/kmalloc.h>
 #include <graphics/tty.h>
 
 /*
@@ -22,23 +23,20 @@ int __newline = 0;
 //char __kbd_buffer[80];
 
 
-kbd_event scancode_set1[KBD_SCAN_CODES];
+kbd_event * scancode_set1;
     
-    /* printscreen and pause break here */
-
 
 static void init_kdb_struct(uint8_t idx, uint8_t data, uint8_t data_mod, uint8_t modifier_mask)
 {
-    kbd_event * ptr = &scancode_set1[idx];
-    ptr->data = data;
-    ptr->data_mod = data_mod;
-    ptr->modifier_mask = modifier_mask;
+    scancode_set1[idx].data = data;
+    scancode_set1[idx].data_mod = data_mod;
+    scancode_set1[idx].modifier_mask = modifier_mask;
 }
 
 void keyboard_init()
 {
     kprintf("Initializing Keyboard\n");
-
+    scancode_set1 = (kbd_event *) kmalloc(KBD_SCAN_CODES * sizeof(kbd_event));
     // TODO: 
     // disable all LEDs?
     // set type rate?

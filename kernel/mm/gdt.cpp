@@ -1,12 +1,13 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <libk/kprintf.h>
+#include <libk/kmalloc.h>
 #include <mm/gdt.h>
 
 #define GDT_SIZE 5
 
-static gdt_segment segments[GDT_SIZE];
-static gdt_table gdt;
+static gdt_segment * segments;
+static gdt_table * gdt;
 
 /* ASM function which loads the GDT for us */
 extern "C" int asm_init_gdt(uint32_t gdt_address);
@@ -35,6 +36,8 @@ static void insert_gdt_entry(
 
 void init_gdt()
 {
+    size_t segment_tbl_size = GDT_SIZE * sizeof(gdt_segment);
+    segments = (gdt_segment *) kmalloc(segment_tbl_size);
     // // Null segment
     insert_gdt_entry(0, 0, 0x00000000, 0x00, 0x00); 
     // Create linear address space
@@ -44,10 +47,11 @@ void init_gdt()
     insert_gdt_entry(3, 0, 0xFFFFFFFF, 0xFA, 0xC0); // User Code segment
     insert_gdt_entry(4, 0, 0xFFFFFFFF, 0xF2, 0xC0); // User Code segment
 
+    gdt = (gdt_table *) kmalloc(sizeof(gdt_table));
     // load GDT at table address
     // why is the size - 1?
-    gdt.length = sizeof(segments) - 1;
-    gdt.segments = (uint32_t) &segments;
-    asm_init_gdt((uint32_t) &gdt);
+    gdt->length = segment_tbl_size - 1;
+    gdt->segments = (uint32_t) segments;
+    asm_init_gdt((uint32_t) gdt);
     kprintf("GDT initialized\n");
 }

@@ -13,12 +13,9 @@
 #include <mm/gdt.h>
 #include <mm/pmm.h>
 
-
 //extern char __kbd_buffer[80];
-extern int __len;
-extern int __newline;
-
-
+//extern int __len;
+//extern int __newline;
 
 extern "C" void kernel_main(unsigned long magic, unsigned long mb_addr);
 
@@ -32,22 +29,18 @@ void kernel_main(unsigned long magic, unsigned long mb_addr)
         return;
     }
 
+    multiboot_info_t *mbi = (multiboot_info_t *) (mb_addr + VMM_KERN_ADDR_START);
     kprintf("Initializing Kernel\n");
+    // Memory Management
+    init_pmm(mbi);
+    init_vmm();
     // descriptor tables and exception handlers
     init_gdt();
     init_irq();
     init_cpu_exceptions();
     init_idt();
-
-    multiboot_info_t *mbi = (multiboot_info_t *) (mb_addr + VMM_KERN_ADDR_START);
-
-    // Memory Management
-    init_pmm(mbi);
-    init_vmm();
-
     // Setup graphics
     init_graphics(mbi);
-
     // Let loose the dogs of war
     enable_interrupts();
 

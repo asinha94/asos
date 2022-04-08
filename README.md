@@ -16,10 +16,10 @@ My pet project in bootstrapping a bare-bones OS. The goal is for this to eventua
 ## Short-Term Work
 - [ ] Suppress warnings for multiboot.h
 - [ ] Finish C++ migration. Remove static arrays. Use classes
+- [ ] Move MM init higher up
+- [ ] Create PIT/RTC drivers
 - [ ] Create handlers for interrupt 0-31
 - [ ] Handle exceptions (beyond just logging)
-- [ ] Create PIT/RTC drivers
-
 - [ ] Process Scheduling/Multitasking
 - [ ] Jump to userspace
 - [ ] Basic syscalls (read/write/fork/exec/mmap)
