@@ -2,7 +2,6 @@
 #include <boot/multiboot.h>
 #include <cpu/hal.h>
 #include <cpu/interrupts/pic.h>
-#include <cpu/interrupts/exception.h>
 #include <cpu/interrupts/idt.h>
 #include <drivers/keyboard/keyboard.h>
 #include <drivers/serial/serial.h>
@@ -18,7 +17,6 @@
 //extern int __newline;
 
 extern "C" void kernel_main(unsigned long magic, unsigned long mb_addr);
-
 void kernel_main(unsigned long magic, unsigned long mb_addr)
 {
     // Setup serial output for debugging
@@ -36,9 +34,7 @@ void kernel_main(unsigned long magic, unsigned long mb_addr)
     init_vmm();
     // descriptor tables and exception handlers
     asos::GDTTable::initGDT();
-    init_irq();
-    init_cpu_exceptions();
-    init_idt();
+    asos::IDTHandler::initIDT();
     // Setup graphics
     init_graphics(mbi);
     // Let loose the dogs of war

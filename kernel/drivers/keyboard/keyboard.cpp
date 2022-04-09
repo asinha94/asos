@@ -167,7 +167,7 @@ static uint8_t kbd_read_data()
 }
 
 
-void keyboard_handler(isr_data * data)
+void keyboard_handler(asos::ISRData * data)
 {
     // If we got an interrupt and the data isn't ready it's
     // already been read and we can just ignore this I guess?

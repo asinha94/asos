@@ -4,9 +4,6 @@
 #include <libk/kmalloc.h>
 #include <mm/gdt.h>
 
-#define GDT_SIZE 5
-
-
 /* ASM function which loads the GDT for us */
 extern "C" int asm_init_gdt(uint32_t gdt_address);
 
@@ -14,7 +11,7 @@ namespace asos {
     
     GDTSegment::GDTSegment(uint32_t base, uint32_t limit, uint8_t type, uint8_t granularity)
     {
-        // The irony is that all of these are 0 when we favor paging over segmentation
+        // The irony is that all of these are 0
         this->m_base_lower  = (uint16_t) ((base >> 00) & 0xFFFF);
         this->m_base_middle = (uint8_t) ((base >> 16) & 0xFF);
         this->m_base_upper  = (uint8_t) ((base >> 24) & 0xFF);

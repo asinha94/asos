@@ -49,7 +49,7 @@ typedef struct kbd_event_struct kbd_event;
 
 
 void keyboard_init();
-void keyboard_handler(isr_data * data);
+void keyboard_handler(asos::ISRData * data);
 
 
 #endif

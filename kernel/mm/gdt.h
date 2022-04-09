@@ -9,19 +9,25 @@ namespace asos {
     class GDTSegment {
     public:
         GDTSegment() {};
-        GDTSegment(const GDTSegment & other) = default;
-        GDTSegment(GDTSegment && other) = default;
-        GDTSegment& operator=(const GDTSegment & other) = default;
-        GDTSegment& operator=(GDTSegment && other) = default;
+        GDTSegment& operator=(GDTSegment && other)
+        {
+            this->m_limit_lower = other.m_limit_lower;
+            this->m_base_lower = other.m_base_lower;
+            this->m_base_middle = other.m_base_middle;
+            this->m_type = other.m_type;
+            this->m_granularity = other.m_granularity;
+            this->m_base_upper = other.m_base_upper;
+            return *this;
+        }
         GDTSegment(uint32_t base, uint32_t limit, uint8_t type, uint8_t granularity);
-        uint8_t getType() {return m_type;}
+
     private:
-        uint16_t m_limit_lower;
-        uint16_t m_base_lower;
-        uint8_t  m_base_middle;
-        uint8_t  m_type;
-        uint8_t  m_granularity;
-        uint8_t  m_base_upper;
+        uint16_t m_limit_lower = 0;
+        uint16_t m_base_lower  = 0;
+        uint8_t  m_base_middle = 0;
+        uint8_t  m_type        = 0;
+        uint8_t  m_granularity = 0;
+        uint8_t  m_base_upper  = 0;
     };
 
     #pragma pack(push, 1)
@@ -33,7 +39,7 @@ namespace asos {
         uint16_t m_length;
         uint32_t m_segments;
     };
-    #pragma pop
+    #pragma pack(pop)
 }
 
 
