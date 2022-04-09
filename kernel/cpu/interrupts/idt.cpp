@@ -44,7 +44,7 @@ extern "C" void asm_handler_isr31();
 namespace asos {
 
     static IDTEntry * idt_entries    = nullptr;
-    static IVTPtr * ivt                = nullptr;
+    static IVTPtr * ivt              = nullptr;
     static size_t handled_interuppts = 0;
 
     static void default_isr_handler(ISRData * data)
