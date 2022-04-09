@@ -22,7 +22,7 @@ void kprintf(const char * format, ...)
     const char * iter;
     for (iter = format; *iter != 0; ++iter) {
         if (*iter != '%') {
-            serial_putchar(*iter);
+            asos::serial_putchar(*iter);
             continue;
         }
 
@@ -30,31 +30,31 @@ void kprintf(const char * format, ...)
         switch(*iter) {
             case 'c':
                 i = va_arg(arg, int);
-                serial_putchar((char) i);
+                asos::serial_putchar((char) i);
                 break;
             case 'd':
                 i = va_arg(arg, int);
                 if (i < 0) {
                     i = -i;
-                    serial_putchar('-');
+                    asos::serial_putchar('-');
                 }
                 s = itoa(&temp[11], i, 10);
-                serial_puts(s);
+                asos::serial_puts(s);
                 break;
             case 'u':
                 u = va_arg(arg, unsigned int);
                 s = itoa(&temp[11], u, 10);
-                serial_puts(s);
+                asos::serial_puts(s);
                 break;
             case 's':
                 s = va_arg(arg, char *);
-                serial_puts(s);
+                asos::serial_puts(s);
                 break;
             case 'x':
                 u = va_arg(arg, unsigned int);
                 s = itoa(&temp[11], u, 16);
-                serial_puts("0x");
-                serial_puts(s);
+                asos::serial_puts("0x");
+                asos::serial_puts(s);
                 break; 
         }
 

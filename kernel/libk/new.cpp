@@ -16,7 +16,7 @@ void operator delete(void * p)
     kfree(p);
 }
 
-void operator delete(void * p, long unsigned int align)
+void operator delete(void * p, __attribute__ ((unused)) long unsigned int align)
 {
     kfree(p);
 }
@@ -26,7 +26,7 @@ void operator delete[](void * p)
     kfree(p);
 }
 
-void operator delete[](void * p, long unsigned int align)
+void operator delete[](void * p, __attribute__ ((unused)) long unsigned int align)
 {
     kfree(p);
 }

@@ -22,6 +22,9 @@
 extern "C" {
 #endif
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
+
 #ifndef MULTIBOOT_HEADER
 #define MULTIBOOT_HEADER 1
 
@@ -276,6 +279,7 @@ struct multiboot_apm_info
 
 #endif /* ! MULTIBOOT_HEADER */
 
+#pragma GCC diagnostic pop
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

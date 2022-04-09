@@ -11,7 +11,6 @@ extern FrameBuffer * fb;
 
 static void draw_character(char c);
 static void tty_clear_from(size_t linum);
-static void tty_scroll_up_lines(size_t num_lines);
 static void increment_cursor();
 
 

@@ -20,7 +20,7 @@ extern "C" void kernel_main(unsigned long magic, unsigned long mb_addr);
 void kernel_main(unsigned long magic, unsigned long mb_addr)
 {
     // Setup serial output for debugging
-    init_serial();
+    asos::init_serial();
     kprintf("Multiboot Magic Header %x\n", magic);
     if (magic != MULTIBOOT_BOOTLOADER_MAGIC) {
         kprintf("Invalid Multiboot Magic Number: %x. Expected %x\n", magic, MULTIBOOT_BOOTLOADER_MAGIC);
