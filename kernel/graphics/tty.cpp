@@ -7,12 +7,14 @@
 
 static TTYWidget * widget;
 uint8_t * pixel_buffer;
-extern FrameBuffer * fb;
+static asos::VGAFrameBuffer * fb;
 
 static void draw_character(char c);
 static void tty_clear_from(size_t linum);
 static void increment_cursor();
 
+
+using Pixel = asos::Pixel;
 
 void (*char_func[])(uint8_t *) = {
     pxl_space,
@@ -116,8 +118,8 @@ void (*char_func[])(uint8_t *) = {
 
 void tty_draw_character_bmp(Pixel * point, uint8_t * c)
 {
-    Pixel Black = create_pixel(COLOR_MAX, COLOR_MAX, COLOR_MAX);
-    Pixel White = create_pixel(COLOR_MIN, COLOR_MIN, COLOR_MIN);
+    Pixel Black = fb->CreatePixel(asos::ColorMax, asos::ColorMax, asos::ColorMax);
+    Pixel White = fb->CreatePixel(asos::ColorMin, asos::ColorMin, asos::ColorMin);
     
     for (size_t k = 0; k < PXL_HEIGHT; ++k) {
         Pixel * p = point + (k * PXL_WIDTH * widget->cols);
@@ -240,6 +242,7 @@ void tty_puts(const char* data)
 
 void init_tty()
 {
+    fb = asos::VGAFrameBuffer::GetFrameBuffer();
     pixel_buffer = (uint8_t *) kmalloc(16);
 
     // Init TTY Window
@@ -251,7 +254,6 @@ void init_tty()
     widget->current_row = 0;
 
     /* TODO:
-        - add in lowercase chars
         - abstract away pitch vs character calculation because its leading to lots of errors
     */
 }
