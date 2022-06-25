@@ -25,7 +25,7 @@
 #define KBD_STATUS_PARITY   0x80
 
 /* Modifier Bitmasks */
-#define KBD_MASK_NONE       0x00
+#define KBD_MASK_NONE       0x00 // 0b00000000
 #define KBD_MASK_CAPSLOCK   0x01 // 0b00000001
 #define KBD_MASK_SHIFT      0x02 // 0b00000010
 #define KBD_MASK_CTRL       0x04 // 0b00000100
@@ -48,9 +48,8 @@ struct kbd_event_struct {
 typedef struct kbd_event_struct kbd_event;
 
 
-const kbd_event scancode_set1[KBD_SCAN_CODES];
 void keyboard_init();
-void keyboard_handler(isr_data * data);
+void keyboard_handler(asos::ISRData * data);
 
 
 #endif

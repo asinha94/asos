@@ -7,12 +7,14 @@
 
 static TTYWidget * widget;
 uint8_t * pixel_buffer;
+static asos::VGAFrameBuffer * fb;
 
 static void draw_character(char c);
 static void tty_clear_from(size_t linum);
-static void tty_scroll_up_lines(size_t num_lines);
 static void increment_cursor();
 
+
+using Pixel = asos::Pixel;
 
 void (*char_func[])(uint8_t *) = {
     pxl_space,
@@ -80,32 +82,32 @@ void (*char_func[])(uint8_t *) = {
     pxl_caret,
     pxl_underscore,
     pxl_backtick,
-    pxl_A, // underscore character
-    pxl_B,
-    pxl_C,
-    pxl_D,
-    pxl_E,
-    pxl_F,
-    pxl_G,
-    pxl_H,
-    pxl_I,
-    pxl_J,
-    pxl_K,
-    pxl_L,
-    pxl_M,
-    pxl_N,
-    pxl_O,
-    pxl_P,
-    pxl_Q,
-    pxl_R,
-    pxl_S,
-    pxl_T,
-    pxl_U,
-    pxl_V,
-    pxl_W,
-    pxl_X,
-    pxl_Y,
-    pxl_Z,
+    pxl_a,
+    pxl_b,
+    pxl_c,
+    pxl_d,
+    pxl_e,
+    pxl_f,
+    pxl_g,
+    pxl_h,
+    pxl_i,
+    pxl_j,
+    pxl_k,
+    pxl_l,
+    pxl_m,
+    pxl_n,
+    pxl_o,
+    pxl_p,
+    pxl_q,
+    pxl_r,
+    pxl_s,
+    pxl_t,
+    pxl_u,
+    pxl_v,
+    pxl_w,
+    pxl_x,
+    pxl_y,
+    pxl_z,
     pxl_opencurly,
     pxl_pipe,
     pxl_closecurly,
@@ -116,6 +118,9 @@ void (*char_func[])(uint8_t *) = {
 
 void tty_draw_character_bmp(Pixel * point, uint8_t * c)
 {
+    Pixel Black = fb->CreatePixel(asos::ColorMax, asos::ColorMax, asos::ColorMax);
+    Pixel White = fb->CreatePixel(asos::ColorMin, asos::ColorMin, asos::ColorMin);
+    
     for (size_t k = 0; k < PXL_HEIGHT; ++k) {
         Pixel * p = point + (k * PXL_WIDTH * widget->cols);
         for (size_t l = 0; l < PXL_WIDTH; ++l) {
@@ -237,10 +242,11 @@ void tty_puts(const char* data)
 
 void init_tty()
 {
-    pixel_buffer = kmalloc(16);
+    fb = asos::VGAFrameBuffer::GetFrameBuffer();
+    pixel_buffer = (uint8_t *) kmalloc(16);
 
     // Init TTY Window
-    widget = kmalloc(sizeof(TTYWidget));
+    widget = (TTYWidget *) kmalloc(sizeof(TTYWidget));
     widget->curr = fb->addr;
     widget->rows = 32 / PXL_HEIGHT;
     widget->current_row = 0;
@@ -248,7 +254,6 @@ void init_tty()
     widget->current_row = 0;
 
     /* TODO:
-        - add in lowercase chars
         - abstract away pitch vs character calculation because its leading to lots of errors
     */
 }

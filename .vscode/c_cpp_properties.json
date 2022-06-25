@@ -3,13 +3,14 @@
         {
             "name": "asOS",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/bin/gcc-7.5.0/lib/gcc/i686-elf/7.5.0/include"
             ],
             "defines": [],
-            "compilerPath": "/usr/bin/gcc",
+            "compilerPath": "${workspaceFolder}/bin/gcc-7.5.0/bin/i686-elf-g++",
             "cStandard": "c11",
             "cppStandard": "c++17",
-            "intelliSenseMode": "clang-x64"
+            "intelliSenseMode": "${default}"
         }
     ],
     "version": 4

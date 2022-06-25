@@ -6,26 +6,29 @@
 #include <libk/kprintf.h>
 
 
+using asos::IDTHandler;
+
+
 // IRQ handlers in assembly
-extern void asm_handler_irq0();
-extern void asm_handler_irq1();
-extern void asm_handler_irq2();
-extern void asm_handler_irq3();
-extern void asm_handler_irq4();
-extern void asm_handler_irq5();
-extern void asm_handler_irq6();
-extern void asm_handler_irq7();
-extern void asm_handler_irq8();
-extern void asm_handler_irq9();
-extern void asm_handler_irq10();
-extern void asm_handler_irq11();
-extern void asm_handler_irq12();
-extern void asm_handler_irq13();
-extern void asm_handler_irq14();
-extern void asm_handler_irq15();
+extern "C" void asm_handler_irq0();
+extern "C" void asm_handler_irq1();
+extern "C" void asm_handler_irq2();
+extern "C" void asm_handler_irq3();
+extern "C" void asm_handler_irq4();
+extern "C" void asm_handler_irq5();
+extern "C" void asm_handler_irq6();
+extern "C" void asm_handler_irq7();
+extern "C" void asm_handler_irq8();
+extern "C" void asm_handler_irq9();
+extern "C" void asm_handler_irq10();
+extern "C" void asm_handler_irq11();
+extern "C" void asm_handler_irq12();
+extern "C" void asm_handler_irq13();
+extern "C" void asm_handler_irq14();
+extern "C" void asm_handler_irq15();
 
 // Handlers in C
-static void default_irq_handler(isr_data * data)
+static void default_irq_handler(asos::ISRData * data)
 {
     kprintf("Entered ISR %u\n", data->int_no);
     irq_eoi(data->int_no);
@@ -61,22 +64,22 @@ void init_irq()
     //  Install IRQ handlers into IDT
     // Entries [32-47] are the IRQs we just re-mapped
     uint8_t idt_index = PIC_MASTER_VECTOR_OFFSET;
-    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq0, default_irq_handler);
-    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq1, keyboard_handler);
-    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq2, default_irq_handler);
-    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq3, default_irq_handler);
-    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq4, default_irq_handler);
-    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq5, default_irq_handler);
-    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq6, default_irq_handler);
-    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq7, default_irq_handler);
-    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq8, default_irq_handler);
-    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq9, default_irq_handler);
-    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq10, default_irq_handler);
-    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq11, default_irq_handler);
-    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq12, default_irq_handler);
-    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq13, default_irq_handler);
-    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq14, default_irq_handler);
-    insert_idt_entry(idt_index++, (uint32_t) asm_handler_irq15, default_irq_handler);
+    IDTHandler::insertIDTEntry(idt_index++, (uint32_t) asm_handler_irq0, default_irq_handler);
+    IDTHandler::insertIDTEntry(idt_index++, (uint32_t) asm_handler_irq1, keyboard_handler);
+    IDTHandler::insertIDTEntry(idt_index++, (uint32_t) asm_handler_irq2, default_irq_handler);
+    IDTHandler::insertIDTEntry(idt_index++, (uint32_t) asm_handler_irq3, default_irq_handler);
+    IDTHandler::insertIDTEntry(idt_index++, (uint32_t) asm_handler_irq4, default_irq_handler);
+    IDTHandler::insertIDTEntry(idt_index++, (uint32_t) asm_handler_irq5, default_irq_handler);
+    IDTHandler::insertIDTEntry(idt_index++, (uint32_t) asm_handler_irq6, default_irq_handler);
+    IDTHandler::insertIDTEntry(idt_index++, (uint32_t) asm_handler_irq7, default_irq_handler);
+    IDTHandler::insertIDTEntry(idt_index++, (uint32_t) asm_handler_irq8, default_irq_handler);
+    IDTHandler::insertIDTEntry(idt_index++, (uint32_t) asm_handler_irq9, default_irq_handler);
+    IDTHandler::insertIDTEntry(idt_index++, (uint32_t) asm_handler_irq10, default_irq_handler);
+    IDTHandler::insertIDTEntry(idt_index++, (uint32_t) asm_handler_irq11, default_irq_handler);
+    IDTHandler::insertIDTEntry(idt_index++, (uint32_t) asm_handler_irq12, default_irq_handler);
+    IDTHandler::insertIDTEntry(idt_index++, (uint32_t) asm_handler_irq13, default_irq_handler);
+    IDTHandler::insertIDTEntry(idt_index++, (uint32_t) asm_handler_irq14, default_irq_handler);
+    IDTHandler::insertIDTEntry(idt_index++, (uint32_t) asm_handler_irq15, default_irq_handler);
 }
 
 

@@ -7,6 +7,7 @@
 
 #include <graphics/vga.h>
 
+using Pixel = asos::Pixel;
 
 typedef struct TTYWidget {
     Pixel *  curr;

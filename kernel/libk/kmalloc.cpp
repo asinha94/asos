@@ -42,7 +42,7 @@ void * kmalloc(size_t size)
         // looped back to the head, return
         if (p == __last_used_block) {
             // allocate more memory if possible
-            p = __increase_heap_size_for_block(block_size);
+            p = (block_header *) __increase_heap_size_for_block(block_size);
             if (p == NULL)
                 return p;
             break;
@@ -52,7 +52,7 @@ void * kmalloc(size_t size)
         if (p->block_size >= block_size) {
             // Split if necessary, p points to new block if split
             block_header * orig_block = p;
-            p = __split_block(p, block_size);
+            p = (block_header *) __split_block(p, block_size);
 
             if (p == orig_block)
                 // no split, remove whole block from free_list
@@ -156,7 +156,7 @@ void * __increase_heap_size_for_block(size_t block_size)
     block_header * new_block = (block_header *) virtual_page_addr;
     new_block->block_size = VMM_PG_SZ_SMALL;   
         
-    block_header * p = __split_block(new_block, block_size);
+    block_header * p = (block_header *) __split_block(new_block, block_size);
     if (p != new_block) {
         // split occurred, need to 'free' the other block
         // kfree assumes memory was returned so it decrements
