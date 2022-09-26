@@ -13,7 +13,7 @@ void init_graphics(multiboot_info_t * mbi)
     // TODO: This function probably needs to be moved elsewhere
     asos::VGAFrameBuffer::initVGAFramebuffer(mbi);
 
-    //set_background_color(create_pixel(COLOR_MIN, COLOR_MIN, COLOR_MAX));
+    //set_background_color(create_pixel(asos::ColorMin, asos::ColorMin, asos::ColorMax));
     init_tty();
 }
 

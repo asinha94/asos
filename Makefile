@@ -7,8 +7,8 @@ SRC_DIR      = $(PREFIX)/kernel
 CC_VERSION   = gcc-7.5.0
 CROSS_CC_DIR = $(BIN_DIR)/$(CC_VERSION)/bin
 ISODIR       = $(BUILD_DIR)/isodir
-WIN_ISO_DIR  = /mnt/c/Users/Anura/Downloads
-WIN_ISO_PATH = C:\Users\Anura\Downloads
+WIN_ISO_DIR  = /mnt/c/Users/Anu/Downloads
+WIN_ISO_PATH = C:\Users\Anu\Downloads
 POWERSHELL   = powershell.exe -Command
 
 # Compiler & Build
@@ -22,8 +22,8 @@ NASM = nasm
 QEMU      = /mnt/c/Program\ Files/qemu/qemu-system-i386.exe
 QEMU_TERM = /usr/bin/qemu-system-i386
 QEMU_WIN  = 'C:\Program Files\qemu\qemu-system-i386.exe'
-BOCHS     = /mnt/c/Program\ Files/Bochs-2.6.11/bochs.exe
-BOCHSDBG  = /mnt/c/Program\ Files/Bochs-2.6.11/bochsdbg.exe
+BOCHS     = /mnt/c/Program\ Files/Bochs-2.7/bochs.exe
+BOCHSDBG  = /mnt/c/Program\ Files/Bochs-2.7/bochsdbg.exe
 
 
 # Files
