@@ -2,9 +2,9 @@
 
 My pet project in bootstrapping a bare-bones OS. The goal is for this to eventually become a POSIX compliant OS
 
+![](asos.gif)
+
 ---
-
-
 
 ## Completed:
 - [X] Boot intp Protected Mode C Kernel
@@ -15,8 +15,8 @@ My pet project in bootstrapping a bare-bones OS. The goal is for this to eventua
 
 ## Short-Term Work
 - [ ] Convert graphics stack to C++
-- [ ] Remove static arrays. Convert some stuff to classes
-- [ ] Figure out why ESC causes GPF
+- [ ] Remove global arrays. Convert some stuff to classes
+- [ ] Figure out why ESC causes Page Fault
 - [ ] Convert MM stuff to C++
 - [ ] Create PIT/RTC drivers
 - [ ] Create handlers for interrupt 0-31
@@ -25,12 +25,13 @@ My pet project in bootstrapping a bare-bones OS. The goal is for this to eventua
 - [ ] Jump to userspace
 - [ ] Basic syscalls (read/write/fork/exec/mmap)
 - [ ] Create char devices (i.e kbm for UI)
+- [ ] Bash shell
 
 ## Long-Term Work
 - [ ] Use APIC instead of PIC
 - [ ] Improve malloc to use slab allocation
-- [ ] Use buddy allocator for PMMv (use stack instead of Bitmap)
-- [ ] Bash shell
+- [ ] Use buddy allocator for PMM (use stack instead of Bitmap)
+
 - [ ] Basic Windowing Graphics 
 - [ ] File-system support (FAT/ext2/ntfs?)  
 - [ ] TCP/IP networking stack
@@ -90,6 +91,6 @@ Bochs debugging is useful when debugging hardware i.e making sure your CPU is in
 
 ## Resources/References
 
-- wiki.osdev.org
+- [wiki.osdev.org](wiki.osdev.org)
 - http://www.osdever.net/tutorials/
 - https://github.com/cfenollosa/os-tutorial

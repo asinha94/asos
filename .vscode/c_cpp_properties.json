@@ -10,7 +10,8 @@
             "compilerPath": "${workspaceFolder}/bin/gcc-7.5.0/bin/i686-elf-g++",
             "cStandard": "c11",
             "cppStandard": "c++17",
-            "intelliSenseMode": "${default}"
+            "intelliSenseMode": "${default}",
+            "configurationProvider": "ms-vscode.makefile-tools"
         }
     ],
     "version": 4

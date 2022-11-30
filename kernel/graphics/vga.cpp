@@ -7,13 +7,22 @@
 #include <mm/pmm.h>
 #include <mm/vmm.h>
 
+void set_background_color(Pixel color)
+{   
+    auto fb = asos::VGAFrameBuffer::GetFrameBuffer();
+    Pixel * p = fb->addr;
+    for (size_t i = 0; i < fb->height; ++i)
+        for (size_t j = 0; j < fb->width; ++j)
+            *p++ = color;
+}
 
 void init_graphics(multiboot_info_t * mbi)
 {
     // TODO: This function probably needs to be moved elsewhere
     asos::VGAFrameBuffer::initVGAFramebuffer(mbi);
 
-    //set_background_color(create_pixel(asos::ColorMin, asos::ColorMin, asos::ColorMax));
+    //auto fb = asos::VGAFrameBuffer::GetFrameBuffer();
+    //set_background_color(fb->CreatePixel(asos::ColorMin, asos::ColorMin, asos::ColorMax));
     init_tty();
 }
 
